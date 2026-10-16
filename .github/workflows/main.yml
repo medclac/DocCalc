@@ -1,0 +1,66 @@
+name: Build MedCalc Android APK
+on:
+  workflow_dispatch:
+  push:
+      branches: 
+        - main
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out project
+        uses: actions/checkout@v4
+        
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+    
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v4
+        with:
+          packages: 'platform-tools'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Check web assets
+        run: |
+          pwd
+          ls -la
+          ls -la www
+          test -f www/index.html
+          
+      - name: Create Android project
+        run: npx cap add android
+
+      - name: Set MedCalc APK icon
+        run: |
+          npm install --save-dev @capacitor/assets
+          mkdir -p assets
+          cp www/logo.png assets/icon.png
+          npx capacitor-assets generate --android
+
+      - name: Sync app assets
+        run: npx cap sync android
+
+      - name: Build debug APK
+        working-directory: android
+        run: chmod +x gradlew && ./gradlew assembleDebug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: MedCalc-o.1v-APK
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error

@@ -334,7 +334,7 @@ $("form").addEventListener("submit", e => {
 
   const r = t.calc(v);
   $("value").textContent = r.value;
-  $("equation").textContent = r.eq;
+  $("equation").innerHTML = r.eq;
 
   const interpretation = $("interpretation");
   const guidance = guidanceStore[t.id] || null;

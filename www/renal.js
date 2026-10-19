@@ -242,9 +242,25 @@
 
         const egfr = 142 * Math.pow(minVal, alpha) * Math.pow(maxVal, -1.200) * Math.pow(0.9938, age) * genderMultiplier;
         let stage = egfr >= 90 ? "G1 (Normal/high)" : egfr >= 60 ? "G2 (Mildly decreased)" : egfr >= 45 ? "G3a (Mild-to-moderate decrease)" : egfr >= 30 ? "G3b (Moderate-to-severe decrease)" : egfr >= 15 ? "G4 (Severely decreased)" : "G5 (Kidney failure)";
+        
+        let guidanceText = "";
+        if (egfr >= 90) {
+          guidanceText = "Normal or high GFR. If markers of kidney damage (e.g., albuminuria) are present, evaluate for early CKD. Otherwise, standard age-related monitoring.";
+        } else if (egfr >= 60) {
+          guidanceText = "Mildly decreased GFR. Evaluate for other markers of kidney damage. Monitor renal function and proteinuria annually.";
+        } else if (egfr >= 30) {
+          guidanceText = "Moderate decrease in GFR (Stage G3). Typically associated with complications of CKD (e.g., anemia, bone mineral disorders). Nephrology consultation and comagement recommended, optimize blood pressure and glycemic control, use ACEi/ARB if albuminuric.";
+        } else if (egfr >= 15) {
+          guidanceText = "Severe decrease in GFR (Stage G4). Prepare for renal replacement therapy options (dialysis modalities, kidney transplantation). Nephrology referral essential.";
+        } else {
+          guidanceText = "Kidney failure (Stage G5). Immediate preparation for or initiation of renal replacement therapy (dialysis or urgent transplant evaluation) unless palliative care is chosen.";
+        }
+
         return {
           value: Math.round(egfr) + " mL/min/1.73m² (" + stage + ")",
-          eq: "CKD-EPI 2021 refit without race variable: 142 × min(Scr/κ, 1)^α × max(Scr/κ, 1)^-1.200 × 0.9938^Age [× 1.012 if female]."
+          eq: "CKD-EPI 2021 refit without race variable: 142 × min(Scr/κ, 1)^α × max(Scr/κ, 1)^-1.200 × 0.9938^Age [× 1.012 if female].",
+          guidance: guidanceText,
+          references: "Inker LA, Eneanya ND, Coresh J, et al. New Creatinine- and Cystatin C-Based Equations to Estimate GFR without Race. N Engl J Med. 2021;385(19):1737-1749."
         };
       }
     },
@@ -271,9 +287,18 @@
         const genderMult = female ? 0.963 : 1.0;
 
         const egfr = 135 * Math.pow(minScr, alpha) * Math.pow(maxScr, -0.544) * Math.pow(minCys, -0.323) * Math.pow(maxCys, -0.778) * Math.pow(0.9961, age) * genderMult;
+        
+        let guidanceText = egfr >= 60 
+          ? "Normal to mildly reduced combined eGFR. Reassuring when creatinine alone was borderline."
+          : egfr >= 30 
+          ? "Moderate reduction in combined eGFR. Confirms CKD stages G3a-G3b; use for precise staging and risk stratification."
+          : "Severe reduction in combined eGFR (Stages G4-G5). Prompt nephrology evaluation and preparation for renal replacement therapy.";
+
         return {
           value: Math.round(egfr) + " mL/min/1.73m²",
-          eq: "CKD-EPI 2021 Creatinine-Cystatin C equation. More precise than creatinine alone at eGFR 45–59 mL/min/1.73m²."
+          eq: "CKD-EPI 2021 Creatinine-Cystatin C equation. More precise than creatinine alone at eGFR 45–59 mL/min/1.73m².",
+          guidance: guidanceText,
+          references: "Inker LA, Eneanya ND, Coresh J, et al. New Creatinine- and Cystatin C-Based Equations to Estimate GFR without Race. N Engl J Med. 2021;385(19):1737-1749."
         };
       }
     },
@@ -292,9 +317,20 @@
       calc: v => {
         const mult = v.sex === "female" ? 0.85 : 1.0;
         const crcl = ((140 - +v.age) * +v.weight) / (72 * +v.scr) * mult;
+        
+        let guidanceText = crcl >= 90
+          ? "Normal creatinine clearance. Standard drug dosing is typically appropriate unless specific organ toxicities dictate otherwise."
+          : crcl >= 50
+          ? "Mildly reduced clearance. Review medications cleared renally; minor dosage adjustments may be required for narrow therapeutic index drugs."
+          : crcl >= 10
+          ? "Moderate-to-severe reduction in clearance. Significant dosage reductions or extended dosing intervals are generally required for renally excreted medications."
+          : "Severely impaired clearance. Most renally cleared medications require major dose adjustments or contraindication review.";
+
         return {
           value: Math.round(crcl) + " mL/min",
-          eq: "Cockcroft-Gault: [(140 − Age) × Weight (kg)] ÷ (72 × SCr [mg/dL]) [× 0.85 if female]. Note: Estimates clearance, not GFR."
+          eq: "Cockcroft-Gault: [(140 − Age) × Weight (kg)] ÷ (72 × SCr [mg/dL]) [× 0.85 if female]. Note: Estimates clearance, not GFR.",
+          guidance: guidanceText,
+          references: "Cockcroft DW, Gault MH. Prediction of creatinine clearance from serum creatinine. Nephron. 1976;16(1):31-41."
         };
       }
     },
@@ -310,9 +346,18 @@
       ],
       calc: v => {
         const egfr = (0.413 * +v.height) / +v.scr;
+        
+        let guidanceText = egfr >= 90
+          ? "Normal pediatric GFR. Normal renal function; monitor routinely."
+          : egfr >= 60
+          ? "Mildly decreased pediatric GFR. Pediatric nephrology consultation if accompanied by structural abnormalities or proteinuria."
+          : "Abnormal/decreased pediatric GFR (<60 mL/min/1.73m²). Pediatric nephrology referral required for management of growth retardation, electrolyte imbalance, and CKD progression.";
+
         return {
           value: Math.round(egfr) + " mL/min/1.73m²",
-          eq: "Bedside Schwartz: eGFR = 0.413 × Height (cm) ÷ Serum Creatinine (mg/dL). Validated for IDMS-traceable enzymatic assays."
+          eq: "Bedside Schwartz: eGFR = 0.413 × Height (cm) ÷ Serum Creatinine (mg/dL). Validated for IDMS-traceable enzymatic assays.",
+          guidance: guidanceText,
+          references: "Schwartz GJ, Muñoz A, Schneider MF, et al. New equations to estimate GFR in children with CKD. J Am Soc Nephrol. 2009;20(3):629-637."
         };
       }
     },
@@ -328,9 +373,21 @@
       calc: v => {
         const g = +v.gfr;
         let c = g >= 90 ? "Stage G1 — Normal or high GFR (≥90)" : g >= 60 ? "Stage G2 — Mildly decreased (60–89)" : g >= 45 ? "Stage G3a — Mildly to moderately decreased (45–59)" : g >= 30 ? "Stage G3b — Moderately to severely decreased (30–44)" : g >= 15 ? "Stage G4 — Severely decreased (15–29)" : "Stage G5 — Kidney failure (<15)";
+        
+        let guidanceText = "";
+        if (g >= 60) {
+          guidanceText = "Stages G1-G2: CKD diagnosis requires structural or functional markers of kidney damage persisting for ≥3 months. Focus on cardiovascular risk reduction and treating underlying etiology.";
+        } else if (g >= 30) {
+          guidanceText = "Stages G3a-G3b: Moderate CKD. Monitor for secondary complications (anemia, secondary hyperparathyroidism, metabolic acidosis). Implement nephroprotection (BP control, RAS inhibition, SGLT2i).";
+        } else {
+          guidanceText = "Stages G4-G5: Advanced CKD. Prepare for renal replacement therapy, evaluate for kidney transplantation, create vascular access plans, and manage advanced metabolic disturbances.";
+        }
+
         return {
           value: c,
-          eq: "KDIGO GFR categories. Diagnosis of CKD also requires ≥3 months duration and/or evidence of kidney damage."
+          eq: "KDIGO GFR categories. Diagnosis of CKD also requires ≥3 months duration and/or evidence of kidney damage.",
+          guidance: guidanceText,
+          references: "KDIGO 2012 Clinical Practice Guideline for the Evaluation and Management of Chronic Kidney Disease. Kidney Int Suppl. 2013;3(1):1-150."
         };
       }
     },
@@ -346,9 +403,18 @@
       calc: v => {
         const u = +v.uacr;
         let s = u < 30 ? "Stage A1: Normal to mildly increased (<30 mg/g)" : u <= 300 ? "Stage A2: Moderately increased (30–300 mg/g)" : "Stage A3: Severely increased (>300 mg/g; includes nephrotic range if >2200 mg/g)";
+        
+        let guidanceText = u < 30 
+          ? "Normal or mild albuminuria. Standard follow-up."
+          : u <= 300 
+          ? "Moderately increased albuminuria (microalbuminuria). Indicates early glomerular injury, diabetic nephropathy, or endothelial dysfunction. Initiate or optimize RAS inhibitors (ACEi/ARB) and SGLT2 inhibitors."
+          : "Severely increased albuminuria (macroalbuminuria / nephrotic range). High risk of progressive renal decline and cardiovascular events. Aggressive blood pressure control, maximum tolerated RAS blockade, and nephrology co-management recommended.";
+
         return {
           value: s,
-          eq: "KDIGO Albuminuria categories: A1 (<30 mg/g), A2 (30–300 mg/g), A3 (>300 mg/g)."
+          eq: "KDIGO Albuminuria categories: A1 (<30 mg/g), A2 (30–300 mg/g), A3 (>300 mg/g).",
+          guidance: guidanceText,
+          references: "KDIGO 2012 Clinical Practice Guideline for the Evaluation and Management of Chronic Kidney Disease. Kidney Int Suppl. 2013;3(1):1-150."
         };
       }
     },
@@ -376,16 +442,26 @@
       calc: v => {
         const g = v.gfr_cat, a = v.alb_cat;
         let risk = "Low risk (Green)";
+        let guidanceText = "";
+        
         if (g === "g5" || g === "g4" || (g === "g3b" && a !== "a1") || (g === "g3a" && a === "a3")) {
           risk = "Very High Risk (Red) — Recommend nephrology referral and close monitoring (≥3–4x/year)";
+          guidanceText = "Very high risk of progression, cardiovascular events, and mortality. Immediate nephrology referral, frequent monitoring, comprehensive risk factor modification, and preparation for renal replacement therapy.";
         } else if ((g === "g3b" && a === "a1") || (g === "g3a" && a === "a2") || ((g === "g1" || g === "g2") && a === "a3")) {
           risk = "High Risk (Orange) — Nephrology co-management recommended (monitoring ≥2x/year)";
+          guidanceText = "High risk of CKD progression and adverse outcomes. Nephrology consultation advised, rigorous blood pressure and glycemic targets, maximize nephroprotective medical therapy.";
         } else if ((g === "g3a" && a === "a1") || ((g === "g1" || g === "g2") && a === "a2")) {
           risk = "Moderate Risk (Yellow) — Annual monitoring recommended";
+          guidanceText = "Moderate risk. Monitor GFR and albuminuria at least annually. Treat underlying drivers (diabetes, hypertension) and initiate protective therapies.";
+        } else {
+          guidanceText = "Low risk of CKD progression. Standard primary care follow-up and lifestyle counseling.";
         }
+
         return {
           value: risk,
-          eq: "KDIGO prognosis grid: Combines GFR and Albuminuria to determine risks of CKD progression, all-cause mortality, and CV events."
+          eq: "KDIGO prognosis grid: Combines GFR and Albuminuria to determine risks of CKD progression, all-cause mortality, and CV events.",
+          guidance: guidanceText,
+          references: "KDIGO 2012 Clinical Practice Guideline for the Evaluation and Management of Chronic Kidney Disease. Kidney Int Suppl. 2013;3(1):1-150."
         };
       }
     },
@@ -402,9 +478,18 @@
       calc: v => {
         const uacr = (+v.ualb / +v.ucr) * 1000;
         let c = uacr < 30 ? "A1: Normal/mild (<30 mg/g)" : uacr <= 300 ? "A2: Microalbuminuria (30–300 mg/g)" : "A3: Severely increased (>300 mg/g)";
+        
+        let guidanceText = uacr < 30 
+          ? "Normal urine albumin excretion. No evidence of significant glomerular filtration barrier leakage."
+          : uacr <= 300 
+          ? "Microalbuminuria. Early marker of diabetic kidney disease or vascular injury. Start ACEi or ARB and control blood pressure/glucose."
+          : "Macroalbuminuria. Significant glomerular permselectivity loss. Nephrology input, rigorous blood pressure control, and optimized guideline-directed medical therapy recommended.";
+
         return {
           value: Math.round(uacr) + " mg/g creatinine — " + c,
-          eq: "UACR (mg/g) = (Urine Albumin [mg/dL] ÷ Urine Creatinine [mg/dL]) × 1000."
+          eq: "UACR (mg/g) = (Urine Albumin [mg/dL] ÷ Urine Creatinine [mg/dL]) × 1000.",
+          guidance: guidanceText,
+          references: "KDIGO 2012 Clinical Practice Guideline for the Evaluation and Management of Chronic Kidney Disease. Kidney Int Suppl. 2013;3(1):1-150."
         };
       }
     },
@@ -421,9 +506,18 @@
       calc: v => {
         const upcr = +v.uprot / +v.ucr;
         let c = upcr < 0.15 ? "Normal protein excretion (<0.15 g/g)" : upcr < 0.5 ? "Mild proteinuria (0.15–0.49 g/g)" : upcr < 3.5 ? "Moderate-to-heavy proteinuria (0.5–3.49 g/g)" : "Nephrotic-range proteinuria (≥3.5 g/g)";
+        
+        let guidanceText = upcr < 0.15
+          ? "Normal protein excretion. Reassuring baseline."
+          : upcr < 3.5
+          ? "Non-nephrotic proteinuria. Evaluate for underlying glomerulonephritis, hypertensive nephrosclerosis, or diabetic nephropathy."
+          : "Nephrotic-range proteinuria. High suspicion for primary or secondary glomerular disease (e.g., membranous nephropathy, FSGS, minimal change disease, diabetic nephropathy). Nephrology referral and possible renal biopsy warranted.";
+
         return {
           value: upcr.toFixed(2) + " g/g creatinine (~" + upcr.toFixed(2) + " g/24h) — " + c,
-          eq: "UPCR = Urine Protein (mg/dL) ÷ Urine Creatinine (mg/dL). UPCR roughly approximates 24-hour protein excretion in grams."
+          eq: "UPCR = Urine Protein (mg/dL) ÷ Urine Creatinine (mg/dL). UPCR roughly approximates 24-hour protein excretion in grams.",
+          guidance: guidanceText,
+          references: "KDIGO 2021 Clinical Practice Guideline for the Management of Glomerular Diseases. Kidney Int. 2021;100(4S):S1-S276."
         };
       }
     },
@@ -442,9 +536,18 @@
       calc: v => {
         const fena = ((+v.una * +v.scr) / (+v.sna * +v.ucr)) * 100;
         let c = fena < 1.0 ? "Prerenal azotemia (<1%)" : fena > 2.0 ? "Intrinsic renal injury / ATN (>2%)" : "Indeterminate / intermediate (1–2%)";
+        
+        let guidanceText = fena < 1.0
+          ? "Suggests avid sodium retention due to effective circulating volume depletion (prerenal azotemia). Respond with fluid resuscitation or optimization of hemodynamics."
+          : fena > 2.0
+          ? "Suggests tubular dysfunction and inability to reabsorb sodium (intrinsic acute tubular necrosis). Avoid fluid overload; manage supportively."
+          : "Intermediate result. Can be seen in early obstruction, contrast nephropathy, or prerenal states in patients on diuretics. Clinical correlation required.";
+
         return {
           value: fena.toFixed(2) + "% — " + c,
-          eq: "FENa = [(Urine Na × Serum Cr) ÷ (Serum Na × Urine Cr)] × 100%. Note: Unreliable if patient received diuretics within 24h (use FEUrea)."
+          eq: "FENa = [(Urine Na × Serum Cr) ÷ (Serum Na × Urine Cr)] × 100%. Note: Unreliable if patient received diuretics within 24h (use FEUrea).",
+          guidance: guidanceText,
+          references: "Miller TR, Anderson RJ, Linas SL, et al. Urinary diagnostic indices in acute renal failure: a prospective study. Ann Intern Med. 1978;89(1):47-50."
         };
       }
     },
@@ -463,9 +566,18 @@
       calc: v => {
         const feUrea = ((+v.uurea * +v.scr) / (+v.bun * +v.ucr)) * 100;
         let c = feUrea < 35 ? "Prerenal azotemia (<35%)" : feUrea > 50 ? "Intrinsic renal injury / ATN (>50%)" : "Intermediate / non-diagnostic (35–50%)";
+        
+        let guidanceText = feUrea < 35
+          ? "Suggests prerenal azotemia even in the presence of recent loop diuretic use. Consider volume responsiveness."
+          : feUrea > 50
+          ? "Suggests intrinsic acute tubular necrosis. Diuretic use does not significantly confound urea handling compared to sodium."
+          : "Intermediate urea excretion. Interpret cautiously alongside clinical history and urine sediment.";
+
         return {
           value: feUrea.toFixed(1) + "% — " + c,
-          eq: "FEUrea = [(Urine Urea × Serum Cr) ÷ (BUN × Urine Cr)] × 100%. Urea reabsorption in the proximal tubule is less affected by loop diuretics."
+          eq: "FEUrea = [(Urine Urea × Serum Cr) ÷ (BUN × Urine Cr)] × 100%. Urea reabsorption in the proximal tubule is less affected by loop diuretics.",
+          guidance: guidanceText,
+          references: "Espnel CH. The fractional excretion of urea. A simple and reliable test for differential diagnosis of acute renal failure. JAMA. 1980;244(6):579-581."
         };
       }
     },
@@ -496,9 +608,23 @@
       calc: v => {
         const maxStage = Math.max(+v.cr_stage, +v.uo_stage);
         let s = maxStage === 0 ? "No AKI by KDIGO criteria" : "KDIGO AKI Stage " + maxStage;
+        
+        let guidanceText = "";
+        if (maxStage === 0) {
+          guidanceText = "No acute kidney injury criteria met. Continue monitoring.";
+        } else if (maxStage === 1) {
+          guidanceText = "Stage 1 AKI. Review and discontinue nephrotoxic medications, ensure adequate volume status and perfusion pressure, monitor daily creatinine and urine output.";
+        } else if (maxStage === 2) {
+          guidanceText = "Stage 2 AKI. Moderate severity. Consider nephrology consultation, avoid nephrotoxics strictly, monitor fluid balance closely, and evaluate for intrinsic renal etiologies.";
+        } else {
+          guidanceText = "Stage 3 AKI. Severe acute kidney injury. Urgent nephrology consultation, evaluation for emergent renal replacement therapy, intensive hemodynamic monitoring, and electrolyte management.";
+        }
+
         return {
           value: s,
-          eq: "Staged by whichever criterion (creatinine or urine output) yields the more severe stage."
+          eq: "Staged by whichever criterion (creatinine or urine output) yields the more severe stage.",
+          guidance: guidanceText,
+          references: "KDIGO Clinical Practice Guideline for Acute Kidney Injury. Kidney Int Suppl. 2012;2(1):1-138."
         };
       }
     },
@@ -518,9 +644,12 @@
         let txt = v.system === "rifle" 
           ? "RIFLE: Risk (1.5× Cr / GFR drop >25%), Injury (2× Cr / GFR drop >50%), Failure (3× Cr or Cr ≥4 with acute rise ≥0.5 / GFR drop >75%), Loss (persistent failure >4 weeks), ESRD (>3 months)."
           : "AKIN: Stage 1 (Cr rise ≥0.3 or 1.5–2×), Stage 2 (2–3× Cr), Stage 3 (>3× Cr or Cr ≥4 with acute rise ≥0.5 or on RRT). KDIGO harmonized both into 48h/7d windows.";
+        
         return {
           value: v.system.toUpperCase() + " Criteria",
-          eq: txt
+          eq: txt,
+          guidance: "Reference classification tool. Use KDIGO criteria for contemporary clinical practice and research trial definitions.",
+          references: "Bellomo R, Ronco C, Kellum JA, Mehta RL, Palevsky P; Acute Dialysis Quality Initiative workgroup. Acute renal failure - definition, outcome measures, animal models, fluid therapy and information technology needs: the Second International Consensus Conference of the Acute Dialysis Quality Initiative (ADQI) group. Crit Care. 2004;8(4):R204-R212."
         };
       }
     },
@@ -538,9 +667,18 @@
       calc: v => {
         const rate = +v.vol / +v.weight / +v.hours;
         let c = rate >= 0.5 ? "Adequate output (≥0.5 mL/kg/h)" : rate >= 0.3 ? "Oliguria (0.3–0.49 mL/kg/h) — meets KDIGO Stage 1 if ≥6h" : "Severe oliguria / anuria (<0.3 mL/kg/h)";
+        
+        let guidanceText = rate >= 0.5
+          ? "Adequate renal perfusion based on urine output."
+          : rate >= 0.3
+          ? "Oliguria detected. Assess volume status, rule out catheter obstruction, and check for prerenal or early AKI causes."
+          : "Severe oliguria or anuria. High risk for acute kidney injury progression, fluid overload, and metabolic crisis. Urgent clinical assessment required.";
+
         return {
           value: rate.toFixed(2) + " mL/kg/h — " + c,
-          eq: "Rate = Volume (mL) ÷ Weight (kg) ÷ Time (hours). Oliguria (<0.5 mL/kg/h for ≥6 hours) defines Stage 1 AKI."
+          eq: "Rate = Volume (mL) ÷ Weight (kg) ÷ Time (hours). Oliguria (<0.5 mL/kg/h for ≥6 hours) defines Stage 1 AKI.",
+          guidance: guidanceText,
+          references: "KDIGO Clinical Practice Guideline for Acute Kidney Injury. Kidney Int Suppl. 2012;2(1):1-138."
         };
       }
     },
@@ -558,9 +696,20 @@
         const delta = +v.curr_cr - +v.base_cr;
         const ratio = +v.curr_cr / +v.base_cr;
         let c = ratio >= 3.0 || +v.curr_cr >= 4.0 ? "Stage 3 AKI threshold (≥3.0× or Cr ≥4.0)" : ratio >= 2.0 ? "Stage 2 AKI threshold (2.0–2.9×)" : (ratio >= 1.5 || delta >= 0.3) ? "Stage 1 AKI threshold (≥1.5× or Δ ≥0.3 mg/dL)" : "No AKI by creatinine criteria";
+        
+        let guidanceText = ratio >= 3.0 || +v.curr_cr >= 4.0
+          ? "Meets Stage 3 AKI criteria. Immediate evaluation for RRT and nephrology consultation."
+          : ratio >= 2.0
+          ? "Meets Stage 2 AKI criteria. Aggressive management and optimization of renal perfusion."
+          : (ratio >= 1.5 || delta >= 0.3)
+          ? "Meets Stage 1 AKI criteria. Review medications and volume status."
+          : "Creatinine change does not meet standard AKI threshold.";
+
         return {
           value: "Ratio: " + ratio.toFixed(2) + "× baseline | ΔCr: +" + delta.toFixed(2) + " mg/dL (" + c + ")",
-          eq: "Fold-change = Current Cr ÷ Baseline Cr. Delta Cr = Current Cr − Baseline Cr."
+          eq: "Fold-change = Current Cr ÷ Baseline Cr. Delta Cr = Current Cr − Baseline Cr.",
+          guidance: guidanceText,
+          references: "KDIGO Clinical Practice Guideline for Acute Kidney Injury. Kidney Int Suppl. 2012;2(1):1-138."
         };
       }
     },
@@ -580,9 +729,18 @@
         const totalIn = +v.iv + +v.oral;
         const totalOut = +v.uo + +v.drains;
         const net = totalIn - totalOut;
+        
+        let guidanceText = net > 1000
+          ? "Significantly positive fluid balance. Monitor for signs of fluid overload, pulmonary edema, and worsening tissue oxygenation. Consider conservative fluid strategies or diuresis."
+          : net < -500
+          ? "Negative fluid balance. Ensure patient remains adequately fluid-resuscitated unless intentionally diuresing."
+          : "Neutral fluid balance. Generally desirable in stable non-resuscitating patients.";
+
         return {
           value: (net >= 0 ? "+" : "") + net + " mL (" + (net >= 0 ? "Positive" : "Negative") + " balance)",
-          eq: "Total In (" + totalIn + " mL) − Total Out (" + totalOut + " mL) = Net " + (net >= 0 ? "+" : "") + net + " mL."
+          eq: "Total In (" + totalIn + " mL) − Total Out (" + totalOut + " mL) = Net " + (net >= 0 ? "+" : "") + net + " mL.",
+          guidance: guidanceText,
+          references: "Hoste EA, Maitland K, Brudney CS, et al. Four phases of fluid therapy: a conceptual model for fluid management and the IMDR. Br J Anaesth. 2014;113(5):740-747."
         };
       }
     },
@@ -599,9 +757,18 @@
       calc: v => {
         const pct = (+v.net_l / +v.weight) * 100;
         let c = pct >= 10 ? "Severe fluid overload (≥10%): independently predicts mortality & prolonged ICU stay" : pct >= 5 ? "Moderate fluid accumulation (5–9.9%)" : "Mild / no significant fluid overload (<5%)";
+        
+        let guidanceText = pct >= 10
+          ? "Severe fluid overload (≥10%). Strongly associated with increased mortality, ventilator dependence, and need for RRT. Initiate aggressive active fluid removal (diuresis or RRT)."
+          : pct >= 5
+          ? "Moderate fluid accumulation. Re-evaluate ongoing fluid administration and consider proactive fluid de-escalation."
+          : "Low fluid overload percentage.";
+
         return {
           value: pct.toFixed(1) + "% Fluid Overload — " + c,
-          eq: "Formula: [Cumulative Net Fluid Balance (L) ÷ Baseline Admission Weight (kg)] × 100%."
+          eq: "Formula: [Cumulative Net Fluid Balance (L) ÷ Baseline Admission Weight (kg)] × 100%.",
+          guidance: guidanceText,
+          references: "Goldstein SL, Currier H, Graf JM, et al. Outcome in children receiving continuous venovenous hemofiltration. Pediatrics. 2001;107(4):716-721."
         };
       }
     },
@@ -623,9 +790,16 @@
         const g = +v.glucose;
         const katz = +v.sna + 0.016 * (g - 100);
         const hillier = +v.sna + 0.024 * (g - 100);
+        
+        let guidanceText = katz >= 135
+          ? "Corrected sodium is in the normal range. Hyponatremia is entirely accounted for by osmotic fluid shifts from hyperglycemia."
+          : "True concomitant hyponatremia present despite correction. Investigate hypovolemic, euvolemic, or hypervolemic causes of true hyponatremia.";
+
         return {
           value: "Corrected Na: " + katz.toFixed(1) + " mEq/L (Katz) | " + hillier.toFixed(1) + " mEq/L (Hillier)",
-          eq: "Katz: Measured Na + 0.016 × (Glucose − 100). Hillier (often used when glucose >400): Measured Na + 0.024 × (Glucose − 100)."
+          eq: "Katz: Measured Na + 0.016 × (Glucose − 100). Hillier (often used when glucose >400): Measured Na + 0.024 × (Glucose − 100).",
+          guidance: guidanceText,
+          references: "Katz MA. Hyperglycemia-induced hyponatremia: calculation of expected serum sodium depression. N Engl J Med. 1973;289(16):843-844."
         };
       }
     },
@@ -652,9 +826,12 @@
 
         const tbw = +v.weight * f;
         const deficit = tbw * ((+v.sna / 140) - 1);
+        
         return {
           value: deficit.toFixed(1) + " Liters free water deficit (TBW: " + tbw.toFixed(1) + " L)",
-          eq: "Deficit (L) = TBW × [(Serum Na ÷ 140) − 1]. Correct slowly (target reduction ≤8–10 mEq/L in 24 hours to prevent cerebral edema)."
+          eq: "Deficit (L) = TBW × [(Serum Na ÷ 140) − 1]. Correct slowly (target reduction ≤8–10 mEq/L in 24 hours to prevent cerebral edema).",
+          guidance: "Replace free water enterally (water via NG tube) or via hypotonic IV fluids (e.g., D5W or 0.45% NaCl). Limit serum sodium correction rate to maximum 8–10 mEq/L per 24 hours to prevent osmotic demyelination syndrome.",
+          references: "Adrogué HJ, Madias NE. Hypernatremia. N Engl J Med. 2000;342(20):1493-1499."
         };
       }
     },
@@ -674,9 +851,12 @@
         const factor = v.sex === "female" ? 0.5 : 0.6;
         const tbw = +v.weight * factor;
         const deficit = tbw * (+v.targ_na - +v.curr_na);
+        
         return {
           value: Math.round(deficit) + " mmol Na deficit",
-          eq: "Sodium Deficit (mmol) = TBW × (Target Na − Current Na). Hypertonic saline (3% NaCl) contains ~513 mmol Na/L (~0.513 mmol/mL)."
+          eq: "Sodium Deficit (mmol) = TBW × (Target Na − Current Na). Hypertonic saline (3% NaCl) contains ~513 mmol Na/L (~0.513 mmol/mL).",
+          guidance: "If patient is symptomatic (seizures, encephalopathy), administer 3% hypertonic saline rapidly (e.g., 100-150 mL bolus over 10 minutes). Strictly limit total 24-hour correction to 6–8 mEq/L (maximum 10–12 mEq/L) to avoid osmotic demyelination.",
+          references: "Verbalis JG, Goldsmith SR, Greenberg A, et al. Diagnosis, evaluation, and treatment of hyponatremia: expert panel recommendations. Am J Med. 2013;126(10 Suppl 1):S1-S42."
         };
       }
     },
@@ -691,11 +871,14 @@
       ],
       calc: v => {
         const drop = 4.0 - +v.k;
-        if (drop <= 0) return { value: "No hypokalemia (K ≥4.0 mEq/L)", eq: "Serum potassium within normal baseline." };
+        if (drop <= 0) return { value: "No hypokalemia (K ≥4.0 mEq/L)", eq: "Serum potassium within normal baseline.", guidance: "Potassium is within normal limits.", references: "Sterns RH, Cox M, Feig PU, Singer I. Internal potassium balance and the control of the plasma potassium concentration. Medicine (Baltimore). 1981;60(5):339-354." };
         const deficit = (drop / 0.3) * 100;
+        
         return {
           value: "~" + Math.round(deficit) + " mEq estimated total body deficit",
-          eq: "Rule of thumb: Every 0.3 mEq/L drop below 4.0 mEq/L corresponds to ~100 mEq total body potassium deficit. Adjust for cellular shifts (pH, insulin)."
+          eq: "Rule of thumb: Every 0.3 mEq/L drop below 4.0 mEq/L corresponds to ~100 mEq total body potassium deficit. Adjust for cellular shifts (pH, insulin).",
+          guidance: "Administer potassium replacement orally if well-tolerated and K is mild-to-moderate (>3.0 mEq/L). Use IV repletion via peripheral line (max 10 mEq/h) or central line (max 20 mEq/h) with cardiac telemetry for severe hypokalemia or ECG changes.",
+          references: "Sterns RH, Cox M, Feig PU, Singer I. Internal potassium balance and the control of the plasma potassium concentration. Medicine (Baltimore). 1981;60(5):339-354."
         };
       }
     },
@@ -713,9 +896,18 @@
       calc: v => {
         const ag = +v.na - (+v.cl + +v.hco3);
         let c = ag > 12 ? "High Anion Gap Metabolic Acidosis (HAGMA)" : ag < 4 ? "Low Anion Gap (consider severe hypoalbuminemia, paraproteinemia, lithium)" : "Normal Anion Gap (8–12 mEq/L)";
+        
+        let guidanceText = ag > 12
+          ? "High Anion Gap Metabolic Acidosis (HAGMA). Evaluate for MUDPILES (Methanol, Uremia, DKA, Paraldehyde, Iron/Isoniazid, Lactic acidosis, Ethylene glycol, Salicylates)."
+          : ag < 4
+          ? "Low or negative anion gap. Check serum albumin, check for multiple myeloma (paraproteins), or laboratory error (bromide/lithium toxicity)."
+          : "Normal Anion Gap Metabolic Acidosis (NAGMA / hyperchloremic acidosis). Evaluate for GI losses (diarrhea) or renal tubular acidosis (RTA).";
+
         return {
           value: ag + " mEq/L — " + c,
-          eq: "Anion Gap = Na − (Cl + HCO₃). Normal range typically 8–12 mEq/L (in the presence of normal albumin)."
+          eq: "Anion Gap = Na − (Cl + HCO₃). Normal range typically 8–12 mEq/L (in the presence of normal albumin).",
+          guidance: guidanceText,
+          references: "Emmett M, Narins RG. Clinical use of the anion gap. Medicine (Baltimore). 1977;56(1):38-54."
         };
       }
     },
@@ -734,9 +926,16 @@
       calc: v => {
         const uncorr = +v.na - (+v.cl + +v.hco3);
         const corr = uncorr + 2.5 * (4.0 - +v.alb);
+        
+        let guidanceText = corr > 12
+          ? "Corrected anion gap is elevated. Unmasked HAGMA present despite hypoalbuminemia."
+          : "Corrected anion gap is within normal limits.";
+
         return {
           value: "Corrected AG: " + corr.toFixed(1) + " mEq/L (Uncorrected: " + uncorr + " mEq/L)",
-          eq: "Corrected AG = Observed AG + 2.5 × (4.0 − Albumin [g/dL]). Albumin is the primary unmeasured circulating anion."
+          eq: "Corrected AG = Observed AG + 2.5 × (4.0 − Albumin [g/dL]). Albumin is the primary unmeasured circulating anion.",
+          guidance: guidanceText,
+          references: "Figge J, Jabor A, Kazda A, Fencl V. Anion gap and hypoalbuminemia. Crit Care Med. 1998;26(11):1807-1810."
         };
       }
     },
@@ -753,12 +952,15 @@
       calc: v => {
         const dAg = +v.ag - 12;
         const dHco3 = 24 - +v.hco3;
-        if (dHco3 <= 0) return { value: "Delta ratio not applicable (HCO₃ ≥24)", eq: "Delta ratio is calculated only in metabolic acidosis." };
+        if (dHco3 <= 0) return { value: "Delta ratio not applicable (HCO₃ ≥24)", eq: "Delta ratio is calculated only in metabolic acidosis.", guidance: "Not applicable for non-acidotic states.", references: "Wrenn K. The delta gap: an approach to mixed acid-base disorders. Ann Emerg Med. 1990;19(11):1310-1313." };
         const ratio = dAg / dHco3;
         let c = ratio < 0.4 ? "<0.4: Pure Normal Anion Gap Acidosis (hyperchloremic)" : ratio < 0.8 ? "0.4–0.8: Mixed HAGMA + Normal Anion Gap Acidosis" : ratio <= 1.5 ? "0.8–1.5: Pure High Anion Gap Metabolic Acidosis" : ">1.5: Concurrent Metabolic Alkalosis or pre-existing high HCO₃";
+        
         return {
           value: ratio.toFixed(2) + " — " + c,
-          eq: "Delta Ratio = (Anion Gap − 12) ÷ (24 − HCO₃). Compares the increase in unmeasured anions to the decrease in bicarbonate."
+          eq: "Delta Ratio = (Anion Gap − 12) ÷ (24 − HCO₃). Compares the increase in unmeasured anions to the decrease in bicarbonate.",
+          guidance: "Helps identify hidden concurrent acid-base disturbances (e.g., coexisting metabolic alkalosis or normal anion gap acidosis alongside HAGMA).",
+          references: "Wrenn K. The delta gap: an approach to mixed acid-base disorders. Ann Emerg Med. 1990;19(11):1310-1313."
         };
       }
     },
@@ -778,9 +980,18 @@
         const maxP = expected + 2;
         const actual = +v.paco2;
         let c = actual > maxP ? "Actual PaCO₂ > expected: Concurrent Respiratory Acidosis (hypoventilation)" : actual < minP ? "Actual PaCO₂ < expected: Concurrent Respiratory Alkalosis (hyperventilation)" : "Adequate respiratory compensation";
+        
+        let guidanceText = actual > maxP
+          ? "Inadequate respiratory compensation / concurrent respiratory acidosis. Patient is hypoventilating relative to metabolic acidosis; assess for respiratory failure."
+          : actual < minP
+          ? "Concurrent respiratory alkalosis. Patient is hyperventilating beyond expected renal compensation (e.g., salicylate toxicity or sepsis)."
+          : "Appropriate respiratory compensation for metabolic acidosis.";
+
         return {
           value: "Expected PaCO₂: " + expected.toFixed(1) + " mmHg (range " + minP.toFixed(1) + "–" + maxP.toFixed(1) + ") — " + c,
-          eq: "Winter's Formula: Expected PaCO₂ = (1.5 × HCO₃) + 8 ± 2."
+          eq: "Winter's Formula: Expected PaCO₂ = (1.5 × HCO₃) + 8 ± 2.",
+          guidance: guidanceText,
+          references: "Winter RW, Engel K, Treip RP. The estimation of acid-base changes in acute metabolic acidosis. Scand J Clin Lab Invest. 1964;16:387-394."
         };
       }
     },
@@ -799,14 +1010,20 @@
       calc: v => {
         const calcOsm = (2 * +v.na) + (+v.glucose / 18) + (+v.bun / 2.8);
         let res = "Calculated Osmolality: " + Math.round(calcOsm) + " mOsm/kg";
+        let guidanceText = "Standard calculated osmolality.";
         if (+v.meas_osm > 0) {
           const gap = +v.meas_osm - calcOsm;
           let tier = gap > 10 ? "ELEVATED OSMOLAR GAP (>10 mOsm/kg; suspect toxic alcohols: methanol, ethylene glycol)" : "Normal osmolar gap (≤10 mOsm/kg)";
           res += " | Gap: " + gap.toFixed(1) + " mOsm/kg (" + tier + ")";
+          guidanceText = gap > 10
+            ? "Elevated osmolar gap (>10 mOsm/kg). Strongly suggests ingestion of unmeasured active osmoles (methanol, ethylene glycol, isopropanol, propylene glycol). Urgent toxicology screen and antidote consideration (fomepizole)."
+            : "Normal osmolar gap.";
         }
         return {
           value: res,
-          eq: "Calculated Osmolality = 2×Na + (Glucose/18) + (BUN/2.8). Osmolar Gap = Measured − Calculated. Gap >10 prompts toxic alcohol workup."
+          eq: "Calculated Osmolality = 2×Na + (Glucose/18) + (BUN/2.8). Osmolar Gap = Measured − Calculated. Gap >10 prompts toxic alcohol workup.",
+          guidance: guidanceText,
+          references: "Gore JA, Pannell WP, Bracker M. The osmolar gap in clinical practice. Mayo Clin Proc. 2014;89(3):398-406."
         };
       }
     },
@@ -823,9 +1040,18 @@
       calc: v => {
         const corr = +v.ca + 0.8 * (4.0 - +v.alb);
         let c = corr > 10.5 ? "Hypercalcemia (>10.5 mg/dL)" : corr < 8.5 ? "Hypocalcemia (<8.5 mg/dL)" : "Normal corrected calcium (8.5–10.5 mg/dL)";
+        
+        let guidanceText = corr > 10.5
+          ? "Corrected hypercalcemia. Evaluate for hyperparathyroidism, malignancy, or Vitamin D toxicity."
+          : corr < 8.5
+          ? "Corrected hypocalcemia. Check ionized calcium, magnesium, and intact PTH. Replete calcium if symptomatic."
+          : "Normal corrected calcium level.";
+
         return {
           value: corr.toFixed(2) + " mg/dL — " + c,
-          eq: "Formula: Corrected Ca = Total Ca (mg/dL) + 0.8 × (4.0 − Albumin [g/dL]). Ionized calcium is preferred when available."
+          eq: "Formula: Corrected Ca = Total Ca (mg/dL) + 0.8 × (4.0 − Albumin [g/dL]). Ionized calcium is preferred when available.",
+          guidance: guidanceText,
+          references: "Payne RB, Little AJ, Williams RB, Milner JR. Interpretation of serum calcium in patients with abnormal serum proteins. BMJ. 1973;4(5893):643-646."
         };
       }
     },
@@ -842,9 +1068,16 @@
       calc: v => {
         const prod = +v.ca * +v.phos;
         let c = prod > 55 ? "Elevated product (>55 mg²/dL²; heightened risk of metastatic calcification / calciphylaxis)" : "Desirable range (≤55 mg²/dL²)";
+        
+        let guidanceText = prod > 55
+          ? "Elevated calcium-phosphate product (>55 mg²/dL²). High risk for vascular calcification, soft tissue deposition, and calciphylaxis. Restrict dietary phosphate, optimize phosphate binders, and manage secondary hyperparathyroidism."
+          : "Calcium-phosphate product within desirable therapeutic range.";
+
         return {
           value: prod.toFixed(1) + " mg²/dL² — " + c,
-          eq: "Product = Serum Calcium (mg/dL) × Serum Phosphate (mg/dL). Maintain ≤55 mg²/dL² in advanced CKD."
+          eq: "Product = Serum Calcium (mg/dL) × Serum Phosphate (mg/dL). Maintain ≤55 mg²/dL² in advanced CKD.",
+          guidance: guidanceText,
+          references: "KDIGO Clinical Practice Guideline for Diagnosis, Evaluation, Prevention, and Treatment of Chronic Kidney Disease-Mineral and Bone Disorder (CKD-MBD). Kidney Int Suppl. 2009;(113):S1-S130."
         };
       }
     },
@@ -867,9 +1100,16 @@
       ],
       calc: v => {
         const count = +v.a + +v.e + +v.i + +v.o + +v.u;
+        
+        let guidanceText = count >= 1
+          ? "Urgent indications present for acute renal replacement therapy. Immediate nephrology consultation and emergent dialysis catheter placement or vascular access."
+          : "No emergent indicators present for urgent dialysis. Continue conservative medical management and close monitoring.";
+
         return {
           value: count >= 1 ? "URGENT RRT CRITERIA MET (" + count + " indication[s])" : "No emergent indication present",
-          eq: "AEIOU: Acidosis, Electrolytes (K), Ingestions, Overload, Uremia. Presence of any refractory criterion triggers emergent nephrology evaluation."
+          eq: "AEIOU: Acidosis, Electrolytes (K), Ingestions, Overload, Uremia. Presence of any refractory criterion triggers emergent nephrology evaluation.",
+          guidance: guidanceText,
+          references: "KDIGO Clinical Practice Guideline for Acute Kidney Injury. Kidney Int Suppl. 2012;2(1):1-138."
         };
       }
     },
@@ -886,9 +1126,16 @@
       calc: v => {
         const urr = ((+v.pre - +v.post) / +v.pre) * 100;
         let c = urr >= 65 ? "Adequate clearance (≥65% target achieved)" : "Inadequate clearance (<65%; increase time/blood flow/dialyzer)";
+        
+        let guidanceText = urr >= 65
+          ? "Adequate urea clearance for the session (meets minimum 65% target)."
+          : "Inadequate clearance (<65%). Consider increasing blood flow rate, dialysis duration, or dialyzer surface area/efficiency.";
+
         return {
           value: urr.toFixed(1) + "% — " + c,
-          eq: "URR = [(Pre-BUN − Post-BUN) ÷ Pre-BUN] × 100%. Target minimum is 65% for thrice-weekly hemodialysis."
+          eq: "URR = [(Pre-BUN − Post-BUN) ÷ Pre-BUN] × 100%. Target minimum is 65% for thrice-weekly hemodialysis.",
+          guidance: guidanceText,
+          references: "National Kidney Foundation. KDOQI Clinical Practice Guideline for Hemodialysis Adequacy: 2015 Update. Am J Kidney Dis. 2015;66(5):884-930."
         };
       }
     },
@@ -912,9 +1159,16 @@
         const w = +v.weight;
         const ktv = -Math.log(r - 0.008 * t) + (4 - 3.5 * r) * (uf / w);
         let c = ktv >= 1.4 ? "Optimal adequacy (≥1.4)" : ktv >= 1.2 ? "Minimally adequate (1.2–1.39)" : "Inadequate hemodialysis dose (<1.2)";
+        
+        let guidanceText = ktv >= 1.2
+          ? "Hemodialysis dose meets or exceeds minimum adequacy standards (spKt/V ≥1.2)."
+          : "Inadequate dialysis dose. Prescribe longer treatment times, higher blood flow rates, or a larger dialyzer to reach target.";
+
         return {
           value: "spKt/V: " + ktv.toFixed(2) + " — " + c,
-          eq: "Daugirdas 2nd gen: spKt/V = −ln(R − 0.008×t) + (4 − 3.5×R) × (UF/W). Target is ≥1.2 (delivered minimum)."
+          eq: "Daugirdas 2nd gen: spKt/V = −ln(R − 0.008×t) + (4 − 3.5×R) × (UF/W). Target is ≥1.2 (delivered minimum).",
+          guidance: guidanceText,
+          references: "Daugirdas JT. Second generation logarithmic estimates of single-pool variable volume Kt/V: an analysis of error. J Am Soc Nephrol. 1993;4(5):1205-1213."
         };
       }
     },
@@ -932,9 +1186,16 @@
         const idwg = +v.pre_wt - +v.dry_wt;
         const pct = (idwg / +v.dry_wt) * 100;
         let c = pct > 4.5 ? "Excessive fluid gain (>4.5% of dry weight; high cardiovascular stress)" : "Acceptable fluid gain (≤4–4.5%)";
+        
+        let guidanceText = pct > 4.5
+          ? "Excessive interdialytic weight gain (>4.5%). Reinforce dietary sodium and fluid restriction counseling. High IDWG forces rapid ultrafiltration rates, increasing cardiovascular strain and intradialytic hypotension risk."
+          : "Acceptable interdialytic weight gain.";
+
         return {
           value: "+" + idwg.toFixed(1) + " kg (" + pct.toFixed(1) + "% of dry weight) — " + c,
-          eq: "IDWG = Pre-dialysis Weight − Dry Weight. Excessive IDWG increases risk of severe intradialytic hypotension."
+          eq: "IDWG = Pre-dialysis Weight − Dry Weight. Excessive IDWG increases risk of severe intradialytic hypotension.",
+          guidance: guidanceText,
+          references: "National Kidney Foundation. KDOQI Clinical Practice Guideline for Hemodialysis Adequacy: 2015 Update. Am J Kidney Dis. 2015;66(5):884-930."
         };
       }
     },
@@ -952,9 +1213,16 @@
       calc: v => {
         const ufr = (+v.vol / +v.hours) / +v.weight;
         let c = ufr > 13 ? "HIGH UFR (>13 mL/kg/h; associated with increased mortality & myocardial stunning)" : "Safe ultrafiltration rate (≤10–13 mL/kg/h)";
+        
+        let guidanceText = ufr > 13
+          ? "High ultrafiltration rate (>13 mL/kg/h). Strongly associated with myocardial stunning, intradialytic hypotension, and increased cardiovascular mortality. Extend dialysis time or reduce interdialytic fluid gains."
+          : "Safe ultrafiltration rate.";
+
         return {
           value: ufr.toFixed(1) + " mL/kg/h — " + c,
-          eq: "UFR = [Fluid Removed (mL) ÷ Duration (hr)] ÷ Post-Weight (kg). Recommended safety ceiling is ≤13 mL/kg/h."
+          eq: "UFR = [Fluid Removed (mL) ÷ Duration (hr)] ÷ Post-Weight (kg). Recommended safety ceiling is ≤13 mL/kg/h.",
+          guidance: guidanceText,
+          references: "Flythe JE, Kimmel SE, Brunelli SM. Rapid fluid removal during dialysis is associated with cardiovascular morbidity and mortality. Kidney Int. 2011;79(2):250-257."
         };
       }
     },
@@ -974,9 +1242,16 @@
         const totalEffluent = +v.dialysate + +v.replace + +v.net_uf;
         const dose = totalEffluent / +v.weight;
         let c = dose >= 20 && dose <= 25 ? "Target KDIGO delivered dose (20–25 mL/kg/h)" : dose < 20 ? "Underdosed (<20 mL/kg/h)" : "Above standard KDIGO target (>25 mL/kg/h)";
+        
+        let guidanceText = dose < 20
+          ? "Delivered dose is below recommended KDIGO target. Increase prescription to ensure adequate solute clearance."
+          : "CRRT effluent dose meets or exceeds recommended KDIGO targets.";
+
         return {
           value: dose.toFixed(1) + " mL/kg/h (Total effluent: " + totalEffluent + " mL/h) — " + c,
-          eq: "Effluent Dose = (Dialysate + Replacement + Net UF) ÷ Weight (kg). KDIGO recommends delivering 20–25 mL/kg/h."
+          eq: "Effluent Dose = (Dialysate + Replacement + Net UF) ÷ Weight (kg). KDIGO recommends delivering 20–25 mL/kg/h.",
+          guidance: guidanceText,
+          references: "KDIGO Clinical Practice Guideline for Acute Kidney Injury. Kidney Int Suppl. 2012;2(1):1-138."
         };
       }
     },
@@ -998,9 +1273,16 @@
       calc: v => {
         const uag = (+v.una + +v.uk) - +v.ucl;
         let c = uag < 0 ? "Negative UAG (<0 mEq/L; intact NH₄⁺ excretion; suggests gastrointestinal HCO₃ loss / diarrhea)" : "Positive UAG (>0 mEq/L; impaired NH₄⁺ excretion; suggests distal Renal Tubular Acidosis)";
+        
+        let guidanceText = uag < 0
+          ? "Negative urine anion gap. Kidneys are appropriately excreting ammonium with chloride (e.g., in response to extra-renal bicarbonate loss such as diarrhea)."
+          : "Positive urine anion gap. Reflects low urinary ammonium excretion, pointing toward distal renal tubular acidosis (Type 1 RTA) or hypoaldosteronism (Type 4 RTA).";
+
         return {
           value: uag + " mEq/L — " + c,
-          eq: "Urine Anion Gap = (UNa + UK) − UCl. A negative gap reflects ammonium (NH₄⁺) accompanied by chloride."
+          eq: "Urine Anion Gap = (UNa + UK) − UCl. A negative gap reflects ammonium (NH₄⁺) accompanied by chloride.",
+          guidance: guidanceText,
+          references: "Batlle DC, Husted M, Kuchel GA, Arruda JA. The use of the urine anion gap in the diagnosis of hyperchloremic metabolic acidosis. N Engl J Med. 1988;318(10):594-599."
         };
       }
     },
@@ -1016,9 +1298,18 @@
       calc: v => {
         const u = +v.uosm;
         let s = u < 150 ? "Water diuresis (<150 mOsm/kg; primary polydipsia or central/nephrogenic diabetes insipidus)" : u > 300 ? "Solute / osmotic diuresis (>300 mOsm/kg; glucose, urea, mannitol, saline loading)" : "Mixed or indeterminate diuresis (150–300 mOsm/kg)";
+        
+        let guidanceText = u < 150
+          ? "Water diuresis. Highly suggestive of primary polydipsia or central/nephrogenic diabetes insipidus."
+          : u > 300
+          ? "Solute diuresis. Excess excretion of unmeasured solutes (glucose in uncontrolled diabetes, urea, or mannitol)."
+          : "Indeterminate urine osmolality.";
+
         return {
           value: u + " mOsm/kg — " + s,
-          eq: "Urine osmolality <150 mOsm/kg indicates suppression or absence of ADH effect."
+          eq: "Urine osmolality <150 mOsm/kg indicates suppression or absence of ADH effect.",
+          guidance: guidanceText,
+          references: "Robertson GL. Regulation of vasopressin function in health and disease. Recent Prog Horm Res. 1977;33:333-385."
         };
       }
     },
@@ -1038,12 +1329,22 @@
         const glom = +v.casts === 1 || +v.proteinuria === 1 || +v.brown === 1;
         const uro = +v.clots === 1;
         let c = "";
-        if (glom && !uro) c = "Glomerular etiology strongly favored (nephrology referral and biopsy evaluation indicated)";
-        else if (uro && !glom) c = "Urological / lower tract source favored (cystoscopy and contrast CT urography indicated)";
-        else c = "Indeterminate / overlapping features (nephrology and urology evaluation warranted)";
+        let guidanceText = "";
+        if (glom && !uro) {
+          c = "Glomerular etiology strongly favored (nephrology referral and biopsy evaluation indicated)";
+          guidanceText = "Features suggest glomerular bleeding (nephritis, IgA nephropathy, Alport syndrome). Nephrology referral and serological workup indicated.";
+        } else if (uro && !glom) {
+          c = "Urological / lower tract source favored (cystoscopy and contrast CT urography indicated)";
+          guidanceText = "Features strongly favor urological pathology (malignancy, stones, infection, BPH). Urology evaluation with cystoscopy and CT urography required.";
+        } else {
+          c = "Indeterminate / overlapping features (nephrology and urology evaluation warranted)";
+          guidanceText = "Overlapping or indeterminate features. Dual evaluation by nephrology and urology may be required.";
+        }
         return {
           value: c,
-          eq: "Dysmorphic RBCs/casts indicate glomerular bleeding; blood clots virtually always denote urological source."
+          eq: "Dysmorphic RBCs/casts indicate glomerular bleeding; blood clots virtually always denote urological source.",
+          guidance: guidanceText,
+          references: "American Urological Association. Diagnosis, Evaluation, and Follow-up of Asymptomatic Microhematuria (AMH) in Adults: AUA Guideline. 2020."
         };
       }
     },
@@ -1067,9 +1368,16 @@
         const hypoalb = +v.alb < 3.0;
         const edema = v.edema === "1";
         let c = (prot && hypoalb && edema) ? "Complete Nephrotic Syndrome (Proteinuria ≥3.5 g/g, Albumin <3.0 g/dL, Edema)" : prot ? "Nephrotic-Range Proteinuria without complete nephrotic syndrome" : "Sub-nephrotic proteinuria (<3.5 g/g)";
+        
+        let guidanceText = (prot && hypoalb && edema)
+          ? "Complete nephrotic syndrome confirmed. Initiate evaluation for primary glomerulopathies (membranous nephropathy, minimal change disease, FSGS) or secondary causes (diabetes, amyloidosis, lupus). Initiate edema management (diuretics), lipid control, and thromboembolism prophylaxis if indicated."
+          : "Proteinuria or hypoalbuminemia present. Evaluate underlying glomerular pathology.";
+
         return {
           value: c,
-          eq: "Nephrotic syndrome definition requires triad: heavy proteinuria (>3.5 g/24h or UPCR ≥3.5), hypoalbuminemia (<3.0 g/dL), and edema."
+          eq: "Nephrotic syndrome definition requires triad: heavy proteinuria (>3.5 g/24h or UPCR ≥3.5), hypoalbuminemia (<3.0 g/dL), and edema.",
+          guidance: guidanceText,
+          references: "KDIGO 2021 Clinical Practice Guideline for the Management of Glomerular Diseases. Kidney Int. 2021;100(4S):S1-S276."
         };
       }
     },
@@ -1087,9 +1395,16 @@
       calc: v => {
         const total = +v.sediment + +v.htn + +v.aki;
         let c = total === 3 ? "Classic Acute Nephritic Syndrome triad present — Urgent nephrology evaluation for RPGN" : total === 2 ? "Incomplete nephritic syndrome" : "Criteria not met for nephritic syndrome";
+        
+        let guidanceText = total === 3
+          ? "Classic acute nephritic syndrome triad present. High suspicion for rapidly progressive glomerulonephritis (RPGN). Urgent nephrology consultation, serological workup (ANCA, anti-GBM, complement, ANA/dsDNA), and emergent renal biopsy."
+          : "Incomplete nephritic features. Maintain clinical suspicion for glomerular disease.";
+
         return {
           value: c,
-          eq: "Acute nephritic syndrome: Active urinary sediment + Hypertension + Acute renal failure. Rule out rapidly progressive glomerulonephritis."
+          eq: "Acute nephritic syndrome: Active urinary sediment + Hypertension + Acute renal failure. Rule out rapidly progressive glomerulonephritis.",
+          guidance: guidanceText,
+          references: "KDIGO 2021 Clinical Practice Guideline for the Management of Glomerular Diseases. Kidney Int. 2021;100(4S):S1-S276."
         };
       }
     },
@@ -1111,9 +1426,16 @@
       ],
       calc: v => {
         let tx = (v.class === "III" || v.class === "IV") ? "Active proliferative disease: requires intense immunosuppressive induction (corticosteroids + mycophenolate or cyclophosphamide)." : v.class === "V" ? "Membranous: treat based on proteinuria severity and nephrotic complications." : "Non-proliferative / sclerotic stage.";
+        
+        let guidanceText = (v.class === "III" || v.class === "IV")
+          ? "Proliferative lupus nephritis (Class III/IV). High risk of progressive renal damage. Aggressive immunosuppressive induction therapy required."
+          : "Refer to rheumatology and nephrology for tailored lupus nephritis management protocols.";
+
         return {
           value: "ISN/RPS Class " + v.class + " — " + tx,
-          eq: "Renal biopsy is required to guide treatment in systemic lupus erythematosus with active urinary sediment or proteinuria."
+          eq: "Renal biopsy is required to guide treatment in systemic lupus erythematosus with active urinary sediment or proteinuria.",
+          guidance: guidanceText,
+          references: "Bajema IM, Wilhelmus S, Alpers CE, et al. Revision of the International Society of Nephrology/Renal Pathology Society classification for lupus nephritis: clarification of definitions, and clinical utility. Kidney Int. 2018;93(4):789-796."
         };
       }
     },
@@ -1129,16 +1451,22 @@
       ],
       calc: v => {
         let ddx = "";
+        let guidanceText = "";
         if (v.c3 === "low" && v.c4 === "low") {
           ddx = "Low C3 & Low C4: Systemic Lupus Erythematosus (classical pathway), Mixed Cryoglobulinemia, Infective Endocarditis.";
+          guidanceText = "Activation of the classical complement pathway. Check ANA, dsDNA, cryoglobulins, blood cultures, and hepatitis serologies.";
         } else if (v.c3 === "low" && v.c4 === "normal") {
           ddx = "Low C3 with Normal C4: Post-streptococcal GN, C3 glomerulopathy / dense deposit disease, atheroembolism.";
+          guidanceText = "Activation of the alternative complement pathway. Check ASO titer, anti-DNase B, and evaluate for C3 glomerulopathy.";
         } else {
           ddx = "Normal C3 & C4: IgA Nephropathy, ANCA-associated vasculitis (GPA, MPA), Anti-GBM (Goodpasture) disease.";
+          guidanceText = "Complement levels are normal. Evaluate for IgA nephropathy, ANCA vasculitis (MPO/PR3), or anti-GBM disease.";
         }
         return {
           value: ddx,
-          eq: "Serum complement levels represent the primary laboratory branch point in evaluating acute glomerulonephritis."
+          eq: "Serum complement levels represent the primary laboratory branch point in evaluating acute glomerulonephritis.",
+          guidance: guidanceText,
+          references: "KDIGO 2021 Clinical Practice Guideline for the Management of Glomerular Diseases. Kidney Int. 2021;100(4S):S1-S276."
         };
       }
     },
@@ -1161,16 +1489,22 @@
       calc: v => {
         const age = +v.age, egfr = +v.egfr, uacr = +v.uacr, female = v.sex === "female";
         const logUacr = Math.log(uacr);
-        // 4-variable Tangri equation linear predictor:
         const lp = -0.2201 * (age / 10 - 7.03) + (female ? -0.2467 : 0) - 0.5567 * (egfr / 5 - 7.22) + 0.4510 * (logUacr - 5.137);
 
         const risk2yr = Math.max(0, Math.min(100, (1 - Math.pow(0.9750, Math.exp(lp))) * 100));
         const risk5yr = Math.max(0, Math.min(100, (1 - Math.pow(0.9240, Math.exp(lp))) * 100));
 
         let interp = risk2yr > 10 ? "High 2-year risk (>10%): prompt vascular access planning & transplant referral" : "Moderate 2-year risk (≤10%)";
+        
+        let guidanceText = risk2yr > 10
+          ? "High 2-year risk of kidney failure (>10%). Urgent nephrology co-management, timely vascular access planning (AV fistula creation), and kidney transplantation evaluation (living and deceased donor listing)."
+          : "Moderate-to-low 2-year risk of progression. Continue aggressive nephroprotection and risk factor control.";
+
         return {
           value: "2-Year Risk: " + risk2yr.toFixed(1) + "% | 5-Year Risk: " + risk5yr.toFixed(1) + "% (" + interp + ")",
-          eq: "Tangri 4-Variable KFRE: Predicts treated kidney failure (dialysis or preemptive transplant) in CKD Stages 3–5."
+          eq: "Tangri 4-Variable KFRE: Predicts treated kidney failure (dialysis or preemptive transplant) in CKD Stages 3–5.",
+          guidance: guidanceText,
+          references: "Tangri N, Grams ME, Levey AS, et al. Multinational Assessment of Accuracy of Equations for Predicting Risk of Kidney Failure: A Meta-analysis. JAMA. 2016;315(2):164-174."
         };
       }
     },
@@ -1192,9 +1526,18 @@
       calc: v => {
         const eligible = (+v.egfr <= 20 || v.esrd === "1") && v.contra === "0";
         let c = eligible ? "Eligible for Kidney Transplant Evaluation (eGFR ≤20 mL/min/1.73m² without active contraindications)" : v.contra === "1" ? "Active contraindication present; requires stabilization before transplant evaluation" : "eGFR >20 mL/min/1.73m²: continue medical management; refer when eGFR approaches 20";
+        
+        let guidanceText = eligible
+          ? "Patient meets criteria for kidney transplant evaluation. Pre-emptive transplantation offers superior survival and quality of life compared to initiating maintenance dialysis."
+          : v.contra === "1"
+          ? "Active contraindications must be addressed and stabilized prior to initiating formal transplant workup."
+          : "Continue routine CKD management; monitor for approach to eGFR threshold of 20 mL/min/1.73m².";
+
         return {
           value: c,
-          eq: "UNOS and international guidelines recommend pre-emptive transplant workup when eGFR reaches ≤20 mL/min/1.73m²."
+          eq: "UNOS and international guidelines recommend pre-emptive transplant workup when eGFR reaches ≤20 mL/min/1.73m².",
+          guidance: guidanceText,
+          references: "KDIGO Clinical Practice Guideline on the Evaluation and Care of Living Kidney Donors. Transplantation. 2017;101(3S Suppl 1):S1-S109."
         };
       }
     },
@@ -1211,12 +1554,19 @@
       ],
       calc: v => {
         const sys = +v.sys, art = +v.art, ven = +v.ven;
-        if (sys === ven) return { value: "Invalid BUN inputs", eq: "Systemic and venous BUN cannot be identical." };
+        if (sys === ven) return { value: "Invalid BUN inputs", eq: "Systemic and venous BUN cannot be identical.", guidance: "Invalid input values.", references: "National Kidney Foundation. KDOQI Clinical Practice Guideline for Vascular Access: 2019 Update. Am J Kidney Dis. 2020;75(2 Suppl 2):S1-S164." };
         const recirc = ((sys - art) / (sys - ven)) * 100;
         let c = recirc > 10 ? "ELEVATED RECIRCULATION (>10%): Suggests venous outflow stenosis or reversed access lines" : "Normal access recirculation (≤10%)";
+        
+        let guidanceText = recirc > 10
+          ? "Elevated access recirculation (>10%). Indicates significant stenosis within the AV fistula/graft or inadvertently reversed blood lines. Vascular access ultrasound and fistula evaluation indicated."
+          : "Normal access recirculation.";
+
         return {
           value: recirc.toFixed(1) + "% — " + c,
-          eq: "Recirculation % = [(Systemic BUN − Arterial BUN) ÷ (Systemic BUN − Venous BUN)] × 100%."
+          eq: "Recirculation % = [(Systemic BUN − Arterial BUN) ÷ (Systemic BUN − Venous BUN)] × 100%.",
+          guidance: guidanceText,
+          references: "National Kidney Foundation. KDOQI Clinical Practice Guideline for Vascular Access: 2019 Update. Am J Kidney Dis. 2020;75(2 Suppl 2):S1-S164."
         };
       }
     },
@@ -1237,16 +1587,22 @@
       calc: v => {
         const t = +v.tsat, f = +v.ferritin;
         let c = "";
+        let guidanceText = "";
         if (t <= 30 && f <= 500) {
           c = "Candidate for iron supplementation (TSAT ≤30% and Ferritin ≤500 ng/mL before or during ESA therapy)";
+          guidanceText = "Meets criteria for iron supplementation (IV iron preferred in CKD stages 4-5 or on dialysis) to correct iron deficiency and prepare for or support erythropoiesis-stimulating agent (ESA) therapy.";
         } else if (t > 30 && f > 500) {
           c = "Adequate iron stores / replete (hold IV iron unless hyporesponsive)";
+          guidanceText = "Iron stores are replete. Hold intravenous iron supplementation to avoid risk of iron overload and toxicity.";
         } else {
           c = "Borderline / intermediate iron stores (evaluate reticulocyte hemoglobin / trend)";
+          guidanceText = "Intermediate iron indices. Individualize iron therapy based on hemoglobin trends and ESA requirements.";
         }
         return {
           value: "TSAT: " + t + "% | Ferritin: " + f + " ng/mL — " + c,
-          eq: "KDIGO Anemia: Target TSAT >30% and Ferritin >500 ng/mL prior to escalating ESA therapy."
+          eq: "KDIGO Anemia: Target TSAT >30% and Ferritin >500 ng/mL prior to escalating ESA therapy.",
+          guidance: guidanceText,
+          references: "KDIGO Clinical Practice Guideline for Anemia in Chronic Kidney Disease. Kidney Int Suppl. 2012;2(4):279-335."
         };
       }
     },
@@ -1267,9 +1623,16 @@
         let c = highRisk 
           ? "HIGH RISK for Contrast-Induced AKI: Prophylactic IV isotonic hydration (0.9% NaCl or NaHCO₃) strongly recommended; minimize contrast volume" 
           : "Standard / Low risk: Routine IV hydration generally not mandated for IV contrast if eGFR ≥30.";
+        
+        let guidanceText = highRisk
+          ? "High risk for contrast-associated AKI. Administer peri-procedural IV isotonic crystalloids, hold nephrotoxic agents (NSAIDs, ACEi/ARB/diuretics temporarily if appropriate), and use the minimum possible volume of low-osmolality contrast."
+          : "Standard risk profile. Standard precautions and hydration as clinically indicated.";
+
         return {
           value: c,
-          eq: "ACR/NKF Consensus: Prophylaxis indicated for intra-arterial contrast with eGFR <45, or IV contrast with eGFR <30 mL/min/1.73m²."
+          eq: "ACR/NKF Consensus: Prophylaxis indicated for intra-arterial contrast with eGFR <45, or IV contrast with eGFR <30 mL/min/1.73m².",
+          guidance: guidanceText,
+          references: "American College of Radiology / National Kidney Foundation. ACR Manual on Contrast Media. 2023."
         };
       }
     }

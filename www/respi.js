@@ -6,7 +6,7 @@
     id: "resp",
     name: "Respiratory",
     icon: "🫁",
-    desc: "Lung disease and pulmonary embolism"
+    desc: "pneumonia, pulmonary embolism, asthama, COPD and etc"
   };
 
   const guidance = {

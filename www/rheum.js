@@ -5,6 +5,7 @@
     id: "rheum",
     name: "Rheumatology",
     icon: "🦴"
+    desc: "slicc, EULAR, DAS28, CDAI, MPA, EGVA and etc "
   };
 
   const N = (id, label, value = 0, extra = {}) => ({

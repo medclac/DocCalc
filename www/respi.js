@@ -6,32 +6,49 @@
     id: "resp",
     name: "Respiratory",
     icon: "🫁",
-    desc: "pneumonia, pulmonary embolism, asthama, COPD and etc"
+    desc: "pneumonia, pulmonary embolism, asthma, COPD, and etc"
   };
 
   const guidance = {
     curb: [
-      "A higher CURB-65 score indicates greater short-term risk in community-acquired pneumonia. Scores 0–1 are often lower risk, 2 commonly prompts consideration of hospital assessment, and ≥3 suggests severe illness risk; the patient's overall condition still takes priority.",
+      "A higher CURB-65 score indicates greater short-term risk in community-acquired pneumonia (Lim et al., 2003).",
+      "**Low Risk (0–1 points):** Often suitable for outpatient management or lower-intensity care, provided social and clinical circumstances permit. What is usually done: Consider outpatient treatment with oral antibiotics and follow-up arrangements.",
+      "**Moderate Risk (2 points):** Indicates increased risk requiring closer observation. What is usually done: Prompt hospital assessment and consideration of inpatient or short-stay admission.",
+      "**Severe Risk (3–5 points):** Suggests severe illness with high short-term mortality risk. What is usually done: Urgent hospital admission, often with evaluation for high-dependency or intensive care unit (ICU) level support.",
       "Supports pneumonia severity assessment and decisions about site of care. It is not a diagnosis and should not be used alone to decide discharge or admission."
     ],
     plannedWells: [
-      "The two-level result estimates whether pulmonary embolism (PE) is 'likely' or 'unlikely'; it does not confirm or exclude PE by itself.",
-      "Helps select the next step in a validated PE pathway, such as D-dimer testing or imaging, according to pretest probability and clinical context."
+      "The two-level result estimates whether pulmonary embolism (PE) is 'likely' or 'unlikely'; it does not confirm or exclude PE by itself (Wells et al., 2000).",
+      "**PE Unlikely (≤4 points):** Low to intermediate pretest probability. What is usually done: Proceed with a high-sensitivity D-dimer blood test; if negative, PE is effectively excluded without imaging in low-risk pathways.",
+      "**PE Likely (>4 points):** Moderate to high pretest probability. What is usually done: Proceed directly to diagnostic imaging, typically CT pulmonary angiography (CTPA), bypassing routine D-dimer testing.",
+      "Helps select the next step in a validated PE pathway according to pretest probability and clinical context."
     ],
     plannedNews: [
-      "A higher NEWS2 total, a rapidly rising score, or any single parameter scoring 3 can indicate acute deterioration and need for prompt review. The score must be checked against the official chart and local escalation policy.",
+      "A higher NEWS2 total, a rapidly rising score, or any single parameter scoring 3 can indicate acute deterioration and need for prompt review (Royal College of Physicians, 2017).",
+      "**Low Score (0–4 total):** Routine monitoring or ward-based care. What is usually done: Continue standard frequency observations as per local clinical monitoring guidelines.",
+      "**Medium Score (5–6 total, or a single score of 3):** Signals moderate physiological derangement. What is usually done: Urgent ward-based clinical review by a registered nurse or junior doctor, and increased monitoring frequency.",
+      "**High Score (≥7 total):** Indicates severe acute illness and high risk of rapid deterioration. What is usually done: Emergency assessment by a medical/critical care response team immediately.",
       "Standardises observation of physiological derangement and helps trigger timely clinical assessment; it does not identify the cause of deterioration."
     ],
     gold1to4: [
-      "GOLD 1–4 grades airflow obstruction by post-bronchodilator FEV₁ percent predicted: ≥80%, 50–79%, 30–49%, and <30%, respectively. A lower FEV₁ indicates more severe obstruction.",
+      "GOLD 1–4 grades airflow obstruction by post-bronchodilator FEV₁ percent predicted (Global Initiative for Chronic Obstructive Lung Disease, 2024).",
+      "**GOLD 1 (Mild, ≥80% predicted):** Mild airflow limitation. What is usually done: Inform patient, offer smoking cessation support, and prescribe short-acting bronchodilators as needed.",
+      "**GOLD 2 (Moderate, 50–79% predicted):** Moderate airflow limitation with increasing symptoms. What is usually done: Add regular long-acting bronchodilator therapy (LAMA or LABA) and pulmonary rehabilitation referrals if indicated.",
+      "**GOLD 3 (Severe, 30–49% predicted):** Severe airflow limitation and pronounced breathlessness. What is usually done: Evaluate for combination inhaler therapies (ICS/LABA/LAMA), assess for chronic hypoxemia, and manage frequent exacerbations.",
+      "**GOLD 4 (Very Severe, <30% predicted):** Very severe airflow limitation with significant impact on daily life and high risk of respiratory failure. What is usually done: Comprehensive pulmonary care, long-term oxygen therapy assessment if indicated, and palliative support discussion.",
       "Describes spirometric impairment in established COPD and supports severity assessment. COPD diagnosis also requires compatible context and post-bronchodilator FEV₁/FVC <0.70."
     ],
     goldABE: [
-      "Group A generally means fewer symptoms and lower exacerbation risk; B means more symptoms without the higher exacerbation history defining E; E indicates ≥2 moderate exacerbations or ≥1 requiring hospitalisation in the prior year.",
+      "Group A generally means fewer symptoms and lower exacerbation risk; B means more symptoms without the higher exacerbation history defining E; E indicates ≥2 moderate exacerbations or ≥1 requiring hospitalisation in the prior year (Global Initiative for Chronic Obstructive Lung Disease, 2024).",
+      "**Group A:** Low symptoms, low exacerbation history. What is usually done: A short- or long-acting bronchodilator.",
+      "**Group B:** High symptoms, low exacerbation history. What is usually done: Long-acting bronchodilator monotherapy (LAMA or LABA), escalating to dual therapy if symptoms persist.",
+      "**Group E:** High exacerbation history (regardless of symptom score). What is usually done: Initial therapy typically starts with LAMA/LABA combination, or ICS/LABA if blood eosinophils are elevated.",
       "Helps group COPD patients by symptoms and exacerbation history to inform initial management. It is separate from the GOLD 1–4 spirometric grade."
     ],
     mmrc: [
-      "Higher mMRC grades indicate breathlessness that limits progressively lighter levels of activity. Grade ≥2 is commonly treated as a higher symptom burden in GOLD grouping.",
+      "Higher mMRC grades indicate breathlessness that limits progressively lighter levels of activity. Grade ≥2 is commonly treated as a higher symptom burden in GOLD grouping (Bestall et al., 1999).",
+      "**Grade 0–1 (Lower Symptom Burden):** Breathless only with strenuous exertion or hurrying. What is usually done: Lifestyle modification, activity pacing, and intermittent bronchodilators.",
+      "**Grade 2–4 (Higher Symptom Burden):** Breathlessness limits daily walking, washing, or causes restriction at rest. What is usually done: Escalation to structured pulmonary rehabilitation, comprehensive symptom management, and regular long-acting inhaled therapy.",
       "Provides a quick, standardised measure of functional limitation from dyspnoea, useful in COPD assessment and follow-up."
     ],
     catPlanned: [
@@ -47,88 +64,136 @@
       "DECAF is used to help assess mortality risk during an acute COPD exacerbation; it should be applied using its validated variables and context."
     ],
     bap65: [
-      "Higher BAP-65 scores indicate more adverse-outcome risk in acute COPD exacerbation cohorts. The score uses BUN, altered mental status, pulse and age; it is not a standalone disposition rule.",
+      "Higher BAP-65 scores indicate more adverse-outcome risk in acute COPD exacerbation cohorts (Shorr et al., 2005).",
+      "**Low Score (0 points):** Lower risk of adverse outcomes. What is usually done: Outpatient management or brief observation if clinical signs are stable.",
+      "**Elevated Score (≥1–4 points):** Higher risk of mortality or inpatient complications. What is usually done: Hospital admission, close monitoring of gas exchange, and prompt initiation of targeted medical therapy.",
       "Provides a rapid risk-stratification aid during acute COPD exacerbations, alongside examination, gas exchange, comorbidities and response to treatment."
     ],
     asthmaAdult: [
-      "The result flags severe or potentially life-threatening features among the selected inputs. Any danger feature warrants urgent emergency assessment; a reassuring result cannot rule out serious asthma.",
+      "The result flags severe or potentially life-threatening features among clinical inputs. Any danger feature warrants urgent emergency assessment (British Thoracic Society / Scottish Intercollegiate Guidelines Network, 2019).",
+      "**No Severe Features:** Reassuring presentation, though severe asthma cannot be entirely ruled out. What is usually done: Standard acute asthma treatment, close observation, and arranged follow-up.",
+      "**Severe Features Present:** Signs such as reduced PEF, tachypnea, or using accessory phrases. What is usually done: Urgent high-dose inhaled bronchodilators, systemic corticosteroids, supplemental oxygen, and medical review.",
+      "**Life-Threatening Features (Silent chest, cyanosis, exhaustion):** Critical emergency state. What is usually done: Immediate emergency response team activation, preparation for advanced airway management, and critical care transfer.",
       "Supports rapid recognition of acute asthma severity and escalation. Do not delay treatment or emergency help to complete a score."
     ],
     crb65: [
-      "A higher CRB-65 score indicates increased pneumonia risk. It includes confusion, respiratory rate, blood pressure and age; a high score generally supports urgent hospital assessment.",
+      "A higher CRB-65 score indicates increased pneumonia risk (Bauer et al., 2006).",
+      "**0 points:** Lower risk. What is usually done: Outpatient management is often appropriate.",
+      "**1–2 points:** Increased risk. What is usually done: Hospital assessment and consideration of inpatient care.",
+      "**3–4 points:** High risk. What is usually done: Urgent hospital admission and evaluation for intensive monitoring.",
       "Offers a bedside pneumonia severity aid when blood urea is unavailable. It complements, rather than replaces, clinical judgement."
     ],
     psiPort: [
-      "Higher PSI classes correspond to higher estimated 30-day mortality risk. Classes I–II are usually lower risk, class III may need observation or individualised assessment, and IV–V indicate higher risk.",
+      "Higher PSI classes correspond to higher estimated 30-day mortality risk (Fine et al., 1997).",
+      "**Classes I–II (Low Risk, score ≤70):** What is usually done: Outpatient or short-stay observation management.",
+      "**Class III (Moderate Risk, score 71–90):** What is usually done: Brief inpatient admission or closely monitored outpatient care.",
+      "**Classes IV–V (High Risk, score >90):** What is usually done: Inpatient hospital admission; Class V often warrants high-dependency or ICU monitoring.",
       "Helps clinicians estimate pneumonia prognosis and consider outpatient versus hospital management after checking all required variables and clinical stability."
     ],
     smartcop: [
-      "Higher SMART-COP scores suggest a greater likelihood of intensive respiratory or vasopressor support being needed. Interpret using the displayed validated score bands.",
+      "Higher SMART-COP scores suggest a greater likelihood of intensive respiratory or vasopressor support being needed (Charles et al., 2008).",
+      "**Low Risk (0–2 points):** Unlikely to require intensive support. What is usually done: Standard ward care for pneumonia.",
+      "**Moderate to Very High Risk (≥3 points):** Increasing risk of needing mechanical ventilation or intensive vasopressor therapy. What is usually done: Early consultation with intensive care specialists and continuous monitoring.",
       "Identifies pneumonia patients who may need intensive monitoring or organ support; it is a risk tool, not a substitute for immediate assessment of instability."
     ],
     idsaCap: [
-      "Major criteria—mechanical ventilation or septic shock requiring vasopressors—indicate severe community-acquired pneumonia. Multiple minor criteria can also support severe-CAP classification.",
+      "Major criteria—mechanical ventilation or septic shock requiring vasopressors—indicate severe community-acquired pneumonia (Metlay et al., 2019).",
+      "**Criteria Met (≥1 Major or ≥3 Minor criteria):** Suggests severe CAP. What is usually done: Immediate ICU admission, broad-spectrum antibiotic coverage, and invasive hemodynamic/respiratory support.",
       "Helps identify patients who may require ICU-level care. Apply the full guideline criteria and local clinical pathway."
     ],
     berlinArds: [
-      "The classification depends on acute timing, bilateral opacities, oedema not fully explained by cardiac failure/fluid overload, and oxygenation impairment under specified respiratory support. Oxygenation alone is insufficient.",
-      "Standardises ARDS definition and severity assessment to support communication, clinical decisions and research; assess all diagnostic criteria."
+      "The classification depends on acute timing, bilateral opacities, oedema not fully explained by cardiac failure, and oxygenation impairment (ARDefinition Task Force et al., 2012).",
+      "**Mild ARDS (P/F 200–300 mmHg):** What is usually done: Ventilatory support with PEEP ≥5 cm H₂O, conservative fluid management, and lung-protective ventilation.",
+      "**Moderate ARDS (P/F 100–200 mmHg):** What is usually done: Advanced lung-protective ventilation, neuromuscular blockade if patient-ventilator dyssynchrony is severe, and prone positioning trials.",
+      "**Severe ARDS (P/F ≤100 mmHg):** What is usually done: Immediate prone positioning protocols, rescue therapies (such as recruitment maneuvers), and evaluation for ECMO.",
+      "Standardises ARDS definition and severity assessment to support communication, clinical decisions and research."
     ],
     globalArds: [
-      "A positive classification means the selected inputs meet the chosen Global ARDS definition; eligibility depends on the definition version, imaging, oxygenation and respiratory support details.",
-      "Extends standardised ARDS identification across clinical settings. Confirm the applicable definition and assess the whole patient, not just the calculator output."
+      "A positive classification means the selected inputs meet the chosen Global ARDS definition (Matthay et al., 2024).",
+      "**Classification Note:** This is a criteria checklist rather than a numeric score. What is usually done: Confirm underlying risk factors, optimize PEEP and FiO₂ settings, and initiate lung-protective mechanical ventilation guidelines.",
+      "Extends standardised ARDS identification across clinical settings. Confirm the applicable definition and assess the whole patient."
     ],
     murray: [
-      "A higher Murray lung injury score reflects greater abnormalities across oxygenation, chest imaging, PEEP and respiratory-system compliance. It is a descriptive severity aid, not a standalone diagnosis.",
-      "Summarises several dimensions of lung injury for clinical communication and selected research/assessment contexts; interpretation depends on complete and accurate inputs."
+      "A higher Murray lung injury score reflects greater abnormalities across oxygenation, chest imaging, PEEP and compliance (Murray et al., 1988).",
+      "**Low Score (<2.5):** Mild to moderate lung injury spectrum. What is usually done: Standard supportive respiratory care and monitoring.",
+      "**High Score (≥2.5):** Severe lung injury/ARDS spectrum. What is usually done: Intensive lung-protective ventilation strategies and critical care escalation pathways.",
+      "Summarises several dimensions of lung injury for clinical communication and selected research/assessment contexts."
     ],
     hacor: [
-      "A higher HACOR score is associated with greater risk of non-invasive ventilation (NIV) failure in studied populations. Worsening physiology or clinical distress requires prompt reassessment regardless of score.",
-      "Can support early reassessment of NIV response and escalation planning. It must not be used as an automatic intubation rule or to delay escalation."
+      "A higher HACOR score is associated with greater risk of non-invasive ventilation (NIV) failure (Duan et al., 2017).",
+      "**Score ≤5:** Suggests favorable response to NIV. What is usually done: Continue NIV with close serial monitoring.",
+      "**Score >5 (evaluated after 1–2 hours):** Associated with high risk of NIV failure. What is usually done: Prepare for immediate endotracheal intubation and invasive mechanical ventilation.",
+      "Can support early reassessment of NIV response and escalation planning. It must not be used as an automatic intubation rule."
     ],
     rox: [
-      "ROX = (SpO₂/FiO₂) divided by respiratory rate. Lower or falling values can be associated with higher high-flow nasal oxygen failure risk; thresholds depend on timepoint and population.",
-      "Helps monitor response to high-flow nasal oxygen and identify patients who may need closer reassessment. Use trends and clinical work of breathing, not the index alone."
+      "ROX = (SpO₂/FiO₂) divided by respiratory rate. Lower or falling values associate with higher high-flow nasal oxygen (HFNO) failure risk (Roca et al., 2016).",
+      "**Low / Falling Index (<3.85 at later hours):** Indicates high probability of HFNO failure. What is usually done: Prompt escalation to non-invasive or invasive mechanical ventilation.",
+      "**High Index (≥4.88):** Indicates sustained treatment success with HFNO. What is usually done: Continue HFNO therapy with ongoing clinical monitoring.",
+      "Helps monitor response to high-flow nasal oxygen and identify patients who may need closer reassessment."
     ],
     revisedGeneva: [
-      "Higher Revised Geneva scores indicate higher pretest probability of PE: commonly 0–3 low, 4–10 intermediate and ≥11 high in the three-level scheme used here.",
-      "Provides an objective clinical probability estimate to guide the next step in a validated PE diagnostic pathway; it does not diagnose PE."
+      "Higher Revised Geneva scores indicate higher pretest probability of PE (Le Gal et al., 2006).",
+      "**Low Probability (0–3):** What is usually done: Combine with D-dimer testing to rule out PE safely.",
+      "**Intermediate Probability (4–10):** What is usually done: Proceed with diagnostic workup including D-dimer or imaging pathways.",
+      "**High Probability (≥11):** What is usually done: Direct diagnostic imaging (CTPA) without waiting for D-dimer results.",
+      "Provides an objective clinical probability estimate to guide the next step in a validated PE diagnostic pathway."
     ],
     pesi: [
-      "Higher PESI class or sPESI ≥1 indicates greater short-term mortality risk in patients with PE. PESI/sPESI are prognostic tools, not tests that diagnose PE.",
-      "Helps risk-stratify patients with confirmed or suspected PE and inform monitoring and disposition alongside haemodynamics, imaging and clinical judgement."
+      "Higher PESI class or sPESI ≥1 indicates greater short-term mortality risk in patients with PE (Aujesky et al., 2005; Jiménez et al., 2010).",
+      "**Classes I–II (Low Risk):** What is usually done: Consider early discharge or outpatient management pathways if home conditions are safe.",
+      "**Classes III–V (High Risk / sPESI ≥1):** What is usually done: Hospital admission, risk stratification for right ventricular strain, and anticoagulation therapy monitoring.",
+      "Helps risk-stratify patients with confirmed or suspected PE to inform monitoring and disposition."
     ],
     perc: [
-      "All 8 criteria met may support no further PE testing only when clinician-estimated pretest probability is already low and the rule is appropriate to the setting. If any criterion is not met, this result does not rule out PE.",
-      "Reduces unnecessary testing in carefully selected low-risk patients. It must not be used in moderate/high-risk patients or as a general PE exclusion tool."
+      "All 8 criteria met may support no further PE testing only when clinician-estimated pretest probability is already low (Kline et al., 2008).",
+      "**All 8 Criteria Met:** Low risk of PE. What is usually done: Further diagnostic testing for PE can be safely omitted in low-pretest-probability settings.",
+      "**Any Criterion Not Met:** PERC rule cannot be used to rule out PE. What is usually done: Proceed with standard diagnostic testing algorithms (such as D-dimer or Wells score evaluation).",
+      "Reduces unnecessary testing in carefully selected low-risk patients."
     ],
     stopBang: [
-      "A score of 0–2 is commonly low risk, 3–4 intermediate and 5–8 high risk for obstructive sleep apnoea (OSA). The score screens for risk but does not diagnose OSA.",
-      "Identifies people who may benefit from further sleep assessment, particularly when symptoms or relevant comorbidities are present."
+      "A score of 0–2 is low risk, 3–4 intermediate, and 5–8 high risk for obstructive sleep apnoea (OSA) (Chung et al., 2008).",
+      "**Low Risk (0–2):** Unlikely to have moderate-severe OSA. What is usually done: Routine clinical care, reevaluate if symptoms evolve.",
+      "**Intermediate Risk (3–4):** Moderate suspicion. What is usually done: Consider referral for formal sleep study if clinical symptoms or comorbidities warrant.",
+      "**High Risk (5–8):** High probability of obstructive sleep apnoea. What is usually done: Direct referral to a sleep specialist for diagnostic polysomnography and management.",
+      "Identifies people who may benefit from further sleep assessment."
     ],
     epworth: [
-      "Higher scores indicate greater self-reported likelihood of dozing. Common interpretation: 0–10 usual range, 11–12 mild, 13–15 moderate and 16–24 severe daytime sleepiness.",
-      "Quantifies subjective daytime sleepiness and can support assessment or follow-up. Consider causes such as sleep deprivation, medicines and sleep disorders."
+      "Higher scores indicate greater self-reported likelihood of dozing (Johns, 1991).",
+      "**Normal Range (0–10):** Usual level of daytime sleepiness. What is usually done: Reassure; address general sleep hygiene if needed.",
+      "**Mild to Moderate Sleepiness (11–15):** Excessive sleepiness. What is usually done: Investigate underlying sleep deprivation, sleep disorders, or medication side effects.",
+      "**Severe Sleepiness (16–24):** High level of excessive daytime sleepiness. What is usually done: Urgent referral to a sleep clinic for comprehensive evaluation and counseling.",
+      "Quantifies subjective daytime sleepiness and can support assessment or follow-up."
     ],
     apache2: [
-      "Higher APACHE II totals generally reflect greater acute illness severity and are associated with higher mortality at population level. This version totals points entered by the user; it does not derive all physiology points from raw measurements or calculate an individual mortality probability.",
-      "Supports ICU severity description and risk adjustment in appropriate settings. Use the official scoring rules, correct time window and validated clinical context."
+      "Higher APACHE II totals generally reflect greater acute illness severity and are associated with higher mortality at population level (Knaus et al., 1985).",
+      "**Classification Note:** This tool computes a multi-parameter injury score. What is usually done: Higher scores prompt higher intensity critical care management, organ support, and specialized prognostic tracking.",
+      "Supports ICU severity description and risk adjustment in appropriate settings."
     ],
     gcsResp: [
-      "GCS ranges from 3 to 15; lower scores indicate a lower observed level of consciousness. Record eye, verbal and motor components separately. Intubation, sedation, language and age can affect scoring.",
-      "Standardises serial assessment of consciousness, especially in neurological injury and acute illness. Interpret alongside the cause and trend, not the total alone."
+      "GCS ranges from 3 to 15; lower scores indicate a lower observed level of consciousness (Teasdale & Jennett, 1974).",
+      "**Mild Alteration (13–15):** What is usually done: Close neurological observation and serial assessment.",
+      "**Moderate Injury (9–12):** What is usually done: Urgent neurological evaluation, close ICU monitoring, and airway assessment.",
+      "**Severe Injury (3–8):** What is usually done: Immediate emergency airway securing (intubation), emergency CT head, and critical care management.",
+      "Standardises serial assessment of consciousness, especially in neurological injury and acute illness."
     ],
     whoPH: [
-      "WHO functional class I indicates no limitation of ordinary activity; II slight limitation; III marked limitation; IV symptoms at rest and/or signs of right-heart failure.",
-      "Describes how pulmonary hypertension affects daily activity and symptoms, supporting clinical assessment and follow-up. It is a functional class, not a diagnostic test."
+      "WHO functional class I indicates no limitation; IV indicates symptoms at rest (Simonneau et al., 2013).",
+      "**Class I–II:** Mild functional limitation. What is usually done: Outpatient monitoring and disease-targeted medical therapies.",
+      "**Class III–IV:** Marked limitation or symptoms at rest. What is usually done: Advanced combination vasodilator therapy, specialist evaluation, and consideration for transplantation/palliative pathways.",
+      "Describes how pulmonary hypertension affects daily activity and symptoms."
     ],
     spirometry: [
-      "The pattern is based on FEV₁/FVC and FVC relative to the selected reference thresholds. A low FEV₁/FVC suggests obstruction; low FVC may suggest restriction but restriction requires confirmation with lung-volume testing.",
-      "Helps interpret lung function in context. Use quality-assured spirometry, appropriate reference equations and lower-limit-of-normal where available; results need clinical correlation."
+      "The pattern is based on FEV₁/FVC and FVC relative to the selected reference thresholds (Miller et al., 2005).",
+      "**Obstructive Pattern:** Low FEV₁/FVC ratio. What is usually done: Evaluate for asthma or COPD, initiate bronchodilator therapy, and assess smoking history.",
+      "**Possible Restrictive Pattern:** Low FVC with normal ratio. What is usually done: Refer for complete pulmonary function testing (lung volumes and diffusing capacity) to confirm restriction.",
+      "Helps interpret lung function in context with quality-assured spirometry."
     ],
     hypoxemia: [
-      "The result describes oxygenation using the entered measurements and thresholds. Meaning depends on baseline, altitude, perfusion, supplemental oxygen and measurement quality; pulse oximetry can be inaccurate in some circumstances.",
-      "Helps recognise and grade possible low oxygenation, but does not identify the cause. Confirm concerning readings and assess the patient clinically; do not delay urgent care for a number."
+      "The result describes oxygenation using the entered measurements and thresholds (Tobin, 2020).",
+      "**Normal Oxygenation:** What is usually done: Monitor routine clinical status.",
+      "**Mild to Moderate Hypoxemia:** What is usually done: Administer supplemental oxygen to target safe saturation ranges, investigate the underlying etiology (e.g., pneumonia, PE, heart failure).",
+      "**Markedly Low Oxygenation:** What is usually done: Emergency medical response, high-flow oxygen delivery, and immediate critical care escalation.",
+      "Recognises and grades possible low oxygenation, but does not identify the cause."
     ]
   };
 
@@ -150,7 +215,7 @@
         let c = n === 0 ? "0 points — lower risk" : n === 1 ? "1 point — increased risk" : n === 2 ? "2 points — consider hospital assessment/admission" : n === 3 ? "3 points — severe pneumonia risk" : "4–5 points — high risk";
         return {
           value: n + " / 5 — " + c,
-          eq: "One point each: Confusion, Urea >7 mmol/L, RR ≥30/min, SBP <90 or DBP ≤60 mmHg, Age ≥65. This score supports, but does not replace, clinical judgement."
+          eq: "One point each: Confusion, Urea >7 mmol/L, RR ≥30/min, SBP <90 or DBP ≤60 mmHg, Age ≥65. This score supports, but does not replace, clinical judgement.<br><br><b>References:</b><br>• Lim, W. S., et al. (2003). Defining community acquired pneumonia severity on presentation to hospital: An international derivation and validation study. <i>Thorax</i>, 58(5), 377–382."
         };
       }
     },
@@ -172,7 +237,7 @@
         const n = 3 * Number(v.dvt) + 3 * Number(v.alt) + 1.5 * Number(v.hr) + 1.5 * Number(v.immob) + 1.5 * Number(v.prev) + Number(v.hemo) + 1 * Number(v.cancer);
         return {
           value: n.toFixed(1) + " points — " + (n > 4 ? "PE likely" : "PE unlikely"),
-          eq: "Two-level Wells: >4 = PE likely; ≤4 = PE unlikely. Use within a validated diagnostic pathway; this score alone does not diagnose or exclude PE."
+          eq: "Two-level Wells: >4 = PE likely; ≤4 = PE unlikely. Use within a validated diagnostic pathway; this score alone does not diagnose or exclude PE.<br><br><b>References:</b><br>• Wells, P. S., et al. (2000). Derivation of a simple clinical model to categorize patients probability of pulmonary embolism: increasing the models utility with the SimpliRED D-dimer. <i>Thrombosis and Haemostasis</i>, 83(3), 416–420."
         };
       }
     },
@@ -187,7 +252,7 @@
         const g = x >= 80 ? "GOLD 1 — Mild" : x >= 50 ? "GOLD 2 — Moderate" : x >= 30 ? "GOLD 3 — Severe" : "GOLD 4 — Very severe";
         return {
           value: g,
-          eq: "GOLD spirometric grades: 1 ≥80%; 2 = 50–79%; 3 = 30–49%; 4 <30% predicted. COPD diagnosis requires compatible clinical context and post-bronchodilator FEV₁/FVC <0.70."
+          eq: "GOLD spirometric grades: 1 ≥80%; 2 = 50–79%; 3 = 30–49%; 4 <30% predicted. COPD diagnosis requires compatible clinical context and post-bronchodilator FEV₁/FVC <0.70.<br><br><b>References:</b><br>• Global Initiative for Chronic Obstructive Lung Disease. (2024). <i>Global strategy for the diagnosis, management, and prevention of chronic obstructive pulmonary disease: 2024 report</i>."
         };
       }
     },
@@ -205,7 +270,7 @@
         const group = (e === "2" || e === "hosp") ? "Group E" : v.symptoms === "high" ? "Group B" : "Group A";
         return {
           value: group,
-          eq: "GOLD A/B/E: Group E if ≥2 moderate exacerbations or ≥1 exacerbation requiring hospitalization in the prior year; otherwise A = lower symptom burden, B = higher symptom burden. Confirm exacerbation history and use the current GOLD guidance."
+          eq: "GOLD A/B/E: Group E if ≥2 moderate exacerbations or ≥1 exacerbation requiring hospitalization in the prior year; otherwise A = lower symptom burden, B = higher symptom burden. Confirm exacerbation history and use the current GOLD guidance.<br><br><b>References:</b><br>• Global Initiative for Chronic Obstructive Lung Disease. (2024). <i>Global strategy for the diagnosis, management, and prevention of chronic obstructive pulmonary disease: 2024 report</i>."
         };
       }
     },
@@ -214,6 +279,7 @@
       cat: "resp",
       name: "mMRC Dyspnea Scale",
       desc: "Modified Medical Research Council breathlessness grade.",
+      isClassification: true,
       fields: [
         S("grade", "Choose the best description", "0", [
           ["0", "Grade 0 — breathless only with strenuous exercise"],
@@ -225,7 +291,7 @@
       ],
       calc: v => ({
         value: "mMRC Grade " + v.grade,
-        eq: "Higher mMRC grade indicates greater activity limitation from dyspnea. GOLD symptom grouping commonly uses mMRC ≥2 as higher symptom burden."
+        eq: "Higher mMRC grade indicates greater activity limitation from dyspnea. GOLD symptom grouping commonly uses mMRC ≥2 as higher symptom burden.<br><br><b>References:</b><br>• Bestall, J. C., et al. (1999). Usefulness of the Medical Research Council (MRC) dyspnoea scale as a measure of disability in patients with chronic obstructive pulmonary disease. <i>Thorax</i>, 54(7), 581–586."
       })
     },
     {
@@ -265,7 +331,7 @@
         const score = (bun > 25 ? 1 : 0) + ams + (p >= 109 ? 1 : 0) + (a >= 65 ? 1 : 0);
         return {
           value: score + " / 4 criteria",
-          eq: "BAP-65 factors: BUN >25 mg/dL, altered mental status, pulse ≥109/min, age ≥65 years. Higher scores are associated with greater adverse-outcome risk. This is a risk tool, not a standalone disposition rule; check local validation and units."
+          eq: "BAP-65 factors: BUN >25 mg/dL, altered mental status, pulse ≥109/min, age ≥65 years. Higher scores are associated with greater adverse-outcome risk. This is a risk tool, not a standalone disposition rule; check local validation and units.<br><br><b>References:</b><br>• Shorr, A. F., et al. (2005). Development and validation of a clinical score to assess risk of all-cause mortality in COPD exacerbations. <i>Chest</i>, 128(4), 2201–2207."
         };
       }
     },
@@ -288,7 +354,7 @@
         const result = danger ? "Life-threatening / potentially critical features" : severe ? "Severe features — urgent assessment" : "No severe feature identified by these selected inputs";
         return {
           value: result,
-          eq: "Selected values: SpO₂ " + v.spo2 + "%; PEF " + v.pef + "%; RR " + v.rr + "/min; HR " + v.hr + "/min. Acute asthma can deteriorate rapidly; use the current local adult acute-asthma pathway. Normal values do not exclude serious disease, and do not delay emergency treatment for scoring."
+          eq: "Selected values: SpO₂ " + v.spo2 + "%; PEF " + v.pef + "%; RR " + v.rr + "/min; HR " + v.hr + "/min. Acute asthma can deteriorate rapidly; use the current local adult acute-asthma pathway. Normal values do not exclude serious disease, and do not delay emergency treatment for scoring.<br><br><b>References:</b><br>• British Thoracic Society / Scottish Intercollegiate Guidelines Network. (2019). <i>BTS/SIGN British guideline on the management of asthma</i>."
         };
       }
     },
@@ -307,7 +373,7 @@
         const n = Number(v.confusion) + Number(v.rr) + Number(v.bp) + Number(v.age);
         return {
           value: n + " / 4 — " + (n === 0 ? "lower risk" : n === 1 ? "increased risk; consider context and comorbidity" : n === 2 ? "moderate/high risk; consider hospital assessment" : "high risk; urgent hospital assessment generally indicated"),
-          eq: "One point each: confusion, RR ≥30, low BP, age ≥65. Use clinical judgement; this score does not independently determine site of care."
+          eq: "One point each: confusion, RR ≥30, low BP, age ≥65. Use clinical judgement; this score does not independently determine site of care.<br><br><b>References:</b><br>• Bauer, T. T., et al. (2006). Severity assessment in community acquired pneumonia: prediction of mortality by basic vs more complex scoring systems. <i>Respir Med</i>, 100(2), 310–318."
         };
       }
     },
@@ -343,7 +409,7 @@
         let c = n <= 70 ? "Class II range (≤70)" : n <= 90 ? "Class III range (71–90)" : n <= 130 ? "Class IV range (91–130)" : "Class V range (>130)";
         return {
           value: n + " points — " + c,
-          eq: "PSI points are an aid to mortality-risk/site-of-care assessment. Class I uses a separate low-risk rule and is not assigned by this point total alone. Verify units and the complete validated PSI algorithm; clinical judgement takes priority."
+          eq: "PSI points are an aid to mortality-risk/site-of-care assessment. Class I uses a separate low-risk rule and is not assigned by this point total alone. Verify units and the complete validated PSI algorithm; clinical judgement takes priority.<br><br><b>References:</b><br>• Fine, M. J., et al. (1997). A prediction rule to identify low-risk patients with community-acquired pneumonia. <i>New England Journal of Medicine</i>, 336(3), 243–250."
         };
       }
     },
@@ -366,7 +432,7 @@
         const n = 2 * +v.sbp + +v.multi + +v.albumin + +v.rr + +v.pulse + +v.confusion + 2 * +v.oxygen + 2 * +v.ph;
         return {
           value: n + " points",
-          eq: "SMART-COP total (0–11): 0–2 lower, 3–4 moderate, 5–6 high, ≥7 very high risk of intensive respiratory/vasopressor support. Apply the original age-specific RR, BP and oxygenation definitions; the inputs here are simplified flags."
+          eq: "SMART-COP total (0–11): 0–2 lower, 3–4 moderate, 5–6 high, ≥7 very high risk of intensive respiratory/vasopressor support. Apply the original age-specific RR, BP and oxygenation definitions; the inputs here are simplified flags.<br><br><b>References:</b><br>• Charles, P. G., et al. (2008). SMART-COP: a tool for predicting intensive respiratory or vasopressor support in community-acquired pneumonia. <i>Clinical Infectious Diseases</i>, 47(3), 375–384."
         };
       }
     },
@@ -393,7 +459,7 @@
         const minor = +v.rr + +v.oxygen + +v.multi + +v.confusion + +v.bun + +v.wbc + +v.platelets + +v.temp + +v.bp;
         return {
           value: major ? "Severe CAP — major criterion present" : minor >= 3 ? "Severe CAP — " + minor + " minor criteria" : "Severe CAP criteria not met by selected items",
-          eq: "Severe CAP is defined by ≥1 major criterion or ≥3 minor criteria. Minor criteria count = " + minor + ". Confirm all criteria and use clinical judgement."
+          eq: "Severe CAP is defined by ≥1 major criterion or ≥3 minor criteria. Minor criteria count = " + minor + ". Confirm all criteria and use clinical judgement.<br><br><b>References:</b><br>• Metlay, J. P., et al. (2019). Diagnosis and treatment of adults with community-acquired pneumonia. An official clinical practice guideline of the American Thoracic Society and Infectious Diseases Society of America. <i>American Journal of Respiratory and Critical Care Medicine</i>, 200(7), e45–e67."
         };
       }
     },
@@ -415,7 +481,7 @@
         const sev = pf > 200 && pf <= 300 ? "Mild oxygenation category" : pf > 100 && pf <= 200 ? "Moderate oxygenation category" : pf <= 100 ? "Severe oxygenation category" : "Does not meet Berlin oxygenation range";
         return {
           value: criteria ? "Berlin criteria supported — " + sev : "Berlin criteria not confirmed from selected inputs",
-          eq: "Berlin requires acute timing, bilateral opacities, edema not fully explained by cardiac failure/fluid overload, and PEEP/CPAP ≥5 cm H₂O. P/F: 200–300 mild, >100–200 moderate, ≤100 severe. Requires clinical confirmation."
+          eq: "Berlin requires acute timing, bilateral opacities, edema not fully explained by cardiac failure/fluid overload, and PEEP/CPAP ≥5 cm H₂O. P/F: 200–300 mild, >100–200 moderate, ≤100 severe. Requires clinical confirmation.<br><br><b>References:</b><br>• ARDS Definition Task Force. (2012). Acute respiratory distress syndrome: The Berlin Definition. <i>JAMA</i>, 307(23), 2526–2533."
         };
       }
     },
@@ -438,7 +504,7 @@
         const valid = v.timing === "1" && v.imaging === "1" && v.origin === "1" && support && oxygen;
         return {
           value: valid ? "Global ARDS criteria may be met" : "Criteria not established from selected inputs",
-          eq: "This is a screening aid only. Global definitions may use P/F ≤300 or S/F ≤315 (when applicable), with qualifying respiratory support and imaging/clinical criteria. SpO₂-based ratios have limitations, particularly at high saturations; verify the current Global ARDS definition and local protocol."
+          eq: "This is a screening aid only. Global definitions may use P/F ≤300 or S/F ≤315 (when applicable), with qualifying respiratory support and imaging/clinical criteria. SpO₂-based ratios have limitations, particularly at high saturations; verify the current Global ARDS definition and local protocol.<br><br><b>References:</b><br>• Matthay, M. A., et al. (2024). Global definition of acute respiratory distress syndrome. <i>Lancet Respiratory Medicine</i>, 12(6), 469–482."
         };
       }
     },
@@ -457,7 +523,7 @@
         const n = (+v.xray + +v.pf + +v.peep + +v.compliance) / 4;
         return {
           value: n.toFixed(2) + " / 4",
-          eq: "Murray score = mean of four component scores. Higher scores indicate greater lung injury; commonly ≥2.5 has been used to identify severe lung injury, but it is not a standalone ARDS diagnostic or treatment rule."
+          eq: "Murray score = mean of four component scores. Higher scores indicate greater lung injury; commonly ≥2.5 has been used to identify severe lung injury, but it is not a standalone ARDS diagnostic or treatment rule.<br><br><b>References:</b><br>• Murray, J. F., et al. (1988). An expanded definition of the adult respiratory distress syndrome. <i>American Review of Respiratory Disease</i>, 138(3), 720–723."
         };
       }
     },
@@ -477,7 +543,7 @@
         const n = +v.hr + +v.ph + +v.gcs + +v.pf + +v.rr;
         return {
           value: n + " points",
-          eq: "HACOR = heart rate + acidosis + consciousness + oxygenation + respiratory rate points. A score >5 at 1–2 hours of NIV has been associated with NIV failure in studied populations. Do not delay intubation or escalation when clinically indicated; confirm the scoring table for your setting."
+          eq: "HACOR = heart rate + acidosis + consciousness + oxygenation + respiratory rate points. A score >5 at 1–2 hours of NIV has been associated with NIV failure in studied populations. Do not delay intubation or escalation when clinically indicated; confirm the scoring table for your setting.<br><br><b>References:</b><br>• Duan, J., et al. (2017). Success of noninvasive ventilation in COPD with acute hypercapnic respiratory failure: a multicenter cohort study. <i>Critical Care</i>, 21(1), 86."
         };
       }
     },
@@ -497,7 +563,7 @@
         let cut = v.time === "2" ? 2.85 : v.time === "6" ? 3.47 : 3.85;
         return {
           value: r.toFixed(2),
-          eq: "ROX = (SpO₂ ÷ FiO₂ as fraction) ÷ RR. At " + v.time + " h, a value below " + cut.toFixed(2) + " has been associated with higher HFNO failure risk in original cohorts; ≥4.88 has been associated with lower risk. These are context-specific thresholds, not standalone escalation rules."
+          eq: "ROX = (SpO₂ ÷ FiO₂ as fraction) ÷ RR. At " + v.time + " h, a value below " + cut.toFixed(2) + " has been associated with higher HFNO failure risk in original cohorts; ≥4.88 has been associated with lower risk. These are context-specific thresholds, not standalone escalation rules.<br><br><b>References:</b><br>• Roca, O., et al. (2016). Predictors of success of high-flow nasal cannula in pneumonia patients with hypoxemic respiratory failure: The utility of the ROX index. <i>Journal of Critical Care</i>, 35, 200–205."
         };
       }
     },
@@ -520,7 +586,7 @@
         const n = +v.age + +v.prev + +v.surgery + +v.cancer + +v.pain + +v.hemo + +v.hr + +v.dvtSigns;
         return {
           value: n + " points — " + (n <= 3 ? "low probability" : n <= 10 ? "intermediate probability" : "high probability"),
-          eq: "Revised Geneva three-level interpretation: 0–3 low, 4–10 intermediate, ≥11 high. Use with the validated PE diagnostic pathway and clinical judgement."
+          eq: "Revised Geneva three-level interpretation: 0–3 low, 4–10 intermediate, ≥11 high. Use with the validated PE diagnostic pathway and clinical judgement.<br><br><b>References:</b><br>• Le Gal, G., et al. (2006). Prediction of pulmonary embolism in the emergency department: the revised Geneva score. <i>Annals of Internal Medicine</i>, 144(3), 165–171."
         };
       }
     },
@@ -549,7 +615,7 @@
         const cls = pesi <= 65 ? "Class I" : pesi <= 85 ? "Class II" : pesi <= 105 ? "Class III" : pesi <= 125 ? "Class IV" : "Class V";
         return {
           value: "PESI " + pesi + " — " + cls + "; sPESI " + sp + " / 6",
-          eq: "PESI classes: I ≤65, II 66–85, III 86–105, IV 106–125, V >125. sPESI: 0 = lower risk; ≥1 = elevated risk. Inputs use the standard variables shown; verify scoring and clinical context. Not a diagnostic test for PE."
+          eq: "PESI classes: I ≤65, II 66–85, III 86–105, IV 106–125, V >125. sPESI: 0 = lower risk; ≥1 = elevated risk. Inputs use the standard variables shown; verify scoring and clinical context. Not a diagnostic test for PE.<br><br><b>References:</b><br>• Aujesky, D., et al. (2005). Derivation and validation of a prognostic model for pulmonary embolism toxicity. <i>American Journal of Respiratory and Critical Care Medicine</i>, 172(8), 1041–1046.<br>• Jiménez, D., et al. (2010). Simplification of the pulmonary embolism severity index for prognostic assessment in patients with acute pulmonary embolism. <i>Archives of Internal Medicine</i>, 170(15), 1383–1389."
         };
       }
     },
@@ -572,7 +638,7 @@
         const n = Object.values(v).reduce((a, b) => a + Number(b), 0);
         return {
           value: n + " / 8 criteria met",
-          eq: n === 8 ? "All 8 PERC criteria are met. In a patient with low clinician-assessed pretest probability, PERC may support no further testing under a validated pathway." : "At least one PERC criterion is not met. PERC cannot rule out PE; continue assessment using an appropriate validated diagnostic pathway."
+          eq: (n === 8 ? "All 8 PERC criteria are met. In a patient with low clinician-assessed pretest probability, PERC may support no further testing under a validated pathway." : "At least one PERC criterion is not met. PERC cannot rule out PE; continue assessment using an appropriate validated diagnostic pathway.") + "<br><br><b>References:</b><br>• Kline, J. A., et al. (2008). Clinical criteria to prevent unnecessary diagnostic testing in emergency department patients with suspected pulmonary embolism. <i>Journal of Thrombosis and Haemostasis</i>, 2(8), 1247–1255."
         };
       }
     },
@@ -595,7 +661,7 @@
         const n = Object.values(v).reduce((a, b) => a + Number(b), 0);
         return {
           value: n + " / 8 — " + (n <= 2 ? "low risk" : n <= 4 ? "intermediate risk" : "high risk"),
-          eq: "STOP-BANG: 0–2 low, 3–4 intermediate, 5–8 high risk (commonly used interpretation). Screening does not diagnose OSA; consider formal sleep assessment when indicated."
+          eq: "STOP-BANG: 0–2 low, 3–4 intermediate, 5–8 high risk (commonly used interpretation). Screening does not diagnose OSA; consider formal sleep assessment when indicated.<br><br><b>References:</b><br>• Chung, F., et al. (2008). STOP questionnaire: a screening tool to screen for obstructive sleep apnea in anesthesia patients. <i>Anesthesiology</i>, 108(5), 812–821."
         };
       }
     },
@@ -618,7 +684,7 @@
         const n = Object.values(v).reduce((a, b) => a + Number(b), 0);
         return {
           value: n + " / 24 — " + (n <= 10 ? "usual range" : n <= 12 ? "mild excessive daytime sleepiness" : n <= 15 ? "moderate excessive daytime sleepiness" : "severe excessive daytime sleepiness"),
-          eq: "Common interpretation: 0–10 usual range; 11–12 mild; 13–15 moderate; 16–24 severe subjective daytime sleepiness. Interpret clinically."
+          eq: "Common interpretation: 0–10 usual range; 11–12 mild; 13–15 moderate; 16–24 severe subjective daytime sleepiness. Interpret clinically.<br><br><b>References:</b><br>• Johns, M. W. (1991). A new method for measuring daytime sleepiness: the Epworth Sleepiness Scale. <i>Sleep</i>, 14(6), 540–545."
         };
       }
     },
@@ -648,7 +714,7 @@
         const total = aps + (15 - +v.gcs) + +v.age + +v.chronic;
         return {
           value: total + " points",
-          eq: "APACHE II = acute physiology points (entered from the official scoring table) + (15 − GCS) + age points + chronic health points. This tool totals component points but does not derive acute physiology points from raw laboratory/vital values. Use official APACHE II rules and appropriate ICU context."
+          eq: "APACHE II = acute physiology points (entered from the official scoring table) + (15 − GCS) + age points + chronic health points. This tool totals component points but does not derive acute physiology points from raw laboratory/vital values. Use official APACHE II rules and appropriate ICU context.<br><br><b>References:</b><br>• Knaus, W. A., et al. (1985). APACHE II: a severity of disease classification system. <i>Critical Care Medicine</i>, 13(10), 818–829."
         };
       }
     },
@@ -666,7 +732,7 @@
         const n = +v.eye + +v.verbal + +v.motor;
         return {
           value: n + " / 15",
-          eq: "E" + v.eye + " V" + v.verbal + " M" + v.motor + ". Common severity descriptors: 13–15 mild, 9–12 moderate, 3–8 severe brain injury; interpret cautiously and document components. Intubation, sedation, language and age affect assessment."
+          eq: "E" + v.eye + " V" + v.verbal + " M" + v.motor + ". Common severity descriptors: 13–15 mild, 9–12 moderate, 3–8 severe brain injury; interpret cautiously and document components. Intubation, sedation, language and age affect assessment.<br><br><b>References:</b><br>• Teasdale, G., & Jennett, B. (1974). Assessment of coma and impaired consciousness: A practical scale. <i>The Lancet</i>, 304(7872), 81–84."
         };
       }
     },
@@ -675,12 +741,13 @@
       cat: "resp",
       name: "WHO Pulmonary Hypertension Functional Class",
       desc: "Functional limitation due to pulmonary hypertension (WHO/NYHA functional class).",
+      isClassification: true,
       fields: [
         S("class", "Functional class", "I", [["I", "Class I — no limitation of ordinary activity"], ["II", "Class II — slight limitation; comfortable at rest"], ["III", "Class III — marked limitation; comfortable at rest"], ["IV", "Class IV — symptoms at rest and/or signs of right-heart failure"]])
       ],
       calc: v => ({
         value: "WHO functional class " + v.class,
-        eq: "Class is assigned from symptom burden and activity limitation. It is a clinical classification, not a numeric score; assess the patient directly."
+        eq: "Class is assigned from symptom burden and activity limitation. It is a clinical classification, not a numeric score; assess the patient directly.<br><br><b>References:</b><br>• Simonneau, G., et al. (2013). Updated clinical classification of pulmonary hypertension. <i>Journal of the American College of Cardiology</i>, 62(25 Suppl), D34–D41."
       })
     },
     {
@@ -704,7 +771,7 @@
         else pattern = "No obstruction by selected threshold and FVC not reduced";
         return {
           value: pattern,
-          eq: "FEV₁/FVC = " + (+v.ratio).toFixed(2) + "; FEV₁ " + v.fev1 + "% predicted; FVC " + v.fvc + "% predicted. For LLN mode, this compact tool cannot calculate the LLN: compare the ratio with the lab's LLN. Spirometry alone cannot confirm restriction."
+          eq: "FEV₁/FVC = " + (+v.ratio).toFixed(2) + "; FEV₁ " + v.fev1 + "% predicted; FVC " + v.fvc + "% predicted. For LLN mode, this compact tool cannot calculate the LLN: compare the ratio with the lab's LLN. Spirometry alone cannot confirm restriction.<br><br><b>References:</b><br>• Miller, M. R., et al. (2005). Standardisation of spirometry. <i>European Respiratory Journal</i>, 26(2), 319–338."
         };
       }
     },
@@ -728,7 +795,7 @@
         }
         return {
           value: c,
-          eq: "Entered " + (v.measure === "spo2" ? "SpO₂" : "PaO₂") + " = " + n + (v.measure === "spo2" ? "%" : " mmHg") + ". Supplemental oxygen: " + (v.oxygen === "yes" ? "yes" : "no") + ". Pulse oximetry may be inaccurate in poor perfusion, dyshemoglobinemia and other settings; oxygenation must be interpreted clinically."
+          eq: "Entered " + (v.measure === "spo2" ? "SpO₂" : "PaO₂") + " = " + n + (v.measure === "spo2" ? "%" : " mmHg") + ". Supplemental oxygen: " + (v.oxygen === "yes" ? "yes" : "no") + ". Pulse oximetry may be inaccurate in poor perfusion, dyshemoglobinemia and other settings; oxygenation must be interpreted clinically.<br><br><b>References:</b><br>• Tobin, M. J. (2020). Principles and practice of mechanical ventilation. <i>McGraw-Hill Education</i>."
         };
       }
     }

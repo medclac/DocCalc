@@ -103,7 +103,7 @@
 --splash-bg: #0d1520;
 --modal-overlay: rgba(0, 0, 0, 0.7);
 }
- { box-sizing: border-box; }
+* { box-sizing: border-box; }
 body {
 margin: 0;
 background: var(--bg-body);
@@ -342,6 +342,7 @@ footer { text-align: center; font-size: 11px; color: var(--text-muted); padding:
 </header>
 <main>
 <div class="notice"><b>Clinical safety:</b> Educational prototype only. Verify formulas, tables, and criteria independently before clinical use.</div>
+
 <!-- HOME VIEW -->
 <div id="home">
 <div class="search-wrapper">
@@ -366,6 +367,7 @@ footer { text-align: center; font-size: 11px; color: var(--text-muted); padding:
 <div id="searchToolList"></div>
 </div>
 </div>
+
 <!-- CATEGORY VIEW -->
 <div id="categoryPage" class="hidden">
 <div class="row">
@@ -379,6 +381,7 @@ footer { text-align: center; font-size: 11px; color: var(--text-muted); padding:
 </div>
 <div id="toolList"></div>
 </div>
+
 <!-- CALCULATOR & CLASSIFICATION INTERFACE -->
 <div id="calculatorPage" class="hidden">
 <div class="row"><button class="back" id="categoryBtn" type="button">← Back</button></div>
@@ -429,6 +432,7 @@ footer { text-align: center; font-size: 11px; color: var(--text-muted); padding:
 </div>
 <footer>MedCalc · Educational prototype · Verify before clinical use</footer>
 </main>
+
 <!-- SETTINGS MODAL -->
 <div id="settingsModal" class="modal-overlay hidden" role="dialog" aria-modal="true">
 <div class="modal">
@@ -447,6 +451,7 @@ footer { text-align: center; font-size: 11px; color: var(--text-muted); padding:
 </div>
 </div>
 </div>
+
 <!-- ============================================================== -->
 <!-- 1. CORE DATA REGISTRY & HELPER FUNCTIONS                       -->
 <!-- ============================================================== -->
@@ -454,291 +459,348 @@ footer { text-align: center; font-size: 11px; color: var(--text-muted); padding:
 window.categories = window.categories || [];
 window.tools = window.tools || [];
 window.MedCalcModules = window.MedCalcModules || [];
-// Expose field helper constructors expected by module files
-window.N = function (id, label, defaultVal, attrs = {}) {
-return { id, label, type: "number", default: defaultVal, attrs };
+
+// Compatible constructors with both .value and .default properties[span_3](start_span)[span_3](end_span)[span_4](start_span)[span_4](end_span)
+window.N = function (id, label, defaultVal, extra = {}) {
+  return { id, label, type: "number", value: defaultVal, default: defaultVal, ...extra };
 };
 window.S = function (id, label, defaultVal, options = []) {
-return { id, label, type: "select", default: defaultVal, options };
+  return { id, label, type: "select", value: defaultVal, default: defaultVal, options };
 };
 </script>
+
 <!-- ============================================================== -->
 <!-- 2. EXTERNAL SPECIALTY MODULE SCRIPTS                           -->
-<!-- Add your .js files here                                        -->
 <!-- ============================================================== -->
 <script src="obgy.js"></script>
+
 <!-- ============================================================== -->
 <!-- 3. APPLICATION ENGINE & UI CONTROLLER                          -->
 <!-- ============================================================== -->
 <script>
 (function () {
-"use strict";
-const $ = id => document.getElementById(id);
-// Fallback category if none registered
-if (window.categories.length === 0) {
-window.categories.push({ id: "all", name: "General Medicine", icon: "🩺", desc: "Clinical calculators and staging tools" });
-}
-// Determine tool type (calc or class) if not specified
-window.tools.forEach(t => {
-if (!t.type) {
-const isClass = /score|criteria|staging|classification|meows|apgar|bishop|iadpsg|mec|popq|figo/i.test(t.name + " " + (t.desc || ""));
-t.type = isClass ? "class" : "calc";
-}
-});
-// State
-let currentCatId = null;
-let currentTool = null;
-let activeFilter = "all";
-// --- THEME ---
-let activeThemeMode = localStorage.getItem("medcalc_theme") || "system";
-function applyTheme(mode) {
-activeThemeMode = mode;
-localStorage.setItem("medcalc_theme", mode);
-let effective = mode === "system" ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : mode;
-document.documentElement.setAttribute("data-theme", effective);
-document.querySelectorAll(".theme-btn").forEach(btn => btn.classList.toggle("active", btn.dataset.themeVal === mode));
-const meta = document.querySelector('meta[name="theme-color"]');
-if (meta) meta.setAttribute("content", effective === "dark" ? "#0b1523" : "#0f2744");
-}
-window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
-if (activeThemeMode === "system") applyTheme("system");
-});
-applyTheme(activeThemeMode);
-$("openSettingsBtn").onclick = () => $("settingsModal").classList.remove("hidden");
-$("closeSettingsBtn").onclick = () => $("settingsModal").classList.add("hidden");
-$("settingsModal").onclick = e => { if (e.target === $("settingsModal")) $("settingsModal").classList.add("hidden"); };
-document.querySelectorAll(".theme-btn").forEach(btn => btn.onclick = () => applyTheme(btn.dataset.themeVal));
-// Splash dismissal
-window.addEventListener("load", () => {
-setTimeout(() => {
-const splash = $("splash");
-if (splash) {
-splash.classList.add("fade-out");
-setTimeout(() => splash.remove(), 400);
-}
-}, 250);
-});
-// --- NAVIGATION ---
-function showView(view) {
-$("home").classList.toggle("hidden", view !== "home");
-$("categoryPage").classList.toggle("hidden", view !== "category");
-$("calculatorPage").classList.toggle("hidden", view !== "calculator");
-window.scrollTo({ top: 0, behavior: "smooth" });
-}
-// --- RENDER HOME ---
-function renderHome() {
-const catContainer = $("categories");
-catContainer.innerHTML = "";
-window.categories.forEach(cat => {
-const card = document.createElement("div");
-card.className = "card";
-card.innerHTML = ⁠<span class="ico">${cat.icon || "📁"}</span><strong>${cat.name}</strong><small>${cat.desc}</small>⁠;
-card.onclick = () => openCategory(cat.id);
-catContainer.appendChild(card);
-});
-// Quick list: show first 4 tools
-const quickContainer = $("quick");
-quickContainer.innerHTML = "";
-window.tools.slice(0, 4).forEach(t => quickContainer.appendChild(createToolItem(t)));
-}
-// --- CREATE TOOL ITEM COMPONENT ---
-function createToolItem(t) {
-const div = document.createElement("div");
-div.className = "tool";
-const badgeLabel = t.type === "class" ? "Classification" : "Calculator";
-const badgeClass = t.type === "class" ? "badge-class" : "badge-calc";
-div.innerHTML = ⁠<div class="tool-header"> <strong>${t.name}</strong> <span class="badge ${badgeClass}">${badgeLabel}</span> </div> <small>${t.desc || ""}</small>⁠;
-div.onclick = () => openTool(t);
-return div;
-}
-// --- CATEGORY VIEW ---
-function openCategory(catId) {
-currentCatId = catId;
-const cat = window.categories.find(c => c.id === catId);
-$("categoryTitle").textContent = cat ? cat.name : "Specialty Tools";
-$("categoryDesc").textContent = cat ? cat.desc : "";
-activeFilter = "all";
-document.querySelectorAll(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.filter === "all"));
-renderCategoryTools();
-showView("category");
-}
-function renderCategoryTools() {
-const list = $("toolList");
-list.innerHTML = "";
-const filtered = window.tools.filter(t => (t.cat === currentCatId || currentCatId === "all") && (activeFilter === "all" || t.type === activeFilter));
-if (filtered.length === 0) {
-list.innerHTML = ⁠<div class="muted" style="padding:20px 0;text-align:center;">No tools found in this category.</div>⁠;
-return;
-}
-filtered.forEach(t => list.appendChild(createToolItem(t)));
-}
-document.querySelectorAll(".tab-btn").forEach(btn => {
-btn.onclick = () => {
-document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-btn.classList.add("active");
-activeFilter = btn.dataset.filter;
-renderCategoryTools();
-};
-});
-// --- SEARCH ---
-const searchInput = $("search");
-searchInput.oninput = () => {
-const q = searchInput.value.trim().toLowerCase();
-if (!q) {
-$("homeDefaultContent").classList.remove("hidden");
-$("searchResultsSection").classList.add("hidden");
-return;
-}
-$("homeDefaultContent").classList.add("hidden");
-$("searchResultsSection").classList.remove("hidden");
-const matches = window.tools.filter(t => {
-return (t.name && t.name.toLowerCase().includes(q)) ||
-(t.desc && t.desc.toLowerCase().includes(q)) ||
-(t.guidance && t.guidance.toLowerCase().includes(q));
-});
-$("searchResultSubheading").textContent = ⁠Found ${matches.length} tool(s) matching "${searchInput.value}"⁠;
-const searchList = $("searchToolList");
-searchList.innerHTML = "";
-if (matches.length === 0) {
-searchList.innerHTML = ⁠<p class="muted">No clinical tools matched your search query.</p>⁠;
-} else {
-matches.forEach(t => searchList.appendChild(createToolItem(t)));
-}
-};
-$("clearSearchBtn").onclick = () => {
-searchInput.value = "";
-$("homeDefaultContent").classList.remove("hidden");
-$("searchResultsSection").classList.add("hidden");
-};
-// --- CALCULATOR & CLASSIFICATION RUNNER ---
-function openTool(tool) {
-currentTool = tool;
-$("title").textContent = tool.name;
-$("desc").textContent = tool.desc || "";
-const typeBadge = $("toolTypeBadge");
-typeBadge.textContent = tool.type === "class" ? "Classification" : "Calculator";
-typeBadge.className = ⁠badge ${tool.type === "class" ? "badge-class" : "badge-calc"}⁠;
-// Guidance
-if (tool.guidance) {
-$("guidanceBox").classList.remove("hidden");
-$("guidanceText").innerHTML = tool.guidance.replace(/\n/g, "
-");
-} else {
-$("guidanceBox").classList.add("hidden");
-}
-// Contraindications
-if (tool.contraindications) {
-$("contraBox").classList.remove("hidden");
-$("contraText").innerHTML = tool.contraindications.replace(/\n/g, "
-");
-} else {
-$("contraBox").classList.add("hidden");
-}
-// Build form fields
-const fieldsContainer = $("fields");
-fieldsContainer.innerHTML = "";
-(tool.fields || []).forEach(f => {
-const wrap = document.createElement("div");
-if (f.type === "select" || f.fullWidth) wrap.className = "full-width";
-const lbl = document.createElement("label");
-lbl.setAttribute("for", "field_" + f.id);
-lbl.textContent = f.label;
-wrap.appendChild(lbl);
-if (f.type === "select") {
-const sel = document.createElement("select");
-sel.id = "field_" + f.id;
-sel.name = f.id;
-(f.options || []).forEach(opt => {
-const optEl = document.createElement("option");
-if (Array.isArray(opt)) {
-optEl.value = opt[0];
-optEl.textContent = opt[1];
-} else {
-optEl.value = opt.value;
-optEl.textContent = opt.label;
-}
-if (String(optEl.value) === String(f.default)) optEl.selected = true;
-sel.appendChild(optEl);
-});
-wrap.appendChild(sel);
-} else {
-const inp = document.createElement("input");
-inp.type = "number";
-inp.id = "field_" + f.id;
-inp.name = f.id;
-inp.value = f.default !== undefined ? f.default : "";
-if (f.attrs) {
-for (const [k, v] of Object.entries(f.attrs)) inp.setAttribute(k, v);
-}
-wrap.appendChild(inp);
-}
-fieldsContainer.appendChild(wrap);
-});
-// Reference table
-const refCard = $("referenceCard");
-if (tool.table && tool.table.headers && tool.table.rows) {
-refCard.classList.remove("hidden");
-const head = \bm{("refTableHead");}
-\bm{const body = $("refTableBody");}
-\bm{head.innerHTML = `<tr>${tool.table.headers.map(h => `<th>${h}</th>`).join("")}</tr>`;}
-body.innerHTML = tool.table.rows.map(row => `<tr>${row.map(c => `<td>{c}</td>⁠).join("")}</tr>⁠).join("");
-} else {
-refCard.classList.add("hidden");
-}
-// Academic references
-const refsSec = $("academicRefsSection");
-const refsList = $("academicRefsList");
-refsList.innerHTML = "";
-if (tool.references) {
-refsSec.classList.remove("hidden");
-const refItem = document.createElement("div");
-refItem.className = "ref-card-item";
-refItem.innerHTML = ⁠<div class="ref-card-citation">${tool.references}</div>⁠;
-refsList.appendChild(refItem);
-} else {
-refsSec.classList.add("hidden");
-}
-// Hide previous result
-$("result").classList.remove("show");
-showView("calculator");
-// Execute initial default calculation
-calculate();
-}
-function calculate() {
-if (!currentTool || typeof currentTool.calc !== "function") return;
-const vals = {};
-(currentTool.fields || []).forEach(f => {
-const el = $("field_" + f.id);
-if (el) vals[f.id] = el.value;
-});
-try {
-const res = currentTool.calc(vals);
-$("value").textContent = res.value || "";
-$("equation").textContent = res.eq || "";
-$("result").classList.add("show");
-} catch (err) {
-console.error("Calculation error:", err);
-}
-}
-$("form").onsubmit = e => {
-e.preventDefault();
-calculate();
-};
-$("reset").onclick = () => {
-if (currentTool) openTool(currentTool);
-};
-$("copy").onclick = () => {
-const txt = ⁠${currentTool.name}\n${$("value").textContent}\n${$("equation").textContent}⁠;
-navigator.clipboard.writeText(txt).then(() => {
-const btn = $("copy");
-btn.textContent = "Copied!";
-setTimeout(() => btn.textContent = "Copy", 1500);
-});
-};
-$("homeBtn").onclick = () => showView("home");
-$("categoryBtn").onclick = () => currentCatId ? openCategory(currentCatId) : showView("home");
-// Initial load
-renderHome();
+  "use strict";
+  const $ = id => document.getElementById(id);
+
+  // Fallback category if none registered
+  if (window.categories.length === 0) {
+    window.categories.push({ id: "all", name: "General Medicine", icon: "🩺", desc: "Clinical calculators and staging tools" });
+  }
+
+  // Determine tool type (calc or class) if not specified
+  window.tools.forEach(t => {
+    if (!t.type) {
+      const isClass = /score|criteria|staging|classification|meows|apgar|bishop|iadpsg|mec|popq|figo/i.test(t.name + " " + (t.desc || ""));
+      t.type = isClass ? "class" : "calc";
+    }
+  });
+
+  // State
+  let currentCatId = null;
+  let currentTool = null;
+  let activeFilter = "all";
+
+  // --- THEME ---
+  let activeThemeMode = localStorage.getItem("medcalc_theme") || "system";
+  function applyTheme(mode) {
+    activeThemeMode = mode;
+    localStorage.setItem("medcalc_theme", mode);
+    let effective = mode === "system" ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : mode;
+    document.documentElement.setAttribute("data-theme", effective);
+    document.querySelectorAll(".theme-btn").forEach(btn => btn.classList.toggle("active", btn.dataset.themeVal === mode));
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute("content", effective === "dark" ? "#0b1523" : "#0f2744");
+  }
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
+    if (activeThemeMode === "system") applyTheme("system");
+  });
+  applyTheme(activeThemeMode);
+
+  $("openSettingsBtn").onclick = () => $("settingsModal").classList.remove("hidden");
+  $("closeSettingsBtn").onclick = () => $("settingsModal").classList.add("hidden");
+  $("settingsModal").onclick = e => { if (e.target === $("settingsModal")) $("settingsModal").classList.add("hidden"); };
+  document.querySelectorAll(".theme-btn").forEach(btn => btn.onclick = () => applyTheme(btn.dataset.themeVal));
+
+  // --- SPLASH DISMISSAL ---
+  function dismissSplash() {
+    const splash = $("splash");
+    if (splash) {
+      splash.classList.add("fade-out");
+      setTimeout(() => {
+        if (splash.parentNode) splash.parentNode.removeChild(splash);
+      }, 400);
+    }
+  }
+  window.addEventListener("load", () => setTimeout(dismissSplash, 300));
+  setTimeout(dismissSplash, 2000); // Fail-safe timeout
+
+  // --- NAVIGATION ---
+  function showView(view) {
+    $("home").classList.toggle("hidden", view !== "home");
+    $("categoryPage").classList.toggle("hidden", view !== "category");
+    $("calculatorPage").classList.toggle("hidden", view !== "calculator");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  // --- RENDER HOME ---
+  function renderHome() {
+    const catContainer = $("categories");
+    catContainer.innerHTML = "";
+    window.categories.forEach(cat => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `<span class="ico">${cat.icon || "📁"}</span><strong>${cat.name}</strong><small>${cat.desc}</small>`;
+      card.onclick = () => openCategory(cat.id);
+      catContainer.appendChild(card);
+    });
+
+    const quickContainer = $("quick");
+    quickContainer.innerHTML = "";
+    window.tools.slice(0, 4).forEach(t => quickContainer.appendChild(createToolItem(t)));
+  }
+
+  // --- CREATE TOOL ITEM COMPONENT ---
+  function createToolItem(t) {
+    const div = document.createElement("div");
+    div.className = "tool";
+    const badgeLabel = t.type === "class" ? "Classification" : "Calculator";
+    const badgeClass = t.type === "class" ? "badge-class" : "badge-calc";
+    div.innerHTML = `<div class="tool-header"><strong>${t.name}</strong><span class="badge ${badgeClass}">${badgeLabel}</span></div><small>${t.desc || ""}</small>`;
+    div.onclick = () => openTool(t);
+    return div;
+  }
+
+  // --- CATEGORY VIEW ---
+  function openCategory(catId) {
+    currentCatId = catId;
+    const cat = window.categories.find(c => c.id === catId);
+    $("categoryTitle").textContent = cat ? cat.name : "Specialty Tools";
+    $("categoryDesc").textContent = cat ? cat.desc : "";
+    activeFilter = "all";
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.filter === "all"));
+    renderCategoryTools();
+    showView("category");
+  }
+
+  function renderCategoryTools() {
+    const list = $("toolList");
+    list.innerHTML = "";
+    const filtered = window.tools.filter(t => (t.cat === currentCatId || currentCatId === "all") && (activeFilter === "all" || t.type === activeFilter));
+    if (filtered.length === 0) {
+      list.innerHTML = `<div class="muted" style="padding:20px 0;text-align:center;">No tools found in this category.</div>`;
+      return;
+    }
+    filtered.forEach(t => list.appendChild(createToolItem(t)));
+  }
+
+  document.querySelectorAll(".tab-btn").forEach(btn => {
+    btn.onclick = () => {
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      activeFilter = btn.dataset.filter;
+      renderCategoryTools();
+    };
+  });
+
+  // --- SEARCH ---
+  const searchInput = $("search");
+  searchInput.oninput = () => {
+    const q = searchInput.value.trim().toLowerCase();
+    if (!q) {
+      $("homeDefaultContent").classList.remove("hidden");
+      $("searchResultsSection").classList.add("hidden");
+      return;
+    }
+    $("homeDefaultContent").classList.add("hidden");
+    $("searchResultsSection").classList.remove("hidden");
+    const matches = window.tools.filter(t => {
+      return (t.name && t.name.toLowerCase().includes(q)) ||
+        (t.desc && t.desc.toLowerCase().includes(q)) ||
+        (t.guidance && t.guidance.toLowerCase().includes(q)) ||
+        (t.keywords && t.keywords.some(k => k.toLowerCase().includes(q)));
+    });
+    $("searchResultSubheading").textContent = `Found ${matches.length} tool(s) matching "${searchInput.value}"`;
+    const searchList = $("searchToolList");
+    searchList.innerHTML = "";
+    if (matches.length === 0) {
+      searchList.innerHTML = `<p class="muted">No clinical tools matched your search query.</p>`;
+    } else {
+      matches.forEach(t => searchList.appendChild(createToolItem(t)));
+    }
+  };
+
+  $("clearSearchBtn").onclick = () => {
+    searchInput.value = "";
+    $("homeDefaultContent").classList.remove("hidden");
+    $("searchResultsSection").classList.add("hidden");
+  };
+
+  // --- CALCULATOR & CLASSIFICATION RUNNER ---
+  function openTool(tool) {
+    currentTool = tool;
+    $("title").textContent = tool.name;
+    $("desc").textContent = tool.desc || "";
+
+    const typeBadge = $("toolTypeBadge");
+    typeBadge.textContent = tool.type === "class" ? "Classification" : "Calculator";
+    typeBadge.className = `badge ${tool.type === "class" ? "badge-class" : "badge-calc"}`;
+
+    // Guidance
+    if (tool.guidance) {
+      $("guidanceBox").classList.remove("hidden");
+      $("guidanceText").innerHTML = tool.guidance.replace(/\n/g, "<br>");
+    } else {
+      $("guidanceBox").classList.add("hidden");
+    }
+
+    // Contraindications
+    if (tool.contraindications) {
+      $("contraBox").classList.remove("hidden");
+      $("contraText").innerHTML = tool.contraindications.replace(/\n/g, "<br>");
+    } else {
+      $("contraBox").classList.add("hidden");
+    }
+
+    // Build form fields
+    const fieldsContainer = $("fields");
+    fieldsContainer.innerHTML = "";
+    (tool.fields || []).forEach(f => {
+      const wrap = document.createElement("div");
+      if (f.type === "select" || f.fullWidth) wrap.className = "full-width";
+
+      const lbl = document.createElement("label");
+      lbl.setAttribute("for", "field_" + f.id);
+      lbl.textContent = f.label;
+      wrap.appendChild(lbl);
+
+      const defaultVal = f.value !== undefined ? f.value : (f.default !== undefined ? f.default : "");
+
+      if (f.type === "select") {
+        const sel = document.createElement("select");
+        sel.id = "field_" + f.id;
+        sel.name = f.id;
+        (f.options || []).forEach(opt => {
+          const optEl = document.createElement("option");
+          if (Array.isArray(opt)) {
+            optEl.value = opt[0];
+            optEl.textContent = opt[1];
+          } else {
+            optEl.value = opt.value;
+            optEl.textContent = opt.label;
+          }
+          if (String(optEl.value) === String(defaultVal)) optEl.selected = true;
+          sel.appendChild(optEl);
+        });
+        wrap.appendChild(sel);
+      } else {
+        const inp = document.createElement("input");
+        inp.type = "number";
+        inp.id = "field_" + f.id;
+        inp.name = f.id;
+        inp.value = defaultVal;
+        if (f.min !== undefined) inp.min = f.min;
+        if (f.max !== undefined) inp.max = f.max;
+        if (f.step !== undefined) inp.step = f.step;
+        wrap.appendChild(inp);
+      }
+      fieldsContainer.appendChild(wrap);
+    });
+
+    // Reference table
+    const refCard = $("referenceCard");
+    const head = $("refTableHead");
+    const body = $("refTableBody");
+    if (tool.table && tool.table.headers && tool.table.rows) {
+      refCard.classList.remove("hidden");
+      head.innerHTML = `<tr>${tool.table.headers.map(h => `<th>${h}</th>`).join("")}</tr>`;
+      body.innerHTML = tool.table.rows.map(row => {
+        const rowId = row.id ? ` id="ref-row-${row.id}"` : "";
+        const cols = row.cols || (Array.isArray(row) ? row : []);
+        return `<tr${rowId}>${cols.map(c => `<td>${c}</td>`).join("")}</tr>`;
+      }).join("");
+    } else {
+      refCard.classList.add("hidden");
+    }
+
+    // Academic references
+    const refsSec = $("academicRefsSection");
+    const refsList = $("academicRefsList");
+    refsList.innerHTML = "";
+    if (tool.literature && Array.isArray(tool.literature)) {
+      refsSec.classList.remove("hidden");
+      tool.literature.forEach(lit => {
+        const refItem = document.createElement("div");
+        refItem.className = "ref-card-item";
+        refItem.innerHTML = `<div style="font-weight:700;margin-bottom:4px;">${lit.title || ""}</div><div class="ref-card-citation">${lit.citation || ""}</div>`;
+        refsList.appendChild(refItem);
+      });
+    } else if (tool.references) {
+      refsSec.classList.remove("hidden");
+      const refItem = document.createElement("div");
+      refItem.className = "ref-card-item";
+      refItem.innerHTML = `<div class="ref-card-citation">${tool.references}</div>`;
+      refsList.appendChild(refItem);
+    } else {
+      refsSec.classList.add("hidden");
+    }
+
+    // Hide previous result
+    $("result").classList.remove("show");
+    showView("calculator");
+
+    // Execute initial default calculation
+    calculate();
+  }
+
+  function calculate() {
+    if (!currentTool || typeof currentTool.calc !== "function") return;
+    const vals = {};
+    (currentTool.fields || []).forEach(f => {
+      const el = $("field_" + f.id);
+      if (el) vals[f.id] = el.value;
+    });
+
+    try {
+      const res = currentTool.calc(vals);
+      $("value").textContent = res.value || "";
+      $("equation").textContent = res.eq || "";
+
+      // Highlight active table row if matched
+      if (res.matchId) {
+        document.querySelectorAll("#refTable tr").forEach(r => r.classList.remove("active-grade"));
+        const activeRow = $(`ref-row-${res.matchId}`);
+        if (activeRow) activeRow.classList.add("active-grade");
+      }
+
+      $("result").classList.add("show");
+    } catch (err) {
+      console.error("Calculation error:", err);
+    }
+  }
+
+  $("form").onsubmit = e => {
+    e.preventDefault();
+    calculate();
+  };
+
+  $("reset").onclick = () => {
+    if (currentTool) openTool(currentTool);
+  };
+
+  $("copy").onclick = () => {
+    const txt = `${currentTool.name}\n${$("value").textContent}\n${$("equation").textContent}`;
+    navigator.clipboard.writeText(txt).then(() => {
+      const btn = $("copy");
+      btn.textContent = "Copied!";
+      setTimeout(() => btn.textContent = "Copy", 1500);
+    });
+  };
+
+  $("homeBtn").onclick = () => showView("home");
+  $("categoryBtn").onclick = () => currentCatId ? openCategory(currentCatId) : showView("home");
+
+  // Initial load
+  renderHome();
 })();
 </script>
 </body>

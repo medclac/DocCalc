@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,14 +10,117 @@
 <link rel="apple-touch-icon" href="logo.png">
 
 <style>
+/* CSS VARIABLES FOR THEMES */
+:root {
+  --bg-body: #f3f6fa;
+  --bg-card: #ffffff;
+  --bg-header: #0f2744;
+  --header-text: #ffffff;
+  --header-sub: #c4d8ea;
+  --text-main: #172b4d;
+  --text-muted: #62748a;
+  --border-color: #e0e7f0;
+  --border-hover: #b4cbe4;
+  --input-bg: #ffffff;
+  --input-border: #cdd7e2;
+  --tab-bg: #e8eff6;
+  --btn-back-bg: #e6edf5;
+  --btn-back-text: #17324e;
+  --btn-back-hover: #dbe5f0;
+  --notice-bg: #fff4d6;
+  --notice-border: #ffe39a;
+  --notice-text: #593f00;
+  --guidance-bg: #f0f7ff;
+  --guidance-border: #cce3ff;
+  --guidance-text: #0f3f6d;
+  --contra-bg: #fdf2f2;
+  --contra-border: #f9d2d2;
+  --contra-text: #781c1c;
+  --result-bg: #eaf8f1;
+  --result-border: #b5e4cf;
+  --result-val: #075c42;
+  --result-text: #294d3a;
+  --table-head: #f8fafc;
+  --table-border: #edf2f7;
+  --table-row-text: #334155;
+  --active-grade-bg: #effbf4;
+  --active-grade-text: #0b5133;
+  --ref-card-bg: #f8fafc;
+  --ref-badge: #475569;
+  --badge-calc-bg: #e8f2ff;
+  --badge-calc-text: #1351b4;
+  --badge-calc-border: #c7dcff;
+  --badge-class-bg: #f3e8ff;
+  --badge-class-text: #6927b8;
+  --badge-class-border: #e4cbff;
+  --tag-bg: #f1f5f9;
+  --tag-text: #475569;
+  --splash-bg: #ffffff;
+  --modal-overlay: rgba(0, 0, 0, 0.45);
+}
+
+[data-theme="dark"] {
+  --bg-body: #0d1520;
+  --bg-card: #152233;
+  --bg-header: #0b1523;
+  --header-text: #e2e8f0;
+  --header-sub: #8ba2b9;
+  --text-main: #e2e8f0;
+  --text-muted: #8ba2b9;
+  --border-color: #24354a;
+  --border-hover: #3d5473;
+  --input-bg: #1a2a3e;
+  --input-border: #2a3e56;
+  --tab-bg: #1c2b3d;
+  --btn-back-bg: #1c2c40;
+  --btn-back-text: #c2d6ec;
+  --btn-back-hover: #273d57;
+  --notice-bg: #2d2613;
+  --notice-border: #4d3d14;
+  --notice-text: #ffdf85;
+  --guidance-bg: #132438;
+  --guidance-border: #1d3b5c;
+  --guidance-text: #a8d1ff;
+  --contra-bg: #2d1818;
+  --contra-border: #4e2222;
+  --contra-text: #ffadad;
+  --result-bg: #112d21;
+  --result-border: #1e523c;
+  --result-val: #6ee7b7;
+  --result-text: #a7f3d0;
+  --table-head: #18283c;
+  --table-border: #24354a;
+  --table-row-text: #cbd5e1;
+  --active-grade-bg: #133a28;
+  --active-grade-text: #a7f3d0;
+  --ref-card-bg: #18283c;
+  --ref-badge: #94a3b8;
+  --badge-calc-bg: #162a45;
+  --badge-calc-text: #7bb5ff;
+  --badge-calc-border: #22426d;
+  --badge-class-bg: #281e3d;
+  --badge-class-text: #d3abff;
+  --badge-class-border: #442a6c;
+  --tag-bg: #1e2e42;
+  --tag-text: #94a3b8;
+  --splash-bg: #0d1520;
+  --modal-overlay: rgba(0, 0, 0, 0.7);
+}
+
 *{box-sizing:border-box}
-body{margin:0;background:#f3f6fa;color:#172b4d;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+body{
+  margin:0;
+  background:var(--bg-body);
+  color:var(--text-main);
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  transition:background 0.2s ease, color 0.2s ease;
+}
 
 /* SPLASH SCREEN */
 #splash{
   position:fixed;
   inset:0;
-  background:#ffffff;
+  background:var(--splash-bg);
   display:flex;
   align-items:center;
   justify-content:center;
@@ -36,103 +139,251 @@ body{margin:0;background:#f3f6fa;color:#172b4d;font-family:system-ui,-apple-syst
 }
 
 /* APP SHELL */
-header{background:#0f2744;color:white;padding:22px 18px;border-radius:0 0 22px 22px}
-header small{letter-spacing:1px;text-transform:uppercase;color:#c4d8ea;font-size:11px}
+header{
+  background:var(--bg-header);
+  color:var(--header-text);
+  padding:22px 18px;
+  border-radius:0 0 22px 22px;
+  position:relative;
+}
+.header-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+header small{letter-spacing:1px;text-transform:uppercase;color:var(--header-sub);font-size:11px}
 h1{margin:5px 0;font-size:28px}
-header p{margin:0;color:#d8e5f1;font-size:14px}
+header p{margin:0;color:var(--header-sub);font-size:14px}
 main{max-width:760px;margin:auto;padding:16px}
-.notice{background:#fff4d6;border:1px solid #ffe39a;padding:12px;border-radius:10px;font-size:12px;line-height:1.5;margin-bottom:16px}
+
+/* HEADER SETTINGS BUTTON */
+.icon-btn{
+  background:rgba(255,255,255,0.12);
+  border:1px solid rgba(255,255,255,0.2);
+  color:white;
+  padding:6px 12px;
+  border-radius:8px;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  font-size:13px;
+  font-weight:600;
+  transition:background 0.15s ease;
+}
+.icon-btn:hover{background:rgba(255,255,255,0.22)}
+
+.notice{
+  background:var(--notice-bg);
+  border:1px solid var(--notice-border);
+  color:var(--notice-text);
+  padding:12px;
+  border-radius:10px;
+  font-size:12px;
+  line-height:1.5;
+  margin-bottom:16px
+}
 .search-wrapper{position:relative;margin-bottom:16px}
-.search{width:100%;padding:14px;border:1px solid #d5deea;border-radius:12px;font-size:15px;outline:none}
+.search{
+  width:100%;
+  padding:14px;
+  border:1px solid var(--input-border);
+  background:var(--input-bg);
+  color:var(--text-main);
+  border-radius:12px;
+  font-size:15px;
+  outline:none
+}
 .search:focus{border-color:#2463eb;box-shadow:0 0 0 3px rgba(36,99,235,0.15)}
-.search-hints{font-size:11.5px;color:#62748a;margin-top:6px;padding-left:4px}
+.search-hints{font-size:11.5px;color:var(--text-muted);margin-top:6px;padding-left:4px}
 h2{font-size:21px;margin:8px 0}
-.muted{color:#62748a;font-size:13px;line-height:1.5}
+.muted{color:var(--text-muted);font-size:13px;line-height:1.5}
 
 /* CATEGORY GRID */
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.card{background:white;border:1px solid #e0e7f0;border-radius:14px;padding:14px;text-align:left;color:#172b4d;min-height:110px;cursor:pointer}
-.card:hover{border-color:#b4cbe4}
+.card{
+  background:var(--bg-card);
+  border:1px solid var(--border-color);
+  border-radius:14px;
+  padding:14px;
+  text-align:left;
+  color:var(--text-main);
+  min-height:110px;
+  cursor:pointer
+}
+.card:hover{border-color:var(--border-hover)}
 .card .ico{font-size:24px;display:block;margin-bottom:8px}
 .card strong{display:block;font-size:14px}
-.card small{display:block;color:#62748a;line-height:1.4;margin-top:5px}
+.card small{display:block;color:var(--text-muted);line-height:1.4;margin-top:5px}
 .section{margin-top:23px}
 
 /* NAVIGATION & FILTER PILLS */
 .row{display:flex;align-items:center;gap:12px;margin-bottom:14px}
-.back{border:0;border-radius:9px;background:#e6edf5;padding:10px 14px;font-weight:700;color:#17324e;cursor:pointer}
-.back:hover{background:#dbe5f0}
-.filter-tabs{display:flex;gap:6px;margin:12px 0 16px;background:#e8eff6;padding:4px;border-radius:10px}
-.tab-btn{flex:1;padding:8px;font-size:12.5px;font-weight:600;background:transparent;border:0;border-radius:7px;color:#4a5d73;cursor:pointer}
-.tab-btn.active{background:white;color:#0f2744;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
+.back{
+  border:0;
+  border-radius:9px;
+  background:var(--btn-back-bg);
+  color:var(--btn-back-text);
+  padding:10px 14px;
+  font-weight:700;
+  cursor:pointer
+}
+.back:hover{background:var(--btn-back-hover)}
+.filter-tabs{display:flex;gap:6px;margin:12px 0 16px;background:var(--tab-bg);padding:4px;border-radius:10px}
+.tab-btn{flex:1;padding:8px;font-size:12.5px;font-weight:600;background:transparent;border:0;border-radius:7px;color:var(--text-muted);cursor:pointer}
+.tab-btn.active{background:var(--bg-card);color:var(--text-main);box-shadow:0 1px 3px rgba(0,0,0,0.15)}
 
 /* TOOL ITEMS & BADGES */
-.tool{display:block;width:100%;text-align:left;background:white;border:1px solid #e0e7f0;border-radius:12px;padding:13px 15px;margin-bottom:9px;color:#172b4d;cursor:pointer;position:relative}
-.tool:hover{border-color:#b4cbe4}
+.tool{
+  display:block;
+  width:100%;
+  text-align:left;
+  background:var(--bg-card);
+  border:1px solid var(--border-color);
+  border-radius:12px;
+  padding:13px 15px;
+  margin-bottom:9px;
+  color:var(--text-main);
+  cursor:pointer;
+  position:relative
+}
+.tool:hover{border-color:var(--border-hover)}
 .tool-header{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .tool strong{font-size:14px}
 .badge{display:inline-block;padding:2px 7px;border-radius:6px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px}
-.badge-calc{background:#e8f2ff;color:#1351b4;border:1px solid #c7dcff}
-.badge-class{background:#f3e8ff;color:#6927b8;border:1px solid #e4cbff}
-.tool small{display:block;color:#62748a;margin-top:4px;font-size:12px;line-height:1.4}
+.badge-calc{background:var(--badge-calc-bg);color:var(--badge-calc-text);border:1px solid var(--badge-calc-border)}
+.badge-class{background:var(--badge-class-bg);color:var(--badge-class-text);border:1px solid var(--badge-class-border)}
+.tool small{display:block;color:var(--text-muted);margin-top:4px;font-size:12px;line-height:1.4}
 .tool-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:7px}
-.tool-tag{background:#f1f5f9;color:#475569;font-size:10px;padding:2px 6px;border-radius:4px;font-weight:600}
+.tool-tag{background:var(--tag-bg);color:var(--tag-text);font-size:10px;padding:2px 6px;border-radius:4px;font-weight:600}
 
 /* PANEL & FORM */
-.panel{background:white;border:1px solid #e1e7ee;border-radius:16px;padding:18px}
-.desc{font-size:13px;color:#62748a;line-height:1.5;margin:5px 0 14px}
+.panel{background:var(--bg-card);border:1px solid var(--border-color);border-radius:16px;padding:18px}
+.desc{font-size:13px;color:var(--text-muted);line-height:1.5;margin:5px 0 14px}
 
 /* GUIDANCE & CONTRAINDICATIONS */
 .info-box{border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:12.5px;line-height:1.5}
-.guidance-box{background:#f0f7ff;border:1px solid #cce3ff;color:#0f3f6d}
-.contra-box{background:#fdf2f2;border:1px solid #f9d2d2;color:#781c1c}
+.guidance-box{background:var(--guidance-bg);border:1px solid var(--guidance-border);color:var(--guidance-text)}
+.contra-box{background:var(--contra-bg);border:1px solid var(--contra-border);color:var(--contra-text)}
 .info-title{font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:6px;text-transform:uppercase;font-size:11px;letter-spacing:0.5px}
 
 .fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
 .full-width{grid-column:1 / -1}
-label{display:block;font-size:12px;font-weight:700;margin-bottom:6px;color:#52657a}
-input,select{width:100%;padding:11px;border:1px solid #cdd7e2;border-radius:9px;font-size:15px;background:white;color:#172b4d}
+label{display:block;font-size:12px;font-weight:700;margin-bottom:6px;color:var(--text-muted)}
+input,select{
+  width:100%;
+  padding:11px;
+  border:1px solid var(--input-border);
+  border-radius:9px;
+  font-size:15px;
+  background:var(--input-bg);
+  color:var(--text-main)
+}
 .actions{display:flex;gap:9px;margin-top:16px}
 button{cursor:pointer;font:inherit}
 .primary,.secondary{padding:13px;border:0;border-radius:10px;font-weight:750}
 .primary{background:#2463eb;color:white;flex:1}
-.secondary{background:#edf2f7;color:#334e68}
+.secondary{background:var(--btn-back-bg);color:var(--btn-back-text)}
 
 /* RESULTS CARD */
-.result{display:none;margin-top:20px;padding:16px;border-radius:12px;background:#eaf8f1;border:1px solid #b5e4cf}
+.result{display:none;margin-top:20px;padding:16px;border-radius:12px;background:var(--result-bg);border:1px solid var(--result-border)}
 .result.show{display:block}
-.caption{font-size:11px;color:#22674e;font-weight:700;letter-spacing:0.5px;text-transform:uppercase}
-.value{font-size:24px;font-weight:800;color:#075c42;margin:4px 0 10px;overflow-wrap:anywhere}
-.res-subhead{font-size:11.5px;font-weight:750;color:#1b573e;text-transform:uppercase;margin:12px 0 4px;letter-spacing:0.4px}
-.equation{font-size:12.5px;line-height:1.6;color:#294d3a;white-space:pre-line}
-.copy{float:right;padding:6px 11px;border:1px solid #a9d8c2;border-radius:7px;background:white;font-weight:600;color:#075c42}
+.caption{font-size:11px;color:var(--result-text);font-weight:700;letter-spacing:0.5px;text-transform:uppercase}
+.value{font-size:24px;font-weight:800;color:var(--result-val);margin:4px 0 10px;overflow-wrap:anywhere}
+.res-subhead{font-size:11.5px;font-weight:750;color:var(--result-text);text-transform:uppercase;margin:12px 0 4px;letter-spacing:0.4px}
+.equation{font-size:12.5px;line-height:1.6;color:var(--result-text);white-space:pre-line}
+.copy{float:right;padding:6px 11px;border:1px solid var(--result-border);border-radius:7px;background:var(--bg-card);font-weight:600;color:var(--result-val)}
 
 /* COMPLETE CRITERIA & REFERENCE TABLE */
-.reference-card{margin-top:22px;border-top:1px solid #e1e7ee;padding-top:16px}
-.ref-heading{font-size:14px;font-weight:750;color:#172b4d;margin:0 0 6px;display:flex;align-items:center;gap:6px}
-.ref-desc{font-size:12px;color:#62748a;margin-bottom:12px}
-.table-wrap{overflow-x:auto;border:1px solid #e1e7ee;border-radius:10px;background:white}
+.reference-card{margin-top:22px;border-top:1px solid var(--border-color);padding-top:16px}
+.ref-heading{font-size:14px;font-weight:750;color:var(--text-main);margin:0 0 6px;display:flex;align-items:center;gap:6px}
+.ref-desc{font-size:12px;color:var(--text-muted);margin-bottom:12px}
+.table-wrap{overflow-x:auto;border:1px solid var(--border-color);border-radius:10px;background:var(--bg-card)}
 table.ref-table{width:100%;border-collapse:collapse;text-align:left;font-size:12px}
-table.ref-table th{background:#f8fafc;padding:10px 12px;font-weight:700;color:#475569;border-bottom:1px solid #e1e7ee}
-table.ref-table td{padding:10px 12px;border-bottom:1px solid #edf2f7;color:#334155;vertical-align:top}
+table.ref-table th{background:var(--table-head);padding:10px 12px;font-weight:700;color:var(--text-muted);border-bottom:1px solid var(--border-color)}
+table.ref-table td{padding:10px 12px;border-bottom:1px solid var(--table-border);color:var(--table-row-text);vertical-align:top}
 table.ref-table tr:last-child td{border-bottom:none}
-table.ref-table tr.active-grade{background:#effbf4;font-weight:600}
-table.ref-table tr.active-grade td{border-top:2px solid #38a169;border-bottom:2px solid #38a169;color:#0b5133}
+table.ref-table tr.active-grade{background:var(--active-grade-bg);font-weight:600}
+table.ref-table tr.active-grade td{border-top:2px solid #38a169;border-bottom:2px solid #38a169;color:var(--active-grade-text)}
 
 /* ACADEMIC & CLINICAL REFERENCES SECTION */
-.academic-refs{margin-top:24px;border-top:1px solid #e1e7ee;padding-top:18px}
-.ref-card-item{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:14px;margin-bottom:12px}
-.ref-card-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#475569;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.4px}
-.ref-card-title{font-size:13px;font-weight:700;color:#1e293b;margin:0 0 4px;line-height:1.4}
-.ref-card-citation{font-size:12px;color:#64748b;line-height:1.5;margin-bottom:10px}
+.academic-refs{margin-top:24px;border-top:1px solid var(--border-color);padding-top:18px}
+.ref-card-item{background:var(--ref-card-bg);border:1px solid var(--border-color);border-radius:12px;padding:14px;margin-bottom:12px}
+.ref-card-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:var(--ref-badge);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.4px}
+.ref-card-title{font-size:13px;font-weight:700;color:var(--text-main);margin:0 0 4px;line-height:1.4}
+.ref-card-citation{font-size:12px;color:var(--text-muted);line-height:1.5;margin-bottom:10px}
 .ref-card-links{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
 .ref-btn-link{display:inline-flex;align-items:center;gap:4px;padding:6px 12px;border-radius:6px;background:#2463eb;color:white;text-decoration:none;font-size:11.5px;font-weight:600;transition:background 0.15s}
 .ref-btn-link:hover{background:#1d4ed8}
-.ref-btn-link.secondary-link{background:#f1f5f9;color:#334155;border:1px solid #cbd5e1}
-.ref-btn-link.secondary-link:hover{background:#e2e8f0}
+.ref-btn-link.secondary-link{background:var(--btn-back-bg);color:var(--btn-back-text);border:1px solid var(--border-color)}
+.ref-btn-link.secondary-link:hover{background:var(--btn-back-hover)}
+
+/* SETTINGS MODAL */
+.modal-overlay{
+  position:fixed;
+  inset:0;
+  background:var(--modal-overlay);
+  backdrop-filter:blur(3px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:1000;
+  padding:16px;
+}
+.modal{
+  background:var(--bg-card);
+  border:1px solid var(--border-color);
+  border-radius:16px;
+  width:100%;
+  max-width:440px;
+  padding:20px;
+  box-shadow:0 12px 30px rgba(0,0,0,0.25);
+}
+.modal-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:16px;
+}
+.modal-header h3{margin:0;font-size:18px}
+.modal-close{
+  border:0;
+  background:transparent;
+  font-size:20px;
+  cursor:pointer;
+  color:var(--text-muted);
+}
+.theme-options{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin:12px 0 20px;
+}
+.theme-btn{
+  border:2px solid var(--border-color);
+  background:var(--bg-card);
+  color:var(--text-main);
+  border-radius:10px;
+  padding:12px 8px;
+  text-align:center;
+  font-weight:600;
+  font-size:13px;
+  cursor:pointer;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+  transition:border-color 0.15s;
+}
+.theme-btn:hover{border-color:var(--border-hover)}
+.theme-btn.active{
+  border-color:#2463eb;
+  background:rgba(36,99,235,0.08);
+  color:#2463eb;
+}
 
 .hidden{display:none!important}
-footer{text-align:center;font-size:11px;color:#718096;padding:24px 0}
+footer{text-align:center;font-size:11px;color:var(--text-muted);padding:24px 0}
 @media(max-width:480px){.fields{grid-template-columns:1fr}.card{padding:11px}}
 </style>
 </head>
@@ -143,7 +394,10 @@ footer{text-align:center;font-size:11px;color:#718096;padding:24px 0}
 </div>
 
 <header>
-<small>Clinical tools · prototype</small>
+<div class="header-top">
+  <small>Clinical tools · prototype</small>
+  <button id="openSettingsBtn" class="icon-btn" type="button" aria-label="Settings">⚙ Settings</button>
+</div>
 <h1>✚ MedCalc</h1>
 <p>Calculators & criteria-based classifications</p>
 </header>
@@ -246,7 +500,7 @@ footer{text-align:center;font-size:11px;color:#718096;padding:24px 0}
 </div>
 
 <!-- ACADEMIC & CLINICAL REFERENCES LINKS SECTION -->
-<div class="academic-refs hidden" id="academicRefsSection">
+<div id="academicRefsSection" class="academic-refs hidden">
   <div class="ref-heading">📖 Academic & Clinical References</div>
   <div class="ref-desc">Peer-reviewed publications, seminal studies, and validated guidelines:</div>
   <div id="academicRefsList"></div>
@@ -257,13 +511,103 @@ footer{text-align:center;font-size:11px;color:#718096;padding:24px 0}
 <footer>MedCalc · Educational prototype · Verify before clinical use</footer>
 </main>
 
+<!-- SETTINGS MODAL -->
+<div id="settingsModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="settingsTitle">Settings</h3>
+      <button id="closeSettingsBtn" class="modal-close" type="button" aria-label="Close settings">✕</button>
+    </div>
+    <div>
+      <label style="font-size:13px;font-weight:700">Appearance & Theme</label>
+      <div class="theme-options">
+        <button type="button" class="theme-btn" data-theme-val="light">
+          <span style="font-size:20px">☀️</span>
+          <span>Light</span>
+        </button>
+        <button type="button" class="theme-btn" data-theme-val="dark">
+          <span style="font-size:20px">🌙</span>
+          <span>Dark</span>
+        </button>
+        <button type="button" class="theme-btn" data-theme-val="system">
+          <span style="font-size:20px">💻</span>
+          <span>System</span>
+        </button>
+      </div>
+      <p class="muted" style="font-size:12px;margin:0">
+        Changes are saved locally and applied automatically on your return.
+      </p>
+    </div>
+  </div>
+</div>
+
 <script>
 "use strict";
 
+/* ============================
+   THEME LOGIC & SETTINGS MODAL
+   ============================ */
+let activeThemeMode = localStorage.getItem("medcalc_theme") || "system";
+
+function applyTheme(mode) {
+  activeThemeMode = mode;
+  localStorage.setItem("medcalc_theme", mode);
+
+  let effectiveTheme = mode;
+  if (mode === "system") {
+    effectiveTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+
+  document.documentElement.setAttribute("data-theme", effectiveTheme);
+
+  // Update button active state
+  document.querySelectorAll(".theme-btn").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.themeVal === mode);
+  });
+
+  // Keep meta theme-color coordinated
+  const metaTheme = document.querySelector('meta[name="theme-color"]');
+  if (metaTheme) {
+    metaTheme.setAttribute("content", effectiveTheme === "dark" ? "#0b1523" : "#0f2744");
+  }
+}
+
+// Watch system preference change when in "system" mode
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", e => {
+  if (activeThemeMode === "system") {
+    applyTheme("system");
+  }
+});
+
+applyTheme(activeThemeMode);
+
+$("openSettingsBtn").addEventListener("click", () => {
+  $("settingsModal").classList.remove("hidden");
+});
+
+$("closeSettingsBtn").addEventListener("click", () => {
+  $("settingsModal").classList.add("hidden");
+});
+
+$("settingsModal").addEventListener("click", (e) => {
+  if (e.target === $("settingsModal")) {
+    $("settingsModal").classList.add("hidden");
+  }
+});
+
+document.querySelectorAll(".theme-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    applyTheme(btn.dataset.themeVal);
+  });
+});
+
+/* ============================
+   MEDCALC CORE DATA & LOGIC
+   ============================ */
 const N=(id,label,value,extra={})=>({id,label,value,type:"number",...extra});
 const S=(id,label,value,options)=>({id,label,value,type:"select",options});
 
-/* SYNONYM MAPPING: Enables acronym, slang, and organ search expansion */
+/* SYNONYM MAPPING */
 const SYNONYM_MAP={
   "abg":["abg","arterial blood gas","acid base","tonicity","osmolality","electrolytes","ph","pco2","bicarb"],
   "se":["se","serum electrolytes","electrolytes","sodium","potassium","calcium","tonicity","osmolality","osmolar"],
@@ -541,7 +885,7 @@ const tools=[
 }
 ];
 
-const $=id=>document.getElementById(id);
+function $(id){ return document.getElementById(id); }
 let currentCategory="cardio";
 let currentTool="forrest";
 let currentTypeFilter="all";
@@ -730,7 +1074,7 @@ function openTool(id){
     $("fields").appendChild(wrap);
   });
 
-  // Reference Table Construction (For Classifications or Multivariable Tables)
+  // Reference Table Construction
   const refCard=$("referenceCard");
   const thead=$("refTableHead");
   const tbody=$("refTableBody");
@@ -763,7 +1107,7 @@ function openTool(id){
     refCard.classList.add("hidden");
   }
 
-  // Academic References & External Links Construction
+  // Academic References Construction
   const academicSection=$("academicRefsSection");
   const academicList=$("academicRefsList");
   academicList.innerHTML="";
@@ -871,13 +1215,11 @@ function searchToolsAndCategories(rawQuery){
   const cleanQ=rawQuery.trim().toLowerCase();
   if(!cleanQ) return [];
 
-  // Expand query with synonyms
   const searchTerms=new Set([cleanQ]);
   if(SYNONYM_MAP[cleanQ]){
     SYNONYM_MAP[cleanQ].forEach(term=>searchTerms.add(term.toLowerCase()));
   }
 
-  // Cross-search all synonyms in map keys
   for(const [k,synonyms] of Object.entries(SYNONYM_MAP)){
     if(cleanQ===k || synonyms.some(s=>s.includes(cleanQ) || cleanQ.includes(s))){
       searchTerms.add(k);

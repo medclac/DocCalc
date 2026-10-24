@@ -7,229 +7,241 @@
 <title>MedCalc</title>
 <link rel="icon" type="image/png" href="logo.png">
 <link rel="apple-touch-icon" href="logo.png">
+
 <style>
 /* CSS VARIABLES FOR THEMES */
 :root {
---bg-body: #f3f6fa;
---bg-card: #ffffff;
---bg-header: #0f2744;
---header-text: #ffffff;
---header-sub: #c4d8ea;
---text-main: #172b4d;
---text-muted: #62748a;
---border-color: #e0e7f0;
---border-hover: #b4cbe4;
---input-bg: #ffffff;
---input-border: #cdd7e2;
---tab-bg: #e8eff6;
---btn-back-bg: #e6edf5;
---btn-back-text: #17324e;
---btn-back-hover: #dbe5f0;
---notice-bg: #fff4d6;
---notice-border: #ffe39a;
---notice-text: #593f00;
---guidance-bg: #f0f7ff;
---guidance-border: #cce3ff;
---guidance-text: #0f3f6d;
---contra-bg: #fdf2f2;
---contra-border: #f9d2d2;
---contra-text: #781c1c;
---result-bg: #eaf8f1;
---result-border: #b5e4cf;
---result-val: #075c42;
---result-text: #294d3a;
---table-head: #f8fafc;
---table-border: #edf2f7;
---table-row-text: #334155;
---active-grade-bg: #effbf4;
---active-grade-text: #0b5133;
---ref-card-bg: #f8fafc;
---ref-badge: #475569;
---badge-calc-bg: #e8f2ff;
---badge-calc-text: #1351b4;
---badge-calc-border: #c7dcff;
---badge-class-bg: #f3e8ff;
---badge-class-text: #6927b8;
---badge-class-border: #e4cbff;
---tag-bg: #f1f5f9;
---tag-text: #475569;
---splash-bg: #ffffff;
---modal-overlay: rgba(0, 0, 0, 0.45);
+  --bg-body: #f3f6fa;
+  --bg-card: #ffffff;
+  --bg-header: #0f2744;
+  --header-text: #ffffff;
+  --header-sub: #c4d8ea;
+  --text-main: #172b4d;
+  --text-muted: #62748a;
+  --border-color: #e0e7f0;
+  --border-hover: #b4cbe4;
+  --input-bg: #ffffff;
+  --input-border: #cdd7e2;
+  --tab-bg: #e8eff6;
+  --btn-back-bg: #e6edf5;
+  --btn-back-text: #17324e;
+  --btn-back-hover: #dbe5f0;
+  --notice-bg: #fff4d6;
+  --notice-border: #ffe39a;
+  --notice-text: #593f00;
+  --guidance-bg: #f0f7ff;
+  --guidance-border: #cce3ff;
+  --guidance-text: #0f3f6d;
+  --contra-bg: #fdf2f2;
+  --contra-border: #f9d2d2;
+  --contra-text: #781c1c;
+  --result-bg: #eaf8f1;
+  --result-border: #b5e4cf;
+  --result-val: #075c42;
+  --result-text: #294d3a;
+  --table-head: #f8fafc;
+  --table-border: #edf2f7;
+  --table-row-text: #334155;
+  --active-grade-bg: #effbf4;
+  --active-grade-text: #0b5133;
+  --ref-card-bg: #f8fafc;
+  --ref-badge: #475569;
+  --badge-calc-bg: #e8f2ff;
+  --badge-calc-text: #1351b4;
+  --badge-calc-border: #c7dcff;
+  --badge-class-bg: #f3e8ff;
+  --badge-class-text: #6927b8;
+  --badge-class-border: #e4cbff;
+  --tag-bg: #f1f5f9;
+  --tag-text: #475569;
+  --splash-bg: #ffffff;
+  --modal-overlay: rgba(0, 0, 0, 0.45);
 }
+
 [data-theme="dark"] {
---bg-body: #0d1520;
---bg-card: #152233;
---bg-header: #0b1523;
---header-text: #e2e8f0;
---header-sub: #8ba2b9;
---text-main: #e2e8f0;
---text-muted: #8ba2b9;
---border-color: #24354a;
---border-hover: #3d5473;
---input-bg: #1a2a3e;
---input-border: #2a3e56;
---tab-bg: #1c2b3d;
---btn-back-bg: #1c2c40;
---btn-back-text: #c2d6ec;
---btn-back-hover: #273d57;
---notice-bg: #2d2613;
---notice-border: #4d3d14;
---notice-text: #ffdf85;
---guidance-bg: #132438;
---guidance-border: #1d3b5c;
---guidance-text: #a8d1ff;
---contra-bg: #2d1818;
---contra-border: #4e2222;
---contra-text: #ffadad;
---result-bg: #112d21;
---result-border: #1e523c;
---result-val: #6ee7b7;
---result-text: #a7f3d0;
---table-head: #18283c;
---table-border: #24354a;
---table-row-text: #cbd5e1;
---active-grade-bg: #133a28;
---active-grade-text: #a7f3d0;
---ref-card-bg: #18283c;
---ref-badge: #94a3b8;
---badge-calc-bg: #162a45;
---badge-calc-text: #7bb5ff;
---badge-calc-border: #22426d;
---badge-class-bg: #281e3d;
---badge-class-text: #d3abff;
---badge-class-border: #442a6c;
---tag-bg: #1e2e42;
---tag-text: #94a3b8;
---splash-bg: #0d1520;
---modal-overlay: rgba(0, 0, 0, 0.7);
+  --bg-body: #0d1520;
+  --bg-card: #152233;
+  --bg-header: #0b1523;
+  --header-text: #e2e8f0;
+  --header-sub: #8ba2b9;
+  --text-main: #e2e8f0;
+  --text-muted: #8ba2b9;
+  --border-color: #24354a;
+  --border-hover: #3d5473;
+  --input-bg: #1a2a3e;
+  --input-border: #2a3e56;
+  --tab-bg: #1c2b3d;
+  --btn-back-bg: #1c2c40;
+  --btn-back-text: #c2d6ec;
+  --btn-back-hover: #273d57;
+  --notice-bg: #2d2613;
+  --notice-border: #4d3d14;
+  --notice-text: #ffdf85;
+  --guidance-bg: #132438;
+  --guidance-border: #1d3b5c;
+  --guidance-text: #a8d1ff;
+  --contra-bg: #2d1818;
+  --contra-border: #4e2222;
+  --contra-text: #ffadad;
+  --result-bg: #112d21;
+  --result-border: #1e523c;
+  --result-val: #6ee7b7;
+  --result-text: #a7f3d0;
+  --table-head: #18283c;
+  --table-border: #24354a;
+  --table-row-text: #cbd5e1;
+  --active-grade-bg: #133a28;
+  --active-grade-text: #a7f3d0;
+  --ref-card-bg: #18283c;
+  --ref-badge: #94a3b8;
+  --badge-calc-bg: #162a45;
+  --badge-calc-text: #7bb5ff;
+  --badge-calc-border: #22426d;
+  --badge-class-bg: #281e3d;
+  --badge-class-text: #d3abff;
+  --badge-class-border: #442a6c;
+  --tag-bg: #1e2e42;
+  --tag-text: #94a3b8;
+  --splash-bg: #0d1520;
+  --modal-overlay: rgba(0, 0, 0, 0.7);
 }
+
 * { box-sizing: border-box; }
 body {
-margin: 0;
-background: var(--bg-body);
-color: var(--text-main);
-font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-transition: background 0.2s ease, color 0.2s ease;
+  margin: 0;
+  background: var(--bg-body);
+  color: var(--text-main);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  transition: background 0.2s ease, color 0.2s ease;
 }
+
 #splash {
-position: fixed;
-inset: 0;
-background: var(--splash-bg);
-display: flex;
-align-items: center;
-justify-content: center;
-z-index: 9999;
-transition: opacity 0.4s ease, visibility 0.4s;
+  position: fixed;
+  inset: 0;
+  background: var(--splash-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: opacity 0.4s ease, visibility 0.4s;
 }
 #splash.fade-out {
-opacity: 0;
-visibility: hidden;
-pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 .splash-logo {
-width: 140px;
-height: auto;
-display: block;
+  width: 140px;
+  height: auto;
+  display: block;
 }
+
 header {
-background: var(--bg-header);
-color: var(--header-text);
-padding: 22px 18px;
-border-radius: 0 0 22px 22px;
-position: relative;
+  background: var(--bg-header);
+  color: var(--header-text);
+  padding: 22px 18px;
+  border-radius: 0 0 22px 22px;
+  position: relative;
 }
 .header-top {
-display: flex;
-align-items: center;
-justify-content: space-between;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 header small { letter-spacing: 1px; text-transform: uppercase; color: var(--header-sub); font-size: 11px; }
 h1 { margin: 5px 0; font-size: 28px; }
 header p { margin: 0; color: var(--header-sub); font-size: 14px; }
 main { max-width: 760px; margin: auto; padding: 16px; }
+
 .icon-btn {
-background: rgba(255,255,255,0.12);
-border: 1px solid rgba(255,255,255,0.2);
-color: white;
-padding: 6px 12px;
-border-radius: 8px;
-cursor: pointer;
-display: inline-flex;
-align-items: center;
-gap: 6px;
-font-size: 13px;
-font-weight: 600;
-transition: background 0.15s ease;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background 0.15s ease;
 }
 .icon-btn:hover { background: rgba(255,255,255,0.22); }
+
 .notice {
-background: var(--notice-bg);
-border: 1px solid var(--notice-border);
-color: var(--notice-text);
-padding: 12px;
-border-radius: 10px;
-font-size: 12px;
-line-height: 1.5;
-margin-bottom: 16px;
+  background: var(--notice-bg);
+  border: 1px solid var(--notice-border);
+  color: var(--notice-text);
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  margin-bottom: 16px;
 }
+
 .search-wrapper { position: relative; margin-bottom: 16px; }
 .search {
-width: 100%;
-padding: 14px;
-border: 1px solid var(--input-border);
-background: var(--input-bg);
-color: var(--text-main);
-border-radius: 12px;
-font-size: 15px;
-outline: none;
+  width: 100%;
+  padding: 14px;
+  border: 1px solid var(--input-border);
+  background: var(--input-bg);
+  color: var(--text-main);
+  border-radius: 12px;
+  font-size: 15px;
+  outline: none;
 }
 .search:focus { border-color: #2463eb; box-shadow: 0 0 0 3px rgba(36,99,235,0.15); }
 .search-hints { font-size: 11.5px; color: var(--text-muted); margin-top: 6px; padding-left: 4px; }
 h2 { font-size: 21px; margin: 8px 0; }
 .muted { color: var(--text-muted); font-size: 13px; line-height: 1.5; }
+
 .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 .card {
-background: var(--bg-card);
-border: 1px solid var(--border-color);
-border-radius: 14px;
-padding: 14px;
-text-align: left;
-color: var(--text-main);
-min-height: 110px;
-cursor: pointer;
-transition: border-color 0.15s;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 14px;
+  text-align: left;
+  color: var(--text-main);
+  min-height: 110px;
+  cursor: pointer;
+  transition: border-color 0.15s;
 }
 .card:hover { border-color: var(--border-hover); }
 .card .ico { font-size: 24px; display: block; margin-bottom: 8px; }
 .card strong { display: block; font-size: 14px; }
 .card small { display: block; color: var(--text-muted); line-height: 1.4; margin-top: 5px; }
+
 .section { margin-top: 23px; }
 .row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
 .back {
-border: 0;
-border-radius: 9px;
-background: var(--btn-back-bg);
-color: var(--btn-back-text);
-padding: 10px 14px;
-font-weight: 700;
-cursor: pointer;
+  border: 0;
+  border-radius: 9px;
+  background: var(--btn-back-bg);
+  color: var(--btn-back-text);
+  padding: 10px 14px;
+  font-weight: 700;
+  cursor: pointer;
 }
 .back:hover { background: var(--btn-back-hover); }
+
 .filter-tabs { display: flex; gap: 6px; margin: 12px 0 16px; background: var(--tab-bg); padding: 4px; border-radius: 10px; }
 .tab-btn { flex: 1; padding: 8px; font-size: 12.5px; font-weight: 600; background: transparent; border: 0; border-radius: 7px; color: var(--text-muted); cursor: pointer; }
 .tab-btn.active { background: var(--bg-card); color: var(--text-main); box-shadow: 0 1px 3px rgba(0,0,0,0.15); }
+
 .tool {
-display: block;
-width: 100%;
-text-align: left;
-background: var(--bg-card);
-border: 1px solid var(--border-color);
-border-radius: 12px;
-padding: 13px 15px;
-margin-bottom: 9px;
-color: var(--text-main);
-cursor: pointer;
-position: relative;
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 13px 15px;
+  margin-bottom: 9px;
+  color: var(--text-main);
+  cursor: pointer;
+  position: relative;
 }
 .tool:hover { border-color: var(--border-hover); }
 .tool-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
@@ -238,31 +250,36 @@ position: relative;
 .badge-calc { background: var(--badge-calc-bg); color: var(--badge-calc-text); border: 1px solid var(--badge-calc-border); }
 .badge-class { background: var(--badge-class-bg); color: var(--badge-class-text); border: 1px solid var(--badge-class-border); }
 .tool small { display: block; color: var(--text-muted); margin-top: 4px; font-size: 12px; line-height: 1.4; }
+
 .panel { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 18px; }
 .desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; margin: 5px 0 14px; }
+
 .info-box { border-radius: 10px; padding: 12px 14px; margin-bottom: 14px; font-size: 12.5px; line-height: 1.5; }
 .guidance-box { background: var(--guidance-bg); border: 1px solid var(--guidance-border); color: var(--guidance-text); }
 .contra-box { background: var(--contra-bg); border: 1px solid var(--contra-border); color: var(--contra-text); }
 .info-title { font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
+
 .fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 13px; }
 .full-width { grid-column: 1 / -1; }
 label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 6px; color: var(--text-muted); }
 input, select {
-width: 100%;
-padding: 11px;
-border: 1px solid var(--input-border);
-border-radius: 9px;
-font-size: 15px;
-background: var(--input-bg);
-color: var(--text-main);
-outline: none;
+  width: 100%;
+  padding: 11px;
+  border: 1px solid var(--input-border);
+  border-radius: 9px;
+  font-size: 15px;
+  background: var(--input-bg);
+  color: var(--text-main);
+  outline: none;
 }
 input:focus, select:focus { border-color: #2463eb; }
+
 .actions { display: flex; gap: 9px; margin-top: 16px; }
 button { cursor: pointer; font: inherit; }
 .primary, .secondary { padding: 13px; border: 0; border-radius: 10px; font-weight: 750; }
 .primary { background: #2463eb; color: white; flex: 1; }
 .secondary { background: var(--btn-back-bg); color: var(--btn-back-text); }
+
 .result { display: none; margin-top: 20px; padding: 16px; border-radius: 12px; background: var(--result-bg); border: 1px solid var(--result-border); }
 .result.show { display: block; }
 .caption { font-size: 11px; color: var(--result-text); font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
@@ -270,6 +287,7 @@ button { cursor: pointer; font: inherit; }
 .res-subhead { font-size: 11.5px; font-weight: 750; color: var(--result-text); text-transform: uppercase; margin: 12px 0 4px; letter-spacing: 0.4px; }
 .equation { font-size: 12.5px; line-height: 1.6; color: var(--result-text); white-space: pre-line; }
 .copy { float: right; padding: 6px 11px; border: 1px solid var(--result-border); border-radius: 7px; background: var(--bg-card); font-weight: 600; color: var(--result-val); }
+
 .reference-card { margin-top: 22px; border-top: 1px solid var(--border-color); padding-top: 16px; }
 .ref-heading { font-size: 14px; font-weight: 750; color: var(--text-main); margin: 0 0 6px; display: flex; align-items: center; gap: 6px; }
 .ref-desc { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; }
@@ -280,187 +298,213 @@ table.ref-table td { padding: 10px 12px; border-bottom: 1px solid var(--table-bo
 table.ref-table tr:last-child td { border-bottom: none; }
 table.ref-table tr.active-grade { background: var(--active-grade-bg); font-weight: 600; }
 table.ref-table tr.active-grade td { border-top: 2px solid #38a169; border-bottom: 2px solid #38a169; color: var(--active-grade-text); }
+
 .academic-refs { margin-top: 24px; border-top: 1px solid var(--border-color); padding-top: 18px; }
 .ref-card-item { background: var(--ref-card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; margin-bottom: 12px; }
 .ref-card-citation { font-size: 12px; color: var(--text-muted); line-height: 1.5; white-space: pre-line; }
+.ref-card-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.ref-btn-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: #2463eb;
+  color: white;
+  text-decoration: none;
+  font-size: 11px;
+  font-weight: 600;
+}
+.ref-btn-link.secondary {
+  background: var(--btn-back-bg);
+  color: var(--btn-back-text);
+  border: 1px solid var(--border-color);
+}
+
 .modal-overlay {
-position: fixed;
-inset: 0;
-background: var(--modal-overlay);
-backdrop-filter: blur(3px);
-display: flex;
-align-items: center;
-justify-content: center;
-z-index: 1000;
-padding: 16px;
+  position: fixed;
+  inset: 0;
+  background: var(--modal-overlay);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
 }
 .modal {
-background: var(--bg-card);
-border: 1px solid var(--border-color);
-border-radius: 16px;
-width: 100%;
-max-width: 440px;
-padding: 20px;
-box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 440px;
+  padding: 20px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.25);
 }
 .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
 .modal-header h3 { margin: 0; font-size: 18px; }
 .modal-close { border: 0; background: transparent; font-size: 20px; cursor: pointer; color: var(--text-muted); }
+
 .theme-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 12px 0 20px; }
 .theme-btn {
-border: 2px solid var(--border-color);
-background: var(--bg-card);
-color: var(--text-main);
-border-radius: 10px;
-padding: 12px 8px;
-text-align: center;
-font-weight: 600;
-font-size: 13px;
-cursor: pointer;
-display: flex;
-flex-direction: column;
-align-items: center;
-gap: 6px;
+  border: 2px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text-main);
+  border-radius: 10px;
+  padding: 12px 8px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
 }
 .theme-btn.active { border-color: #2463eb; background: rgba(36,99,235,0.08); color: #2463eb; }
+
 .hidden { display: none !important; }
 footer { text-align: center; font-size: 11px; color: var(--text-muted); padding: 24px 0; }
 @media (max-width: 480px) { .fields { grid-template-columns: 1fr; } .card { padding: 11px; } }
 </style>
 </head>
 <body>
+
 <div id="splash">
-<img src="logo.png" alt="MedCalc Logo" class="splash-logo" onerror="this.style.display='none'">
+  <img src="logo.png" alt="MedCalc Logo" class="splash-logo" onerror="this.style.display='none'">
 </div>
+
 <header>
-<div class="header-top">
-<small>Clinical tools · prototype</small>
-<button id="openSettingsBtn" class="icon-btn" type="button" aria-label="Settings">⚙ Settings</button>
-</div>
-<h1>✚ MedCalc</h1>
-<p>Calculators & criteria-based classifications</p>
+  <div class="header-top">
+    <small>Clinical tools · prototype</small>
+    <button id="openSettingsBtn" class="icon-btn" type="button" aria-label="Settings">⚙ Settings</button>
+  </div>
+  <h1>✚ MedCalc</h1>
+  <p>Calculators & criteria-based classifications</p>
 </header>
+
 <main>
-<div class="notice"><b>Clinical safety:</b> Educational prototype only. Verify formulas, tables, and criteria independently before clinical use.</div>
+  <div class="notice"><b>Clinical safety:</b> Educational prototype only. Verify formulas, tables, and criteria independently before clinical use.</div>
 
-<!-- HOME VIEW -->
-<div id="home">
-<div class="search-wrapper">
-<input class="search" id="search" placeholder="Search by name, organ (liver, kidney), or abbreviation..." aria-label="Search tools">
-<div class="search-hints">Quick terms: <code>ga</code>, <code>bpp</code>, <code>bishop</code>, <code>preeclampsia</code>, <code>hellp</code>, <code>ogtt</code></div>
-</div>
-<div id="homeDefaultContent">
-<h2>Browse by specialty</h2>
-<p class="muted">Select a category to view its clinical tools.</p>
-<div class="grid" id="categories"></div>
-<div class="section">
-<h2>Quick access</h2>
-<div id="quick"></div>
-</div>
-</div>
-<div id="searchResultsSection" class="hidden">
-<div class="row" style="justify-content:space-between">
-<h2 id="searchResultHeading" style="margin:0">Search Results</h2>
-<button class="back" id="clearSearchBtn" type="button">Clear</button>
-</div>
-<p class="muted" id="searchResultSubheading"></p>
-<div id="searchToolList"></div>
-</div>
-</div>
+  <!-- HOME VIEW -->
+  <div id="home">
+    <div class="search-wrapper">
+      <input class="search" id="search" placeholder="Search by name, organ (bone, knee, liver), or abbreviation..." aria-label="Search tools">
+      <div class="search-hints">Quick terms: <code>gustilo</code>, <code>ottawa</code>, <code>kellgren</code>, <code>ga</code>, <code>bpp</code>, <code>bishop</code></div>
+    </div>
+    <div id="homeDefaultContent">
+      <h2>Browse by specialty</h2>
+      <p class="muted">Select a category to view its clinical tools.</p>
+      <div class="grid" id="categories"></div>
+      <div class="section">
+        <h2>Quick access</h2>
+        <div id="quick"></div>
+      </div>
+    </div>
+    <div id="searchResultsSection" class="hidden">
+      <div class="row" style="justify-content:space-between">
+        <h2 id="searchResultHeading" style="margin:0">Search Results</h2>
+        <button class="back" id="clearSearchBtn" type="button">Clear</button>
+      </div>
+      <p class="muted" id="searchResultSubheading"></p>
+      <div id="searchToolList"></div>
+    </div>
+  </div>
 
-<!-- CATEGORY VIEW -->
-<div id="categoryPage" class="hidden">
-<div class="row">
-<button class="back" id="homeBtn" type="button">← Home</button>
-<div><h2 id="categoryTitle" style="margin:0"></h2><div class="muted" id="categoryDesc"></div></div>
-</div>
-<div class="filter-tabs" id="typeFilters">
-<button type="button" class="tab-btn active" data-filter="all">All Tools</button>
-<button type="button" class="tab-btn" data-filter="calc">Calculators</button>
-<button type="button" class="tab-btn" data-filter="class">Classifications</button>
-</div>
-<div id="toolList"></div>
-</div>
+  <!-- CATEGORY VIEW -->
+  <div id="categoryPage" class="hidden">
+    <div class="row">
+      <button class="back" id="homeBtn" type="button">← Home</button>
+      <div><h2 id="categoryTitle" style="margin:0"></h2><div class="muted" id="categoryDesc"></div></div>
+    </div>
+    <div class="filter-tabs" id="typeFilters">
+      <button type="button" class="tab-btn active" data-filter="all">All Tools</button>
+      <button type="button" class="tab-btn" data-filter="calc">Calculators</button>
+      <button type="button" class="tab-btn" data-filter="class">Classifications</button>
+    </div>
+    <div id="toolList"></div>
+  </div>
 
-<!-- CALCULATOR & CLASSIFICATION INTERFACE -->
-<div id="calculatorPage" class="hidden">
-<div class="row"><button class="back" id="categoryBtn" type="button">← Back</button></div>
-<section class="panel">
-<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
-<h2 id="title" style="margin:0"></h2>
-<span id="toolTypeBadge" class="badge"></span>
-</div>
-<p class="desc" id="desc"></p>
-<div class="info-box guidance-box" id="guidanceBox">
-<div class="info-title">📋 Clinical Guidance</div>
-<div id="guidanceText"></div>
-</div>
-<div class="info-box contra-box" id="contraBox">
-<div class="info-title">⚠️ Limitations & Caveats</div>
-<div id="contraText"></div>
-</div>
-<form id="form">
-<div class="fields" id="fields"></div>
-<div class="actions">
-<button class="primary" type="submit">Calculate / Stage</button>
-<button class="secondary" type="button" id="reset">Reset</button>
-</div>
-</form>
-<div class="result" id="result" aria-live="polite">
-<button class="copy" id="copy" type="button">Copy</button>
-<div class="caption">ASSESSMENT & CLASSIFICATION</div>
-<div class="value" id="value"></div>
-<div class="res-subhead">Interpretation & Management</div>
-<div class="equation" id="equation"></div>
-</div>
-<div class="reference-card hidden" id="referenceCard">
-<div class="ref-heading">📊 Complete Classification & Reference Table</div>
-<div class="ref-desc">Review full staging criteria and point distribution below:</div>
-<div class="table-wrap">
-<table class="ref-table" id="refTable">
-<thead id="refTableHead"></thead>
-<tbody id="refTableBody"></tbody>
-</table>
-</div>
-</div>
-<div id="academicRefsSection" class="academic-refs hidden">
-<div class="ref-heading">📖 Academic & Clinical References</div>
-<div class="ref-desc">Peer-reviewed publications and clinical practice guidelines:</div>
-<div id="academicRefsList"></div>
-</div>
-</section>
-</div>
-<footer>MedCalc · Educational prototype · Verify before clinical use</footer>
+  <!-- CALCULATOR & CLASSIFICATION INTERFACE -->
+  <div id="calculatorPage" class="hidden">
+    <div class="row"><button class="back" id="categoryBtn" type="button">← Back</button></div>
+    <section class="panel">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+        <h2 id="title" style="margin:0"></h2>
+        <span id="toolTypeBadge" class="badge"></span>
+      </div>
+      <p class="desc" id="desc"></p>
+      <div class="info-box guidance-box" id="guidanceBox">
+        <div class="info-title">📋 Clinical Guidance</div>
+        <div id="guidanceText"></div>
+      </div>
+      <div class="info-box contra-box" id="contraBox">
+        <div class="info-title">⚠️ Limitations & Caveats</div>
+        <div id="contraText"></div>
+      </div>
+      <form id="form">
+        <div class="fields" id="fields"></div>
+        <div class="actions">
+          <button class="primary" type="submit">Calculate / Stage</button>
+          <button class="secondary" type="button" id="reset">Reset</button>
+        </div>
+      </form>
+      <div class="result" id="result" aria-live="polite">
+        <button class="copy" id="copy" type="button">Copy</button>
+        <div class="caption">ASSESSMENT & CLASSIFICATION</div>
+        <div class="value" id="value"></div>
+        <div class="res-subhead">Interpretation & Management</div>
+        <div class="equation" id="equation"></div>
+      </div>
+      <div class="reference-card hidden" id="referenceCard">
+        <div class="ref-heading">📊 Complete Classification & Reference Table</div>
+        <div class="ref-desc">Review full staging criteria and point distribution below:</div>
+        <div class="table-wrap">
+          <table class="ref-table" id="refTable">
+            <thead id="refTableHead"></thead>
+            <tbody id="refTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div id="academicRefsSection" class="academic-refs hidden">
+        <div class="ref-heading">📖 Academic & Clinical References</div>
+        <div class="ref-desc">Peer-reviewed publications and clinical practice guidelines:</div>
+        <div id="academicRefsList"></div>
+      </div>
+    </section>
+  </div>
+
+  <footer>MedCalc · Educational prototype · Verify before clinical use</footer>
 </main>
 
 <!-- SETTINGS MODAL -->
 <div id="settingsModal" class="modal-overlay hidden" role="dialog" aria-modal="true">
-<div class="modal">
-<div class="modal-header">
-<h3>Settings</h3>
-<button id="closeSettingsBtn" class="modal-close" type="button">✕</button>
-</div>
-<div>
-<label style="font-size:13px;font-weight:700">Appearance & Theme</label>
-<div class="theme-options">
-<button type="button" class="theme-btn" data-theme-val="light"><span>☀️</span><span>Light</span></button>
-<button type="button" class="theme-btn" data-theme-val="dark"><span>🌙</span><span>Dark</span></button>
-<button type="button" class="theme-btn" data-theme-val="system"><span>💻</span><span>System</span></button>
-</div>
-<p class="muted" style="font-size:12px;margin:0">Changes are applied immediately.</p>
-</div>
-</div>
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Settings</h3>
+      <button id="closeSettingsBtn" class="modal-close" type="button">✕</button>
+    </div>
+    <div>
+      <label style="font-size:13px;font-weight:700">Appearance & Theme</label>
+      <div class="theme-options">
+        <button type="button" class="theme-btn" data-theme-val="light"><span>☀️</span><span>Light</span></button>
+        <button type="button" class="theme-btn" data-theme-val="dark"><span>🌙</span><span>Dark</span></button>
+        <button type="button" class="theme-btn" data-theme-val="system"><span>💻</span><span>System</span></button>
+      </div>
+      <p class="muted" style="font-size:12px;margin:0">Changes are applied immediately.</p>
+    </div>
+  </div>
 </div>
 
 <!-- ============================================================== -->
-<!-- 1. CORE DATA REGISTRY & HELPER FUNCTIONS                       -->
+<!-- 1. CORE DATA REGISTRY & HELPER CONSTRUCTORS                    -->
 <!-- ============================================================== -->
 <script>
 window.categories = window.categories || [];
 window.tools = window.tools || [];
 window.MedCalcModules = window.MedCalcModules || [];
 
-// Compatible constructors with both .value and .default properties[span_3](start_span)[span_3](end_span)[span_4](start_span)[span_4](end_span)
+// Unified constructor functions compatible with both .value and .default schema
 window.N = function (id, label, defaultVal, extra = {}) {
   return { id, label, type: "number", value: defaultVal, default: defaultVal, ...extra };
 };
@@ -470,9 +514,10 @@ window.S = function (id, label, defaultVal, options = []) {
 </script>
 
 <!-- ============================================================== -->
-<!-- 2. EXTERNAL SPECIALTY MODULE SCRIPTS                           -->
+<!-- 2. SPECIALTY MODULE SCRIPTS                                    -->
 <!-- ============================================================== -->
 <script src="obgy.js"></script>
+<script src="ortho.js"></script>
 
 <!-- ============================================================== -->
 <!-- 3. APPLICATION ENGINE & UI CONTROLLER                          -->
@@ -482,25 +527,11 @@ window.S = function (id, label, defaultVal, options = []) {
   "use strict";
   const $ = id => document.getElementById(id);
 
-  // Fallback category if none registered
-  if (window.categories.length === 0) {
-    window.categories.push({ id: "all", name: "General Medicine", icon: "🩺", desc: "Clinical calculators and staging tools" });
-  }
-
-  // Determine tool type (calc or class) if not specified
-  window.tools.forEach(t => {
-    if (!t.type) {
-      const isClass = /score|criteria|staging|classification|meows|apgar|bishop|iadpsg|mec|popq|figo/i.test(t.name + " " + (t.desc || ""));
-      t.type = isClass ? "class" : "calc";
-    }
-  });
-
-  // State
   let currentCatId = null;
   let currentTool = null;
   let activeFilter = "all";
 
-  // --- THEME ---
+  // --- THEME ENGINE ---
   let activeThemeMode = localStorage.getItem("medcalc_theme") || "system";
   function applyTheme(mode) {
     activeThemeMode = mode;
@@ -521,7 +552,7 @@ window.S = function (id, label, defaultVal, options = []) {
   $("settingsModal").onclick = e => { if (e.target === $("settingsModal")) $("settingsModal").classList.add("hidden"); };
   document.querySelectorAll(".theme-btn").forEach(btn => btn.onclick = () => applyTheme(btn.dataset.themeVal));
 
-  // --- SPLASH DISMISSAL ---
+  // --- SPLASH SCREEN DISMISSAL ---
   function dismissSplash() {
     const splash = $("splash");
     if (splash) {
@@ -531,8 +562,8 @@ window.S = function (id, label, defaultVal, options = []) {
       }, 400);
     }
   }
-  window.addEventListener("load", () => setTimeout(dismissSplash, 300));
-  setTimeout(dismissSplash, 2000); // Fail-safe timeout
+  window.addEventListener("load", () => setTimeout(dismissSplash, 250));
+  setTimeout(dismissSplash, 2000);
 
   // --- NAVIGATION ---
   function showView(view) {
@@ -542,8 +573,21 @@ window.S = function (id, label, defaultVal, options = []) {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  // --- RENDER HOME ---
+  // --- HOME & CATEGORY RENDERING ---
   function renderHome() {
+    if (window.categories.length > 1) {
+      window.categories = window.categories.filter(c => c.id !== "all");
+    } else if (window.categories.length === 0) {
+      window.categories.push({ id: "all", name: "General Medicine", icon: "🩺", desc: "Clinical calculators and staging tools" });
+    }
+
+    window.tools.forEach(t => {
+      if (!t.type) {
+        const isClass = /score|criteria|staging|classification|meows|apgar|bishop|iadpsg|mec|popq|figo|weber|gustilo|tscherne|salter|garden|neer|pauwels|pipkin|rockwood|mason|tile|sins|tlics|meyerding|kellgren/i.test(t.name + " " + (t.desc || ""));
+        t.type = isClass ? "class" : "calc";
+      }
+    });
+
     const catContainer = $("categories");
     catContainer.innerHTML = "";
     window.categories.forEach(cat => {
@@ -556,10 +600,14 @@ window.S = function (id, label, defaultVal, options = []) {
 
     const quickContainer = $("quick");
     quickContainer.innerHTML = "";
-    window.tools.slice(0, 4).forEach(t => quickContainer.appendChild(createToolItem(t)));
+    window.tools.slice(0, 6).forEach(t => quickContainer.appendChild(createToolItem(t)));
   }
 
-  // --- CREATE TOOL ITEM COMPONENT ---
+  // Expose hooks so external module scripts can trigger UI refreshes upon loading
+  window.renderHome = renderHome;
+  window.renderCategories = renderHome;
+  window.renderQuick = renderHome;
+
   function createToolItem(t) {
     const div = document.createElement("div");
     div.className = "tool";
@@ -570,7 +618,6 @@ window.S = function (id, label, defaultVal, options = []) {
     return div;
   }
 
-  // --- CATEGORY VIEW ---
   function openCategory(catId) {
     currentCatId = catId;
     const cat = window.categories.find(c => c.id === catId);
@@ -602,7 +649,7 @@ window.S = function (id, label, defaultVal, options = []) {
     };
   });
 
-  // --- SEARCH ---
+  // --- SEARCH ENGINE ---
   const searchInput = $("search");
   searchInput.oninput = () => {
     const q = searchInput.value.trim().toLowerCase();
@@ -617,7 +664,8 @@ window.S = function (id, label, defaultVal, options = []) {
       return (t.name && t.name.toLowerCase().includes(q)) ||
         (t.desc && t.desc.toLowerCase().includes(q)) ||
         (t.guidance && t.guidance.toLowerCase().includes(q)) ||
-        (t.keywords && t.keywords.some(k => k.toLowerCase().includes(q)));
+        (t.keywords && t.keywords.some(k => k.toLowerCase().includes(q))) ||
+        (t.organ && t.organ.toLowerCase().includes(q));
     });
     $("searchResultSubheading").textContent = `Found ${matches.length} tool(s) matching "${searchInput.value}"`;
     const searchList = $("searchToolList");
@@ -635,7 +683,7 @@ window.S = function (id, label, defaultVal, options = []) {
     $("searchResultsSection").classList.add("hidden");
   };
 
-  // --- CALCULATOR & CLASSIFICATION RUNNER ---
+  // --- CALCULATOR & CLASSIFICATION INTERFACE ---
   function openTool(tool) {
     currentTool = tool;
     $("title").textContent = tool.name;
@@ -645,7 +693,6 @@ window.S = function (id, label, defaultVal, options = []) {
     typeBadge.textContent = tool.type === "class" ? "Classification" : "Calculator";
     typeBadge.className = `badge ${tool.type === "class" ? "badge-class" : "badge-calc"}`;
 
-    // Guidance
     if (tool.guidance) {
       $("guidanceBox").classList.remove("hidden");
       $("guidanceText").innerHTML = tool.guidance.replace(/\n/g, "<br>");
@@ -653,7 +700,6 @@ window.S = function (id, label, defaultVal, options = []) {
       $("guidanceBox").classList.add("hidden");
     }
 
-    // Contraindications
     if (tool.contraindications) {
       $("contraBox").classList.remove("hidden");
       $("contraText").innerHTML = tool.contraindications.replace(/\n/g, "<br>");
@@ -661,7 +707,7 @@ window.S = function (id, label, defaultVal, options = []) {
       $("contraBox").classList.add("hidden");
     }
 
-    // Build form fields
+    // Build form input fields
     const fieldsContainer = $("fields");
     fieldsContainer.innerHTML = "";
     (tool.fields || []).forEach(f => {
@@ -706,7 +752,7 @@ window.S = function (id, label, defaultVal, options = []) {
       fieldsContainer.appendChild(wrap);
     });
 
-    // Reference table
+    // Reference Table
     const refCard = $("referenceCard");
     const head = $("refTableHead");
     const body = $("refTableBody");
@@ -722,7 +768,7 @@ window.S = function (id, label, defaultVal, options = []) {
       refCard.classList.add("hidden");
     }
 
-    // Academic references
+    // Academic & Clinical Literature References
     const refsSec = $("academicRefsSection");
     const refsList = $("academicRefsList");
     refsList.innerHTML = "";
@@ -731,7 +777,11 @@ window.S = function (id, label, defaultVal, options = []) {
       tool.literature.forEach(lit => {
         const refItem = document.createElement("div");
         refItem.className = "ref-card-item";
-        refItem.innerHTML = `<div style="font-weight:700;margin-bottom:4px;">${lit.title || ""}</div><div class="ref-card-citation">${lit.citation || ""}</div>`;
+        let linksHtml = "";
+        if (lit.links && lit.links.length) {
+          linksHtml = `<div class="ref-card-links">${lit.links.map(l => `<a href="${l.url}" target="_blank" rel="noopener noreferrer" class="ref-btn-link ${l.secondary ? "secondary" : ""}">${l.text}</a>`).join("")}</div>`;
+        }
+        refItem.innerHTML = `<div style="font-weight:700;margin-bottom:4px;">${lit.icon || "📄"} ${lit.title || ""}</div><div class="ref-card-citation">${lit.citation || ""}</div>${linksHtml}`;
         refsList.appendChild(refItem);
       });
     } else if (tool.references) {
@@ -744,11 +794,8 @@ window.S = function (id, label, defaultVal, options = []) {
       refsSec.classList.add("hidden");
     }
 
-    // Hide previous result
     $("result").classList.remove("show");
     showView("calculator");
-
-    // Execute initial default calculation
     calculate();
   }
 
@@ -763,9 +810,9 @@ window.S = function (id, label, defaultVal, options = []) {
     try {
       const res = currentTool.calc(vals);
       $("value").textContent = res.value || "";
-      $("equation").textContent = res.eq || "";
+      $("equation").innerHTML = (res.eq || "").replace(/\n/g, "<br>");
 
-      // Highlight active table row if matched
+      // Active table grade row highlighting
       if (res.matchId) {
         document.querySelectorAll("#refTable tr").forEach(r => r.classList.remove("active-grade"));
         const activeRow = $(`ref-row-${res.matchId}`);
@@ -799,8 +846,9 @@ window.S = function (id, label, defaultVal, options = []) {
   $("homeBtn").onclick = () => showView("home");
   $("categoryBtn").onclick = () => currentCatId ? openCategory(currentCatId) : showView("home");
 
-  // Initial load
+  // Initial render calls
   renderHome();
+  document.addEventListener("DOMContentLoaded", renderHome);
 })();
 </script>
 </body>

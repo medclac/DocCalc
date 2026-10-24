@@ -42,8 +42,10 @@ h1{margin:5px 0;font-size:28px}
 header p{margin:0;color:#d8e5f1;font-size:14px}
 main{max-width:760px;margin:auto;padding:16px}
 .notice{background:#fff4d6;border:1px solid #ffe39a;padding:12px;border-radius:10px;font-size:12px;line-height:1.5;margin-bottom:16px}
-.search{width:100%;padding:14px;border:1px solid #d5deea;border-radius:12px;font-size:15px;margin-bottom:16px;outline:none}
+.search-wrapper{position:relative;margin-bottom:16px}
+.search{width:100%;padding:14px;border:1px solid #d5deea;border-radius:12px;font-size:15px;outline:none}
 .search:focus{border-color:#2463eb;box-shadow:0 0 0 3px rgba(36,99,235,0.15)}
+.search-hints{font-size:11.5px;color:#62748a;margin-top:6px;padding-left:4px}
 h2{font-size:21px;margin:8px 0}
 .muted{color:#62748a;font-size:13px;line-height:1.5}
 
@@ -73,6 +75,8 @@ h2{font-size:21px;margin:8px 0}
 .badge-calc{background:#e8f2ff;color:#1351b4;border:1px solid #c7dcff}
 .badge-class{background:#f3e8ff;color:#6927b8;border:1px solid #e4cbff}
 .tool small{display:block;color:#62748a;margin-top:4px;font-size:12px;line-height:1.4}
+.tool-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:7px}
+.tool-tag{background:#f1f5f9;color:#475569;font-size:10px;padding:2px 6px;border-radius:4px;font-weight:600}
 
 /* PANEL & FORM */
 .panel{background:white;border:1px solid #e1e7ee;border-radius:16px;padding:18px}
@@ -101,8 +105,6 @@ button{cursor:pointer;font:inherit}
 .value{font-size:24px;font-weight:800;color:#075c42;margin:4px 0 10px;overflow-wrap:anywhere}
 .res-subhead{font-size:11.5px;font-weight:750;color:#1b573e;text-transform:uppercase;margin:12px 0 4px;letter-spacing:0.4px}
 .equation{font-size:12.5px;line-height:1.6;color:#294d3a;white-space:pre-line}
-.references-box{margin-top:14px;padding-top:10px;border-top:1px dashed #b1d9c6}
-.ref-text{font-size:11.5px;line-height:1.5;color:#3d6751;white-space:pre-line}
 .copy{float:right;padding:6px 11px;border:1px solid #a9d8c2;border-radius:7px;background:white;font-weight:600;color:#075c42}
 
 /* COMPLETE CRITERIA & REFERENCE TABLE */
@@ -116,6 +118,18 @@ table.ref-table td{padding:10px 12px;border-bottom:1px solid #edf2f7;color:#3341
 table.ref-table tr:last-child td{border-bottom:none}
 table.ref-table tr.active-grade{background:#effbf4;font-weight:600}
 table.ref-table tr.active-grade td{border-top:2px solid #38a169;border-bottom:2px solid #38a169;color:#0b5133}
+
+/* ACADEMIC & CLINICAL REFERENCES SECTION */
+.academic-refs{margin-top:24px;border-top:1px solid #e1e7ee;padding-top:18px}
+.ref-card-item{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:14px;margin-bottom:12px}
+.ref-card-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#475569;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.4px}
+.ref-card-title{font-size:13px;font-weight:700;color:#1e293b;margin:0 0 4px;line-height:1.4}
+.ref-card-citation{font-size:12px;color:#64748b;line-height:1.5;margin-bottom:10px}
+.ref-card-links{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.ref-btn-link{display:inline-flex;align-items:center;gap:4px;padding:6px 12px;border-radius:6px;background:#2463eb;color:white;text-decoration:none;font-size:11.5px;font-weight:600;transition:background 0.15s}
+.ref-btn-link:hover{background:#1d4ed8}
+.ref-btn-link.secondary-link{background:#f1f5f9;color:#334155;border:1px solid #cbd5e1}
+.ref-btn-link.secondary-link:hover{background:#e2e8f0}
 
 .hidden{display:none!important}
 footer{text-align:center;font-size:11px;color:#718096;padding:24px 0}
@@ -139,13 +153,29 @@ footer{text-align:center;font-size:11px;color:#718096;padding:24px 0}
 
 <!-- HOME PAGE -->
 <div id="home">
-<input class="search" id="search" placeholder="Search calculators, scores and classifications..." aria-label="Search tools">
-<h2>Browse by specialty</h2>
-<p class="muted">Select a category to view its clinical tools.</p>
-<div class="grid" id="categories"></div>
-<div class="section">
-<h2>Quick access</h2>
-<div id="quick"></div>
+<div class="search-wrapper">
+  <input class="search" id="search" placeholder="Search by name, organ (liver, kidney), region, or shorthand (abg, se)..." aria-label="Search tools">
+  <div class="search-hints">Quick terms: <code>abg</code>, <code>se</code>, <code>crcl</code>, <code>liver</code>, <code>kidney</code>, <code>stomach</code>, <code>heart</code>, <code>afib</code>, <code>gi bleed</code></div>
+</div>
+
+<div id="homeDefaultContent">
+  <h2>Browse by specialty</h2>
+  <p class="muted">Select a category to view its clinical tools.</p>
+  <div class="grid" id="categories"></div>
+  <div class="section">
+    <h2>Quick access</h2>
+    <div id="quick"></div>
+  </div>
+</div>
+
+<!-- SEARCH RESULTS SECTION -->
+<div id="searchResultsSection" class="hidden">
+  <div class="row" style="justify-content:space-between">
+    <h2 id="searchResultHeading" style="margin:0">Search Results</h2>
+    <button class="back" id="clearSearchBtn" type="button">Clear</button>
+  </div>
+  <p class="muted" id="searchResultSubheading"></p>
+  <div id="searchToolList"></div>
 </div>
 </div>
 
@@ -201,11 +231,6 @@ footer{text-align:center;font-size:11px;color:#718096;padding:24px 0}
 
 <div class="res-subhead">Interpretation & Management</div>
 <div class="equation" id="equation"></div>
-
-<div class="references-box" id="referencesBox">
-  <div class="res-subhead">References</div>
-  <div class="ref-text" id="referencesText"></div>
-</div>
 </div>
 
 <!-- COMPLETE REFERENCE TABLE (HIGHLIGHTS DYNAMICALLY) -->
@@ -220,6 +245,13 @@ footer{text-align:center;font-size:11px;color:#718096;padding:24px 0}
   </div>
 </div>
 
+<!-- ACADEMIC & CLINICAL REFERENCES LINKS SECTION -->
+<div class="academic-refs hidden" id="academicRefsSection">
+  <div class="ref-heading">📖 Academic & Clinical References</div>
+  <div class="ref-desc">Peer-reviewed publications, seminal studies, and validated guidelines:</div>
+  <div id="academicRefsList"></div>
+</div>
+
 </section>
 </div>
 <footer>MedCalc · Educational prototype · Verify before clinical use</footer>
@@ -231,28 +263,71 @@ footer{text-align:center;font-size:11px;color:#718096;padding:24px 0}
 const N=(id,label,value,extra={})=>({id,label,value,type:"number",...extra});
 const S=(id,label,value,options)=>({id,label,value,type:"select",options});
 
+/* SYNONYM MAPPING: Enables acronym, slang, and organ search expansion */
+const SYNONYM_MAP={
+  "abg":["abg","arterial blood gas","acid base","tonicity","osmolality","electrolytes","ph","pco2","bicarb"],
+  "se":["se","serum electrolytes","electrolytes","sodium","potassium","calcium","tonicity","osmolality","osmolar"],
+  "crcl":["crcl","cockcroft","creatinine clearance","gfr","egfr","kidney function","renal clearance"],
+  "kidney":["renal","nephrology","crcl","creatinine","gfr","filtration","nephron","urine"],
+  "renal":["kidney","nephrology","crcl","creatinine","gfr","filtration","nephron"],
+  "liver":["hepatic","cirrhosis","child pugh","ascites","encephalopathy","bilirubin","hepatology","meld","inr"],
+  "hepatic":["liver","cirrhosis","child pugh","ascites","encephalopathy","bilirubin","hepatology"],
+  "heart":["cardio","cardiology","cardiac","atrial fibrillation","afib","stroke","chads","cha2ds2","arrhythmia","ischemia"],
+  "cardiac":["heart","cardio","cardiology","atrial fibrillation","afib","stroke","chads","cha2ds2","arrhythmia"],
+  "stomach":["gastric","gastro","gi","ulcer","peptic","forrest","endoscopy","upper gi","bleed","hematemesis","melena"],
+  "gut":["gastro","gi","ulcer","peptic","forrest","stomach","bleed"],
+  "gi":["gastrointestinal","gastro","stomach","gut","liver","forrest","ulcer","cirrhosis"],
+  "afib":["atrial fibrillation","arrhythmia","stroke risk","anticoagulation","cha2ds2va","chads","cardio","heart"],
+  "bleed":["hemorrhage","forrest","upper gi","peptic ulcer","hematemesis","melena","gi bleed"],
+  "osm":["osmolality","tonicity","sodium","glucose","effective osmolality","hypernatremia","hyponatremia"]
+};
+
 const categories=[
-{id:"cardio",name:"Cardiology",icon:"❤️",desc:"Arrhythmia, ischemia, and heart failure tools"},
-{id:"resp",name:"Respiratory",icon:"🫁",desc:"Asthma, COPD, and pulmonary embolism"},
-{id:"emergency",name:"Emergency & ICU",icon:"🚑",desc:"Triage, shock, and critical scores"},
-{id:"neuro",name:"Neurology",icon:"🧠",desc:"Stroke, bleed, and conscious scales"},
-{id:"gi",name:"Gastro & Liver",icon:"🩺",desc:"GI bleed, cirrhosis, and pancreatitis criteria"},
-{id:"electrolytes",name:"Electrolytes & ABG",icon:"🧪",desc:"Sodium, potassium, calcium and osmolar tools"},
-{id:"renal",name:"Renal",icon:"💧",desc:"Glomerular clearance and CKD classifications"},
-{id:"ortho",name:"Orthopedics",icon:"🦴",desc:"Fracture classifications and joint indices"}
+{id:"cardio",name:"Cardiology",icon:"❤️",desc:"Arrhythmia, ischemia, and heart failure tools",organs:["heart","vessels"],region:"cardiovascular / thorax"},
+{id:"resp",name:"Respiratory",icon:"🫁",desc:"Asthma, COPD, and pulmonary embolism",organs:["lung","airway"],region:"pulmonary / thorax"},
+{id:"emergency",name:"Emergency & ICU",icon:"🚑",desc:"Triage, shock, and critical scores",organs:["systemic","multi-organ"],region:"critical care"},
+{id:"neuro",name:"Neurology",icon:"🧠",desc:"Stroke, bleed, and conscious scales",organs:["brain","spine"],region:"head & neck / central nervous system"},
+{id:"gi",name:"Gastro & Liver",icon:"🩺",desc:"GI bleed, cirrhosis, and pancreatitis criteria",organs:["stomach","liver","pancreas","gut"],region:"abdomen / gastrointestinal"},
+{id:"electrolytes",name:"Electrolytes & ABG",icon:"🧪",desc:"Sodium, potassium, calcium and osmolar tools",organs:["blood","cellular"],region:"metabolic / renal system"},
+{id:"renal",name:"Renal",icon:"💧",desc:"Glomerular clearance and CKD classifications",organs:["kidney","bladder"],region:"retroperitoneal / urinary system"},
+{id:"ortho",name:"Orthopedics",icon:"🦴",desc:"Fracture classifications and joint indices",organs:["bone","joint"],region:"musculoskeletal"}
 ];
 
 const tools=[
-/* CLASSIFICATION TOOL WITH REFERENCE TABLE */
+/* CLASSIFICATION TOOLS */
 {
   id:"forrest",
   cat:"gi",
   type:"class",
   name:"Forrest Classification (Upper GI Bleed)",
   desc:"Endoscopic classification for upper gastrointestinal bleeding to assess rebleeding risk.",
+  organ:"Stomach / Duodenum",
+  region:"Upper Gastrointestinal",
+  subject:"Gastroenterology / Endoscopy",
+  keywords:["stomach","gut","gi","upper gi bleed","hematemesis","melena","peptic ulcer","pud","endoscopy","hemostasis","spurting","oozing","forrest"],
   guidance:"1. Perform upper endoscopy for suspected peptic ulcer bleeding.\n2. Inspect the ulcer base meticulously.\n3. Match endoscopic appearance to determine rebleed risk and need for therapeutic hemostasis.",
   contraindications:"Applies specifically to bleeding peptic ulcers; not validated for Mallory-Weiss tears, varices, or vascular malformations.",
-  references:"1. Forrest JA, Finlayson ND, Shearman DJ. Endoscopy in gastrointestinal bleeding. Lancet. 1974;2(7877):394-397.",
+  literature:[
+    {
+      type:"Seminal Publication",
+      icon:"📄",
+      title:"Endoscopy in gastrointestinal bleeding",
+      citation:"Forrest JA, Finlayson ND, Shearman DJ. Lancet. 1974;2(7877):394-397.",
+      links:[
+        {text:"View on PubMed ↗",url:"https://pubmed.ncbi.nlm.nih.gov/4136718/"},
+        {text:"DOI: 10.1016/s0140-6736(74)91753-4",url:"https://doi.org/10.1016/s0140-6736(74)91753-4",secondary:true}
+      ]
+    },
+    {
+      type:"Clinical Practice Guideline",
+      icon:"📘",
+      title:"Management of nonvariceal upper gastrointestinal bleeding: Guideline recommendations",
+      citation:"Barkun AN, Almadi M, Kuipers EJ, et al. Ann Intern Med. 2019;171(11):805-822.",
+      links:[
+        {text:"View Guideline ↗",url:"https://pubmed.ncbi.nlm.nih.gov/31634917/"}
+      ]
+    }
+  ],
   fields:[
     S("appearance","Ulcer Base Finding","Ia",[
       ["Ia","Active spurting hemorrhage"],
@@ -296,10 +371,25 @@ const tools=[
   cat:"gi",
   type:"class",
   name:"Child-Pugh Score (Cirrhosis Prognosis)",
-  desc:"Assesses severity and prognosis in chronic liver disease and cirrhosis.",
+  desc:"Assesses severity, liver dysfunction, and prognosis in chronic liver disease and cirrhosis.",
+  organ:"Liver",
+  region:"Abdominal / Hepatic",
+  subject:"Hepatology / Gastroenterology",
+  keywords:["liver","hepatic","cirrhosis","portal hypertension","ascites","encephalopathy","bilirubin","albumin","inr","meld","hepatology","esophageal varices"],
   guidance:"1. Score 1 to 3 points for each of the 5 clinical parameters.\n2. In cholestatic diseases (PBC/PSC), alternate bilirubin cuts (1–4, 4–10, >10 mg/dL) apply.",
   contraindications:"Subjective scoring elements (ascites and encephalopathy). May be skewed by therapeutic paracentesis or lactulose.",
-  references:"1. Pugh RN, et al. Transection of the oesophagus for bleeding oesophageal varices. Br J Surg. 1973;60(8):646-649.",
+  literature:[
+    {
+      type:"Original Study",
+      icon:"📄",
+      title:"Transection of the oesophagus for bleeding oesophageal varices",
+      citation:"Pugh RN, Murray-Lyon IM, Dawson JL, Pietroni MC, Williams R. Br J Surg. 1973;60(8):646-649.",
+      links:[
+        {text:"View on PubMed ↗",url:"https://pubmed.ncbi.nlm.nih.gov/4541913/"},
+        {text:"DOI: 10.1002/bjs.1800600817",url:"https://doi.org/10.1002/bjs.1800600817",secondary:true}
+      ]
+    }
+  ],
   fields:[
     S("bili","Total Bilirubin (mg/dL)","1",[["1","< 2.0 mg/dL (1 pt)"],["2","2.0 – 3.0 mg/dL (2 pts)"],["3","> 3.0 mg/dL (3 pts)"]]),
     S("alb","Serum Albumin (g/dL)","1",[["1","> 3.5 g/dL (1 pt)"],["2","2.8 – 3.5 g/dL (2 pts)"],["3","< 2.8 g/dL (3 pts)"]]),
@@ -327,16 +417,30 @@ const tools=[
     };
   }
 },
-/* STANDARD CALCULATOR TOOLS */
+/* CALCULATOR TOOLS */
 {
   id:"cha2ds2va",
   cat:"cardio",
   type:"calc",
   name:"CHA₂DS₂-VA Score",
   desc:"Stroke risk stratification in non-valvular atrial fibrillation.",
+  organ:"Heart / Brain / Vascular",
+  region:"Cardiovascular / Cerebrovascular",
+  subject:"Cardiology / Electrophysiology",
+  keywords:["heart","cardiac","atrial fibrillation","afib","stroke","chads","cha2ds2","anticoagulation","doac","warfarin","thromboembolism","hypertension"],
   guidance:"1. Score 1 point for CHF, HTN, DM, Vascular disease, Age 65-74.\n2. Score 2 points for Age ≥75 and prior Stroke/TIA.",
   contraindications:"Do not use in moderate-to-severe mitral stenosis or prosthetic mechanical valves.",
-  references:"1. ESC Guidelines for the diagnosis and management of atrial fibrillation. Eur Heart J. 2024.",
+  literature:[
+    {
+      type:"ESC Guidelines",
+      icon:"📘",
+      title:"2024 ESC Guidelines for the management of atrial fibrillation",
+      citation:"Van Gelder IC, Rienstra M, Bunting KV, et al. European Heart Journal. 2024;45(36):3314–3414.",
+      links:[
+        {text:"View ESC Guideline ↗",url:"https://doi.org/10.1093/eurheartj/ehae176"}
+      ]
+    }
+  ],
   fields:[
     N("hf","Heart failure (0 or 1)",0,{min:0,max:1,step:1}),
     N("htn","Hypertension (0 or 1)",0,{min:0,max:1,step:1}),
@@ -368,10 +472,34 @@ const tools=[
   cat:"renal",
   type:"calc",
   name:"Cockcroft–Gault CrCl",
-  desc:"Estimates creatinine clearance for renal medication dosing.",
+  desc:"Estimates creatinine clearance for renal medication dosing adjustments.",
+  organ:"Kidney",
+  region:"Renal / Urinary",
+  subject:"Nephrology / Pharmacology",
+  keywords:["kidney","renal","nephrology","crcl","creatinine","clearance","cockcroft","gault","gfr","egfr","filtration","dosing","renal function"],
   guidance:"1. Obtain stable serum creatinine, age, and actual weight.\n2. Select biological sex.",
-  contraindications:"Not validated for acute kidney injury. Inaccurate in severe muscle mass extremes.",
-  references:"1. Cockcroft DW, Gault MH. Nephron. 1976;16(1):31-41.",
+  contraindications:"Not validated for acute kidney injury (AKI). Inaccurate in severe muscle mass extremes.",
+  literature:[
+    {
+      type:"Research Paper / Journal Article",
+      icon:"📄",
+      title:"Prediction of creatinine clearance from serum creatinine",
+      citation:"Cockcroft DW, Gault MH. Nephron. 1976;16(1):31-41.",
+      links:[
+        {text:"View on PubMed ↗",url:"https://pubmed.ncbi.nlm.nih.gov/1244564/"},
+        {text:"DOI: 10.1159/000180580",url:"https://doi.org/10.1159/000180580",secondary:true}
+      ]
+    },
+    {
+      type:"Clinical Practice Guideline",
+      icon:"📘",
+      title:"KDIGO 2024 Clinical Practice Guideline for the Evaluation and Management of Chronic Kidney Disease",
+      citation:"Kidney International. 2024;105(4S):S117-S314.",
+      links:[
+        {text:"View KDIGO Guidelines ↗",url:"https://kdigo.org/guidelines/ckd-evaluation-and-management/"}
+      ]
+    }
+  ],
   fields:[
     N("age","Age (years)",60),
     N("weight","Weight (kg)",70),
@@ -389,10 +517,25 @@ const tools=[
   cat:"electrolytes",
   type:"calc",
   name:"Effective Osmolality (Tonicity)",
-  desc:"Solutes that do not freely penetrate cell membranes.",
+  desc:"Calculates effective tonicity and solutes that do not freely penetrate cell membranes.",
+  organ:"Systemic / Cellular / Blood",
+  region:"Metabolic / Fluid Balance",
+  subject:"Electrolytes / Acid-Base / ABG / Critical Care",
+  keywords:["se","abg","electrolytes","serum electrolytes","sodium","na","glucose","sugar","tonicity","osmolality","osmolar","osmolarity","hyponatremia","hypernatremia","fluid"],
   guidance:"1. Obtain contemporaneous serum sodium and glucose.",
-  contraindications:"Do not use to assess toxic alcohol osmolar gaps.",
-  references:"1. Gennari FJ. N Engl J Med. 1984;310(2):102-105.",
+  contraindications:"Do not use to assess toxic alcohol osmolar gaps (use measured vs calculated total osm).",
+  literature:[
+    {
+      type:"Journal Article",
+      icon:"📄",
+      title:"Serum osmolality: Uses and limitations",
+      citation:"Gennari FJ. N Engl J Med. 1984;310(2):102-105.",
+      links:[
+        {text:"View on PubMed ↗",url:"https://pubmed.ncbi.nlm.nih.gov/6361557/"},
+        {text:"DOI: 10.1056/NEJM198401123100207",url:"https://doi.org/10.1056/NEJM198401123100207",secondary:true}
+      ]
+    }
+  ],
   fields:[N("na","Serum sodium (mmol/L)",140,{min:1}),N("glucose","Glucose (mg/dL)",100,{min:0})],
   calc:v=>({value:(2*+v.na+ +v.glucose/18).toFixed(1)+" mOsm/kg",eq:"Normal reference range: ~275–295 mOsm/kg."})
 }
@@ -430,21 +573,32 @@ function appendTool(t,parent){
   
   const small=document.createElement("small");
   small.textContent=t.desc;
+
+  const tagsDiv=document.createElement("div");
+  tagsDiv.className="tool-tags";
+  if(t.organ) {
+    const oTag=document.createElement("span");
+    oTag.className="tool-tag";
+    oTag.textContent="🫀 "+t.organ;
+    tagsDiv.appendChild(oTag);
+  }
+  if(t.region) {
+    const rTag=document.createElement("span");
+    rTag.className="tool-tag";
+    rTag.textContent="📍 "+t.region;
+    tagsDiv.appendChild(rTag);
+  }
   
-  b.append(headerDiv,small);
+  b.append(headerDiv,small,tagsDiv);
   b.addEventListener("click",()=>openTool(t.id));
   parent.appendChild(b);
 }
 
-function renderCategories(filter=""){
+function renderCategories(){
   const parent=$("categories");
   parent.innerHTML="";
-  const q=filter.trim().toLowerCase();
 
   categories.forEach(c=>{
-    const matches=tools.some(t=>t.cat===c.id&&(t.name+" "+t.desc).toLowerCase().includes(q));
-    if(q&&!matches&&!c.name.toLowerCase().includes(q))return;
-
     const b=document.createElement("button");
     b.type="button";
     b.className="card";
@@ -501,7 +655,6 @@ function openCategory(id){
   $("categoryTitle").textContent=c.name;
   $("categoryDesc").textContent=c.desc;
   
-  // Reset filter to 'All'
   currentTypeFilter="all";
   document.querySelectorAll(".tab-btn").forEach(btn=>{
     btn.classList.toggle("active",btn.dataset.filter==="all");
@@ -577,7 +730,7 @@ function openTool(id){
     $("fields").appendChild(wrap);
   });
 
-  // Reference Table Construction
+  // Reference Table Construction (For Classifications or Multivariable Tables)
   const refCard=$("referenceCard");
   const thead=$("refTableHead");
   const tbody=$("refTableBody");
@@ -610,6 +763,49 @@ function openTool(id){
     refCard.classList.add("hidden");
   }
 
+  // Academic References & External Links Construction
+  const academicSection=$("academicRefsSection");
+  const academicList=$("academicRefsList");
+  academicList.innerHTML="";
+
+  if(t.literature && t.literature.length){
+    t.literature.forEach(item=>{
+      const card=document.createElement("div");
+      card.className="ref-card-item";
+
+      const badge=document.createElement("div");
+      badge.className="ref-card-badge";
+      badge.textContent=`${item.icon || "📄"} ${item.type}`;
+
+      const title=document.createElement("div");
+      title.className="ref-card-title";
+      title.textContent=item.title;
+
+      const citation=document.createElement("div");
+      citation.className="ref-card-citation";
+      citation.textContent=item.citation;
+
+      const linksWrap=document.createElement("div");
+      linksWrap.className="ref-card-links";
+
+      (item.links||[]).forEach(link=>{
+        const a=document.createElement("a");
+        a.href=link.url;
+        a.target="_blank";
+        a.rel="noopener noreferrer";
+        a.className=`ref-btn-link ${link.secondary ? "secondary-link" : ""}`;
+        a.textContent=link.text;
+        linksWrap.appendChild(a);
+      });
+
+      card.append(badge,title,citation,linksWrap);
+      academicList.appendChild(card);
+    });
+    academicSection.classList.remove("hidden");
+  } else {
+    academicSection.classList.add("hidden");
+  }
+
   $("result").classList.remove("show");
   showPage("calculatorPage");
 }
@@ -639,7 +835,6 @@ $("form").addEventListener("submit",e=>{
   $("value").textContent=r.value;
   $("equation").textContent=r.eq;
 
-  // Highlight reference row if matchId exists
   if(t.table && r.matchId){
     document.querySelectorAll("#refTable tr").forEach(row=>row.classList.remove("active-grade"));
     const activeRow=$(`ref-row-${r.matchId}`);
@@ -649,11 +844,13 @@ $("form").addEventListener("submit",e=>{
     }
   }
 
-  const ref=t.references||"No specific references documented.";
-  $("referencesText").textContent=ref;
+  let literatureSummary="";
+  if(t.literature){
+    literatureSummary=t.literature.map(l=>`${l.title} - ${l.citation}`).join("\n");
+  }
 
   $("result").classList.add("show");
-  lastResultText=`${t.name}\nResult: ${r.value}\n${r.eq}\n\nReferences:\n${ref}`;
+  lastResultText=`${t.name}\nResult: ${r.value}\n${r.eq}\n\nReferences:\n${literatureSummary}`;
 });
 
 // Category Pill Filter handler
@@ -669,58 +866,86 @@ $("reset").addEventListener("click",()=>openTool(currentTool));
 $("homeBtn").addEventListener("click",()=>showPage("home"));
 $("categoryBtn").addEventListener("click",()=>openCategory(currentCategory));
 
-// Search handler indexing both types
-$("search").addEventListener("input",e=>{
-  const q=e.target.value.trim().toLowerCase();
+/* COMPREHENSIVE SEARCH ENGINE */
+function searchToolsAndCategories(rawQuery){
+  const cleanQ=rawQuery.trim().toLowerCase();
+  if(!cleanQ) return [];
+
+  // Expand query with synonyms
+  const searchTerms=new Set([cleanQ]);
+  if(SYNONYM_MAP[cleanQ]){
+    SYNONYM_MAP[cleanQ].forEach(term=>searchTerms.add(term.toLowerCase()));
+  }
+
+  // Cross-search all synonyms in map keys
+  for(const [k,synonyms] of Object.entries(SYNONYM_MAP)){
+    if(cleanQ===k || synonyms.some(s=>s.includes(cleanQ) || cleanQ.includes(s))){
+      searchTerms.add(k);
+      synonyms.forEach(s=>searchTerms.add(s.toLowerCase()));
+    }
+  }
+
+  const terms=Array.from(searchTerms);
+
+  return tools.filter(t=>{
+    const cat=categories.find(c=>c.id===t.cat)||{};
+    const targetText=[
+      t.name,
+      t.desc,
+      t.type,
+      t.type==='class'?'classification staging criteria':'calculator clinical formula',
+      t.organ||"",
+      t.region||"",
+      t.subject||"",
+      ...(t.keywords||[]),
+      cat.name||"",
+      cat.desc||"",
+      cat.region||"",
+      ...(cat.organs||[])
+    ].join(" ").toLowerCase();
+
+    return terms.some(term=>targetText.includes(term));
+  });
+}
+
+function handleSearch(query){
+  const q=query.trim();
+  const defaultHome=$("homeDefaultContent");
+  const resultsSec=$("searchResultsSection");
+  const list=$("searchToolList");
 
   if(!q){
-    renderCategories();
-    renderQuick();
-    showPage("home");
+    defaultHome.classList.remove("hidden");
+    resultsSec.classList.add("hidden");
+    list.innerHTML="";
     return;
   }
 
-  $("categories").innerHTML="";
-  $("quick").innerHTML="";
+  defaultHome.classList.add("hidden");
+  resultsSec.classList.remove("hidden");
+  list.innerHTML="";
 
-  const found=tools.filter(t=>(t.name+" "+t.desc+" "+t.type).toLowerCase().includes(q));
-  const shown=new Set();
+  const matches=searchToolsAndCategories(q);
+  $("searchResultHeading").textContent=`Search Results for "${q}"`;
+  $("searchResultSubheading").textContent=`Found ${matches.length} matching tool${matches.length===1?'':'s'} across organs, regions, categories, and abbreviations.`;
 
-  found.forEach(t=>{
-    if(!shown.has(t.cat)){
-      shown.add(t.cat);
-      const c=categories.find(x=>x.id===t.cat);
-
-      if(c){
-        const b=document.createElement("button");
-        b.type="button";
-        b.className="card";
-
-        const icon=document.createElement("span");
-        icon.className="ico";
-        icon.textContent=c.icon;
-
-        const name=document.createElement("strong");
-        name.textContent=c.name;
-
-        const desc=document.createElement("small");
-        desc.textContent="Matching results";
-
-        b.append(icon,name,desc);
-        b.addEventListener("click",()=>openCategory(c.id));
-        $("categories").appendChild(b);
-      }
-    }
-    appendTool(t,$("quick"));
-  });
-
-  if(!found.length){
+  if(matches.length){
+    matches.forEach(t=>appendTool(t,list));
+  } else {
     const p=document.createElement("p");
     p.className="muted";
-    p.textContent="No matching tools found.";
-    $("quick").appendChild(p);
+    p.textContent="No calculators or classifications matched your search. Try searching by organ ('liver', 'kidney'), region ('renal', 'upper gi'), or abbreviation ('abg', 'se').";
+    list.appendChild(p);
   }
-  showPage("home");
+}
+
+$("search").addEventListener("input",e=>{
+  handleSearch(e.target.value);
+});
+
+$("clearSearchBtn").addEventListener("click",()=>{
+  $("search").value="";
+  handleSearch("");
 });
 
 $("copy").addEventListener("click",async()=>{

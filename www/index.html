@@ -11,9 +11,9 @@
 
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#f3f6fa;color:#172b4d;font-family:system-ui,sans-serif}
+body{margin:0;background:#f3f6fa;color:#172b4d;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
 
-/* SPLASH SCREEN CSS */
+/* SPLASH SCREEN */
 #splash{
   position:fixed;
   inset:0;
@@ -35,65 +35,95 @@ body{margin:0;background:#f3f6fa;color:#172b4d;font-family:system-ui,sans-serif}
   display:block;
 }
 
-/* APP STYLES */
+/* APP SHELL */
 header{background:#0f2744;color:white;padding:22px 18px;border-radius:0 0 22px 22px}
-header small{letter-spacing:1px;text-transform:uppercase;color:#c4d8ea}
-h1{margin:5px 0;font-size:29px}
+header small{letter-spacing:1px;text-transform:uppercase;color:#c4d8ea;font-size:11px}
+h1{margin:5px 0;font-size:28px}
 header p{margin:0;color:#d8e5f1;font-size:14px}
 main{max-width:760px;margin:auto;padding:16px}
-.notice{background:#fff4d6;padding:12px;border-radius:10px;font-size:12px;line-height:1.5;margin-bottom:16px}
-.search{width:100%;padding:14px;border:1px solid #d5deea;border-radius:12px;font-size:15px;margin-bottom:16px}
+.notice{background:#fff4d6;border:1px solid #ffe39a;padding:12px;border-radius:10px;font-size:12px;line-height:1.5;margin-bottom:16px}
+.search{width:100%;padding:14px;border:1px solid #d5deea;border-radius:12px;font-size:15px;margin-bottom:16px;outline:none}
+.search:focus{border-color:#2463eb;box-shadow:0 0 0 3px rgba(36,99,235,0.15)}
 h2{font-size:21px;margin:8px 0}
 .muted{color:#62748a;font-size:13px;line-height:1.5}
+
+/* CATEGORY GRID */
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.card{background:white;border:1px solid #e0e7f0;border-radius:14px;padding:14px;text-align:left;color:#172b4d;min-height:112px;width:100%}
+.card{background:white;border:1px solid #e0e7f0;border-radius:14px;padding:14px;text-align:left;color:#172b4d;min-height:110px;cursor:pointer}
+.card:hover{border-color:#b4cbe4}
 .card .ico{font-size:24px;display:block;margin-bottom:8px}
 .card strong{display:block;font-size:14px}
 .card small{display:block;color:#62748a;line-height:1.4;margin-top:5px}
 .section{margin-top:23px}
-.row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.back{border:0;border-radius:9px;background:#e6edf5;padding:10px 13px;font-weight:700;color:#17324e}
-.tool{display:block;width:100%;text-align:left;background:white;border:1px solid #e0e7f0;border-radius:12px;padding:14px;margin-bottom:9px;color:#172b4d}
-.tool strong{display:block;font-size:14px}
-.tool small{display:block;color:#62748a;margin-top:4px;font-size:12px}
-.panel{background:white;border:1px solid #e1e7ee;border-radius:16px;padding:17px}
+
+/* NAVIGATION & FILTER PILLS */
+.row{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.back{border:0;border-radius:9px;background:#e6edf5;padding:10px 14px;font-weight:700;color:#17324e;cursor:pointer}
+.back:hover{background:#dbe5f0}
+.filter-tabs{display:flex;gap:6px;margin:12px 0 16px;background:#e8eff6;padding:4px;border-radius:10px}
+.tab-btn{flex:1;padding:8px;font-size:12.5px;font-weight:600;background:transparent;border:0;border-radius:7px;color:#4a5d73;cursor:pointer}
+.tab-btn.active{background:white;color:#0f2744;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
+
+/* TOOL ITEMS & BADGES */
+.tool{display:block;width:100%;text-align:left;background:white;border:1px solid #e0e7f0;border-radius:12px;padding:13px 15px;margin-bottom:9px;color:#172b4d;cursor:pointer;position:relative}
+.tool:hover{border-color:#b4cbe4}
+.tool-header{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.tool strong{font-size:14px}
+.badge{display:inline-block;padding:2px 7px;border-radius:6px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px}
+.badge-calc{background:#e8f2ff;color:#1351b4;border:1px solid #c7dcff}
+.badge-class{background:#f3e8ff;color:#6927b8;border:1px solid #e4cbff}
+.tool small{display:block;color:#62748a;margin-top:4px;font-size:12px;line-height:1.4}
+
+/* PANEL & FORM */
+.panel{background:white;border:1px solid #e1e7ee;border-radius:16px;padding:18px}
 .desc{font-size:13px;color:#62748a;line-height:1.5;margin:5px 0 14px}
 
-/* GUIDANCE & CONTRAINDICATION CALLOUTS */
+/* GUIDANCE & CONTRAINDICATIONS */
 .info-box{border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:12.5px;line-height:1.5}
 .guidance-box{background:#f0f7ff;border:1px solid #cce3ff;color:#0f3f6d}
 .contra-box{background:#fdf2f2;border:1px solid #f9d2d2;color:#781c1c}
 .info-title{font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:6px;text-transform:uppercase;font-size:11px;letter-spacing:0.5px}
 
 .fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.full-width{grid-column:1 / -1}
 label{display:block;font-size:12px;font-weight:700;margin-bottom:6px;color:#52657a}
-input,select{width:100%;padding:12px;border:1px solid #cdd7e2;border-radius:9px;font-size:16px;background:white;color:#172b4d}
+input,select{width:100%;padding:11px;border:1px solid #cdd7e2;border-radius:9px;font-size:15px;background:white;color:#172b4d}
 .actions{display:flex;gap:9px;margin-top:16px}
 button{cursor:pointer;font:inherit}
 .primary,.secondary{padding:13px;border:0;border-radius:10px;font-weight:750}
 .primary{background:#2463eb;color:white;flex:1}
 .secondary{background:#edf2f7;color:#334e68}
 
-/* RESULT SECTION RESTRUCTURE */
-.result{display:none;margin-top:20px;padding:16px;border-radius:12px;background:#e9f8f1;border:1px solid #b9e6d2}
+/* RESULTS CARD */
+.result{display:none;margin-top:20px;padding:16px;border-radius:12px;background:#eaf8f1;border:1px solid #b5e4cf}
 .result.show{display:block}
-.caption{font-size:11px;color:#27664e;font-weight:700;letter-spacing:0.5px;text-transform:uppercase}
-.value{font-size:26px;font-weight:800;color:#075c42;margin:4px 0 10px;overflow-wrap:anywhere}
+.caption{font-size:11px;color:#22674e;font-weight:700;letter-spacing:0.5px;text-transform:uppercase}
+.value{font-size:24px;font-weight:800;color:#075c42;margin:4px 0 10px;overflow-wrap:anywhere}
 .res-subhead{font-size:11.5px;font-weight:750;color:#1b573e;text-transform:uppercase;margin:12px 0 4px;letter-spacing:0.4px}
 .equation{font-size:12.5px;line-height:1.6;color:#294d3a;white-space:pre-line}
 .references-box{margin-top:14px;padding-top:10px;border-top:1px dashed #b1d9c6}
-.references-box .res-subhead{color:#305b46}
 .ref-text{font-size:11.5px;line-height:1.5;color:#3d6751;white-space:pre-line}
 .copy{float:right;padding:6px 11px;border:1px solid #a9d8c2;border-radius:7px;background:white;font-weight:600;color:#075c42}
 
+/* COMPLETE CRITERIA & REFERENCE TABLE */
+.reference-card{margin-top:22px;border-top:1px solid #e1e7ee;padding-top:16px}
+.ref-heading{font-size:14px;font-weight:750;color:#172b4d;margin:0 0 6px;display:flex;align-items:center;gap:6px}
+.ref-desc{font-size:12px;color:#62748a;margin-bottom:12px}
+.table-wrap{overflow-x:auto;border:1px solid #e1e7ee;border-radius:10px;background:white}
+table.ref-table{width:100%;border-collapse:collapse;text-align:left;font-size:12px}
+table.ref-table th{background:#f8fafc;padding:10px 12px;font-weight:700;color:#475569;border-bottom:1px solid #e1e7ee}
+table.ref-table td{padding:10px 12px;border-bottom:1px solid #edf2f7;color:#334155;vertical-align:top}
+table.ref-table tr:last-child td{border-bottom:none}
+table.ref-table tr.active-grade{background:#effbf4;font-weight:600}
+table.ref-table tr.active-grade td{border-top:2px solid #38a169;border-bottom:2px solid #38a169;color:#0b5133}
+
 .hidden{display:none!important}
-footer{text-align:center;font-size:11px;color:#718096;padding:22px 0}
-@media(max-width:380px){.fields{grid-template-columns:1fr}.card{padding:11px}}
+footer{text-align:center;font-size:11px;color:#718096;padding:24px 0}
+@media(max-width:480px){.fields{grid-template-columns:1fr}.card{padding:11px}}
 </style>
 </head>
 <body>
 
-<!-- FULL-SCREEN SPLASH SCREEN -->
 <div id="splash">
   <img src="logo.png" alt="MedCalc Logo" class="splash-logo">
 </div>
@@ -101,16 +131,17 @@ footer{text-align:center;font-size:11px;color:#718096;padding:22px 0}
 <header>
 <small>Clinical tools · prototype</small>
 <h1>✚ MedCalc</h1>
-<p>Clinical scores and bedside calculators</p>
+<p>Calculators & criteria-based classifications</p>
 </header>
 
 <main>
-<div class="notice"><b>Clinical safety:</b> Educational prototype only. Verify formulas, units and results independently. Not a substitute for clinical judgment. Do not enter identifiable patient information.</div>
+<div class="notice"><b>Clinical safety:</b> Educational prototype only. Verify formulas, tables, and criteria independently before clinical use.</div>
 
+<!-- HOME PAGE -->
 <div id="home">
-<input class="search" id="search" placeholder="Search calculators and scores..." aria-label="Search calculators">
+<input class="search" id="search" placeholder="Search calculators, scores and classifications..." aria-label="Search tools">
 <h2>Browse by specialty</h2>
-<p class="muted">Select a category to open its calculators.</p>
+<p class="muted">Select a category to view its clinical tools.</p>
 <div class="grid" id="categories"></div>
 <div class="section">
 <h2>Quick access</h2>
@@ -118,53 +149,75 @@ footer{text-align:center;font-size:11px;color:#718096;padding:22px 0}
 </div>
 </div>
 
+<!-- CATEGORY PAGE -->
 <div id="categoryPage" class="hidden">
 <div class="row">
 <button class="back" id="homeBtn" type="button">← Home</button>
-<div><h2 id="categoryTitle"></h2><div class="muted" id="categoryDesc"></div></div>
+<div><h2 id="categoryTitle" style="margin:0"></h2><div class="muted" id="categoryDesc"></div></div>
 </div>
+
+<!-- TYPE FILTER TABS -->
+<div class="filter-tabs" id="typeFilters">
+  <button type="button" class="tab-btn active" data-filter="all">All Tools</button>
+  <button type="button" class="tab-btn" data-filter="calc">Calculators</button>
+  <button type="button" class="tab-btn" data-filter="class">Classifications</button>
+</div>
+
 <div id="toolList"></div>
 </div>
 
+<!-- CALCULATOR & CLASSIFICATION INTERFACE -->
 <div id="calculatorPage" class="hidden">
 <div class="row"><button class="back" id="categoryBtn" type="button">← Back</button></div>
 <section class="panel">
-<h2 id="title"></h2>
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+  <h2 id="title" style="margin:0"></h2>
+  <span id="toolTypeBadge" class="badge"></span>
+</div>
 <p class="desc" id="desc"></p>
 
-<!-- STEP BY STEP GUIDANCE -->
 <div class="info-box guidance-box" id="guidanceBox">
-  <div class="info-title">📋 Step-by-Step Guidance</div>
+  <div class="info-title">📋 Clinical Guidance</div>
   <div id="guidanceText"></div>
 </div>
 
-<!-- CONTRAINDICATIONS & LIMITATIONS -->
 <div class="info-box contra-box" id="contraBox">
-  <div class="info-title">⚠️ Contraindications & Limitations</div>
+  <div class="info-title">⚠️ Limitations & Caveats</div>
   <div id="contraText"></div>
 </div>
 
 <form id="form">
 <div class="fields" id="fields"></div>
 <div class="actions">
-<button class="primary" type="submit">Calculate</button>
+<button class="primary" type="submit">Calculate / Stage</button>
 <button class="secondary" type="button" id="reset">Reset</button>
 </div>
 </form>
 
-<!-- RESULT SECTION REORGANIZED -->
 <div class="result" id="result" aria-live="polite">
 <button class="copy" id="copy" type="button">Copy</button>
-<div class="caption">CALCULATED RESULT</div>
+<div class="caption">ASSESSMENT & CLASSIFICATION</div>
 <div class="value" id="value"></div>
 
-<div class="res-subhead">Interpretation & Calculation</div>
+<div class="res-subhead">Interpretation & Management</div>
 <div class="equation" id="equation"></div>
 
 <div class="references-box" id="referencesBox">
   <div class="res-subhead">References</div>
   <div class="ref-text" id="referencesText"></div>
 </div>
+</div>
+
+<!-- COMPLETE REFERENCE TABLE (HIGHLIGHTS DYNAMICALLY) -->
+<div class="reference-card hidden" id="referenceCard">
+  <div class="ref-heading">📊 Complete Classification & Reference Table</div>
+  <div class="ref-desc">Review full staging criteria and point distribution below:</div>
+  <div class="table-wrap">
+    <table class="ref-table" id="refTable">
+      <thead id="refTableHead"></thead>
+      <tbody id="refTableBody"></tbody>
+    </table>
+  </div>
 </div>
 
 </section>
@@ -179,361 +232,505 @@ const N=(id,label,value,extra={})=>({id,label,value,type:"number",...extra});
 const S=(id,label,value,options)=>({id,label,value,type:"select",options});
 
 const categories=[
-{id:"cardio",name:"Cardiology",icon:"❤️",desc:"Heart, stroke and bleeding scores"},
-{id:"resp",name:"Respiratory",icon:"🫁",desc:"Lung disease and pulmonary embolism"},
-{id:"emergency",name:"Emergency & ICU",icon:"🚑",desc:"Triage, severity and critical care"},
-{id:"neuro",name:"Neurology",icon:"🧠",desc:"Stroke and neurological assessment"},
-{id:"gi",name:"Gastro & Liver",icon:"🩺",desc:"GI bleeding, liver and pancreatitis"},
-{id:"electrolytes",name:"Electrolytes & ABG",icon:"🧪",desc:"Sodium, potassium, calcium and acid-base"},
-{id:"renal",name:"Renal",icon:"💧",desc:"Kidney function and clearance"},
-{id:"peds",name:"Pediatrics",icon:"🧸",desc:"Children and neonatal tools"},
-{id:"meds",name:"Medications & Dosing",icon:"💊",desc:"Dose arithmetic and infusion rates"},
-{id:"surgery",name:"Surgery & Trauma",icon:"🏥",desc:"Pre-op, trauma and burns"},
-{id:"obgyn",name:"OB-GYN",icon:"🤰",desc:"Obstetric and gynecological tools"},
-{id:"endo",name:"Endocrinology",icon:"🩸",desc:"Diabetes and metabolic medicine"},
-{id:"heme",name:"Hematology",icon:"🧬",desc:"Blood disorders and clotting"},
-{id:"psych",name:"Psychiatry",icon:"🧩",desc:"Screening and symptom scales"},
-{id:"oncology",name:"Oncology",icon:"🎗️",desc:"Cancer severity and prognosis"},
-{id:"ortho",name:"Orthopedics",icon:"🦴",desc:"Fractures and musculoskeletal tools"},
-{id:"derm",name:"Dermatology & Rheumatology",icon:"🔬",desc:"Skin and joint disease"}
+{id:"cardio",name:"Cardiology",icon:"❤️",desc:"Arrhythmia, ischemia, and heart failure tools"},
+{id:"resp",name:"Respiratory",icon:"🫁",desc:"Asthma, COPD, and pulmonary embolism"},
+{id:"emergency",name:"Emergency & ICU",icon:"🚑",desc:"Triage, shock, and critical scores"},
+{id:"neuro",name:"Neurology",icon:"🧠",desc:"Stroke, bleed, and conscious scales"},
+{id:"gi",name:"Gastro & Liver",icon:"🩺",desc:"GI bleed, cirrhosis, and pancreatitis criteria"},
+{id:"electrolytes",name:"Electrolytes & ABG",icon:"🧪",desc:"Sodium, potassium, calcium and osmolar tools"},
+{id:"renal",name:"Renal",icon:"💧",desc:"Glomerular clearance and CKD classifications"},
+{id:"ortho",name:"Orthopedics",icon:"🦴",desc:"Fracture classifications and joint indices"}
 ];
 
 const tools=[
+/* CLASSIFICATION TOOL WITH REFERENCE TABLE */
 {
-  id:"effective_osm",
-  cat:"electrolytes",
-  name:"Effective Osmolality (Tonicity)",
-  desc:"Calculated tonicity; reflects solutes that cannot freely cross cell membranes.",
-  guidance:"1. Obtain contemporaneous serum sodium and serum glucose values.\n2. Ensure units match (Na in mmol/L or mEq/L, glucose in mg/dL).\n3. Calculate to evaluate water movement between ICF and ECF.",
-  contraindications:"Do not use to assess osmolar gaps (use total calculated osmolality including urea). Not valid if exogenous osmolytes (mannitol, ethylene glycol) are present.",
-  references:"1. Gennari FJ. Current concepts: Serum osmolality: Uses and limitations. N Engl J Med. 1984;310(2):102-105.",
-  fields:[N("na","Serum sodium (mmol/L)",140,{min:1}),N("glucose","Glucose (mg/dL)",100,{min:0})],
-  calc:v=>({value:(2*+v.na+ +v.glucose/18).toFixed(1)+" mOsm/kg",eq:"Effective osmolality = 2 × Na + glucose/18.\nNormal reference range: ~275–295 mOsm/kg. Tonicity dictates transcellular water shifts."})
+  id:"forrest",
+  cat:"gi",
+  type:"class",
+  name:"Forrest Classification (Upper GI Bleed)",
+  desc:"Endoscopic classification for upper gastrointestinal bleeding to assess rebleeding risk.",
+  guidance:"1. Perform upper endoscopy for suspected peptic ulcer bleeding.\n2. Inspect the ulcer base meticulously.\n3. Match endoscopic appearance to determine rebleed risk and need for therapeutic hemostasis.",
+  contraindications:"Applies specifically to bleeding peptic ulcers; not validated for Mallory-Weiss tears, varices, or vascular malformations.",
+  references:"1. Forrest JA, Finlayson ND, Shearman DJ. Endoscopy in gastrointestinal bleeding. Lancet. 1974;2(7877):394-397.",
+  fields:[
+    S("appearance","Ulcer Base Finding","Ia",[
+      ["Ia","Active spurting hemorrhage"],
+      ["Ib","Active oozing hemorrhage"],
+      ["IIa","Non-bleeding visible vessel"],
+      ["IIb","Adherent clot"],
+      ["IIc","Flat pigmented spot / black base"],
+      ["III","Clean base ulcer"]
+    ])
+  ],
+  table:{
+    headers:["Class","Description","Rebleeding Risk","Clinical Action"],
+    rows:[
+      {id:"Ia",cols:["Forrest Ia","Spurting hemorrhage","~90%","Urgent Dual Endoscopic Therapy"]},
+      {id:"Ib",cols:["Forrest Ib","Oozing hemorrhage","~50%","Dual Endoscopic Therapy"]},
+      {id:"IIa",cols:["Forrest IIa","Non-bleeding visible vessel","40–50%","Dual Endoscopic Therapy"]},
+      {id:"IIb",cols:["Forrest IIb","Adherent clot","20–30%","Consider clot removal & endoscopic therapy"]},
+      {id:"IIc",cols:["Forrest IIc","Flat pigmented spot","5–10%","High-dose oral PPI, usually no endoscopic Rx"]},
+      {id:"III",cols:["Forrest III","Clean ulcer base","< 5%","Early oral intake, hospital discharge candidate"]}
+    ]
+  },
+  calc:v=>{
+    const map={
+      Ia:{stage:"Forrest Ia (Spurting)",risk:"~90% Risk",plan:"Immediate dual-modality endoscopic hemostasis (clip/thermal + dilute epinephrine) and continuous IV PPI."},
+      Ib:{stage:"Forrest Ib (Oozing)",risk:"~50% Risk",plan:"Dual endoscopic hemostasis and continuous IV PPI."},
+      IIa:{stage:"Forrest IIa (Visible Vessel)",risk:"40–50% Risk",plan:"Dual endoscopic therapy recommended. High rebleeding incidence if untreated."},
+      IIb:{stage:"Forrest IIb (Adherent Clot)",risk:"20–30% Risk",plan:"Careful targeted irrigation and consideration of clot detachment + therapy."},
+      IIc:{stage:"Forrest IIc (Flat Spot)",risk:"5–10% Risk",plan:"Low risk. Endoscopic intervention generally not required. Standard oral/IV PPI."},
+      III:{stage:"Forrest III (Clean Base)",risk:"< 5% Risk",plan:"Very low risk. No endoscopic treatment indicated. Can consider early discharge."}
+    };
+    const c=map[v.appearance];
+    return {
+      value:c.stage,
+      matchId:v.appearance,
+      eq:`Rebleed Risk: ${c.risk}\nManagement: ${c.plan}`
+    };
+  }
 },
 {
-  id:"osmolar_gap",
-  cat:"electrolytes",
-  name:"Osmolar Gap",
-  desc:"Compares measured freezing-point depression osmolality with calculated osmolality.",
-  guidance:"1. Measure serum osmolality via freezing point depression osmometry.\n2. Draw simultaneous Na, glucose, and BUN.\n3. Compute calculated osmolality and subtract from measured value.",
-  contraindications:"Osmometry must use freezing point depression. Vapor pressure osmometry will miss volatile alcohols like ethanol and methanol.",
-  references:"1. Purssell RA, et al. Derivation and validation of a formula to calculate the contribution of ethanol to the osmolal gap. Ann Emerg Med. 2001;38(6):653-659.",
-  fields:[N("measured","Measured osmolality (mOsm/kg)",290,{min:1}),N("na","Serum sodium (mmol/L)",140,{min:1}),N("glucose","Glucose (mg/dL)",100,{min:0}),N("bun","BUN (mg/dL)",14,{min:0})],
-  calc:v=>{const c=2*+v.na+ +v.glucose/18+ +v.bun/2.8;const gap=(+v.measured-c).toFixed(1);return{value:gap+" mOsm/kg",eq:"Calculated = 2 × Na + glucose/18 + BUN/2.8.\nNormal gap is typically < 10 mOsm/kg. A gap > 10–15 mOsm/kg suggests presence of unmeasured osmoles (toxic alcohols, mannitol, glycine)."}}
+  id:"child_pugh",
+  cat:"gi",
+  type:"class",
+  name:"Child-Pugh Score (Cirrhosis Prognosis)",
+  desc:"Assesses severity and prognosis in chronic liver disease and cirrhosis.",
+  guidance:"1. Score 1 to 3 points for each of the 5 clinical parameters.\n2. In cholestatic diseases (PBC/PSC), alternate bilirubin cuts (1–4, 4–10, >10 mg/dL) apply.",
+  contraindications:"Subjective scoring elements (ascites and encephalopathy). May be skewed by therapeutic paracentesis or lactulose.",
+  references:"1. Pugh RN, et al. Transection of the oesophagus for bleeding oesophageal varices. Br J Surg. 1973;60(8):646-649.",
+  fields:[
+    S("bili","Total Bilirubin (mg/dL)","1",[["1","< 2.0 mg/dL (1 pt)"],["2","2.0 – 3.0 mg/dL (2 pts)"],["3","> 3.0 mg/dL (3 pts)"]]),
+    S("alb","Serum Albumin (g/dL)","1",[["1","> 3.5 g/dL (1 pt)"],["2","2.8 – 3.5 g/dL (2 pts)"],["3","< 2.8 g/dL (3 pts)"]]),
+    S("inr","INR","1",[["1","< 1.7 (1 pt)"],["2","1.7 – 2.3 (2 pts)"],["3","> 2.3 (3 pts)"]]),
+    S("ascites","Ascites","1",[["1","None (1 pt)"],["2","Slight / Controlled (2 pts)"],["3","Moderate to Severe (3 pts)"]]),
+    S("enceph","Encephalopathy","1",[["1","None (1 pt)"],["2","Grade 1–2 (2 pts)"],["3","Grade 3–4 (3 pts)"]])
+  ],
+  table:{
+    headers:["Class","Score Range","1-Year Survival","2-Year Survival"],
+    rows:[
+      {id:"A",cols:["Class A (Well-compensated)","5 – 6 points","100%","85%"]},
+      {id:"B",cols:["Class B (Significant compromise)","7 – 9 points","80%","57%"]},
+      {id:"C",cols:["Class C (Decompensated)","10 – 15 points","45%","35%"]}
+    ]
+  },
+  calc:v=>{
+    const total=+v.bili + +v.alb + +v.inr + +v.ascites + +v.enceph;
+    let cls="A",surv="100% 1-yr survival";
+    if(total>=10){cls="C";surv="45% 1-yr survival. Severe decompensation; evaluate for transplant.";}
+    else if(total>=7){cls="B";surv="80% 1-yr survival. Significant functional impairment.";}
+    return{
+      value:`Child-Pugh Class ${cls} (${total} Points)`,
+      matchId:cls,
+      eq:`Severity: Class ${cls} (Points: ${total}/15)\nEstimated Prognosis: ${surv}`
+    };
+  }
 },
+/* STANDARD CALCULATOR TOOLS */
 {
-  id:"delta_ratio",
-  cat:"electrolytes",
-  name:"Anion Gap & Delta Ratio",
-  desc:"Evaluates high-anion-gap metabolic acidosis (HAGMA) to identify mixed acid-base disorders.",
-  guidance:"1. Confirm presence of high anion gap acidosis first.\n2. Input serum Na, Cl, and HCO₃.\n3. Compare change in AG to the change in bicarbonate.",
-  contraindications:"Requires baseline normal AG of 12 and HCO₃ of 24. Must correct for hypoalbuminemia before interpretation.",
-  references:"1. Wrenn K. The delta (Δ) gap: an approach to mixed acid-base disorders. Ann Emerg Med. 1990;19(11):1310-1313.",
-  fields:[N("na","Sodium (mmol/L)",140,{min:1}),N("cl","Chloride (mmol/L)",100,{min:0}),N("hco3","Bicarbonate (mmol/L)",12,{min:0})],
-  calc:v=>{const ag=+v.na-+v.cl-+v.hco3;const d=ag-12;const r=d/(24-+v.hco3);const rStr=Number.isFinite(r)?r.toFixed(2):"N/A";let interp="< 0.4: Hyperchloremic normal-AG acidosis.\n0.4 – 0.8: Mixed HAGMA and normal AG acidosis.\n0.8 – 2.0: Pure HAGMA.\n> 2.0: Concurrent metabolic alkalosis or pre-existing respiratory acidosis.";return{value:"AG "+ag.toFixed(1)+" | Delta "+rStr,eq:"Delta ratio = (AG − 12) ÷ (24 − HCO₃).\n"+interp}}
+  id:"cha2ds2va",
+  cat:"cardio",
+  type:"calc",
+  name:"CHA₂DS₂-VA Score",
+  desc:"Stroke risk stratification in non-valvular atrial fibrillation.",
+  guidance:"1. Score 1 point for CHF, HTN, DM, Vascular disease, Age 65-74.\n2. Score 2 points for Age ≥75 and prior Stroke/TIA.",
+  contraindications:"Do not use in moderate-to-severe mitral stenosis or prosthetic mechanical valves.",
+  references:"1. ESC Guidelines for the diagnosis and management of atrial fibrillation. Eur Heart J. 2024.",
+  fields:[
+    N("hf","Heart failure (0 or 1)",0,{min:0,max:1,step:1}),
+    N("htn","Hypertension (0 or 1)",0,{min:0,max:1,step:1}),
+    N("age75","Age ≥75 years (0 or 1)",0,{min:0,max:1,step:1}),
+    N("dm","Diabetes mellitus (0 or 1)",0,{min:0,max:1,step:1}),
+    N("stroke","Prior stroke/TIA (0 or 1)",0,{min:0,max:1,step:1}),
+    N("vascular","Vascular disease (0 or 1)",0,{min:0,max:1,step:1}),
+    N("age65","Age 65–74 years (0 or 1)",0,{min:0,max:1,step:1})
+  ],
+  table:{
+    headers:["Score","Annual Stroke Risk","Anticoagulation Recommendation"],
+    rows:[
+      {id:"0",cols:["0","0.2%","Anticoagulation generally not recommended"]},
+      {id:"1",cols:["1","0.6–1.0%","Oral anticoagulation should be considered"]},
+      {id:"2plus",cols:["≥ 2","2.2–12.5%","Oral anticoagulation strongly recommended"]}
+    ]
+  },
+  calc:v=>{
+    const s=+v.hf+ +v.htn+2*+v.age75+ +v.dm+2*+v.stroke+ +v.vascular+ +v.age65;
+    let rec="Low risk; anticoagulation generally not recommended.";
+    let match="0";
+    if(s===1){rec="Intermediate risk; consider anticoagulation.";match="1";}
+    else if(s>=2){rec="High stroke risk; oral anticoagulation recommended.";match="2plus";}
+    return{value:s+" / 8 Points",matchId:match,eq:rec};
+  }
 },
 {
   id:"crcl",
   cat:"renal",
+  type:"calc",
   name:"Cockcroft–Gault CrCl",
   desc:"Estimates creatinine clearance for renal medication dosing.",
-  guidance:"1. Obtain stable serum creatinine, age, and actual weight.\n2. Select biological sex.\n3. In obese patients, consider adjusted body weight based on medication guidelines.",
-  contraindications:"Not validated for acute kidney injury (unstable creatinine). Do not use for CKD staging (use CKD-EPI). Inaccurate in extremes of muscle mass (amputees, cachexia).",
-  references:"1. Cockcroft DW, Gault MH. Prediction of creatinine clearance from serum creatinine. Nephron. 1976;16(1):31-41.",
-  fields:[N("age","Age (years)",60),N("weight","Weight (kg)",70),N("creatinine","Creatinine (mg/dL)",1),S("sex","Equation factor","male",[["male","Male"],["female","Female"]])],
-  calc:v=>{let r=((140-v.age)*v.weight)/(72*v.creatinine);if(v.sex==="female")r*=.85;return{value:r.toFixed(1)+" mL/min",eq:"CrCl = [((140 − age) × weight) ÷ (72 × SCr)] × (0.85 if female).\nUsed widely for drug dosage adjustment protocols."}}
+  guidance:"1. Obtain stable serum creatinine, age, and actual weight.\n2. Select biological sex.",
+  contraindications:"Not validated for acute kidney injury. Inaccurate in severe muscle mass extremes.",
+  references:"1. Cockcroft DW, Gault MH. Nephron. 1976;16(1):31-41.",
+  fields:[
+    N("age","Age (years)",60),
+    N("weight","Weight (kg)",70),
+    N("creatinine","Creatinine (mg/dL)",1),
+    S("sex","Biological Factor","male",[["male","Male"],["female","Female"]])
+  ],
+  calc:v=>{
+    let r=((140-v.age)*v.weight)/(72*v.creatinine);
+    if(v.sex==="female") r*=.85;
+    return{value:r.toFixed(1)+" mL/min",eq:"Used widely for antibiotic, DOAC, and chemotherapy dosing adjustments."};
+  }
 },
 {
-  id:"cha2ds2va",
-  cat:"cardio",
-  name:"CHA₂DS₂-VA Score",
-  desc:"Stroke risk stratification in non-valvular atrial fibrillation (excluding sex category).",
-  guidance:"1. Score 1 point each for Congestive heart failure, HTN, Diabetes, Vascular disease, and Age 65-74.\n2. Score 2 points each for Age ≥75 and prior Stroke/TIA.\n3. Assess bleeding risk prior to starting anticoagulation.",
-  contraindications:"Do not use in moderate-to-severe mitral stenosis or mechanical heart valves (these mandate anticoagulation regardless of score).",
-  references:"1. ESC Guidelines for the diagnosis and management of atrial fibrillation. Eur Heart J. 2024.",
-  fields:[N("hf","Heart failure (0 or 1)",0,{min:0,max:1,step:1}),N("htn","Hypertension (0 or 1)",0,{min:0,max:1,step:1}),N("age75","Age ≥75 years (0 or 1)",0,{min:0,max:1,step:1}),N("dm","Diabetes mellitus (0 or 1)",0,{min:0,max:1,step:1}),N("stroke","Prior stroke/TIA/systemic embolism (0 or 1)",0,{min:0,max:1,step:1}),N("vascular","Vascular disease (0 or 1)",0,{min:0,max:1,step:1}),N("age65","Age 65–74 years (0 or 1)",0,{min:0,max:1,step:1})],
-  calc:v=>{const s=+v.hf+ +v.htn+2*+v.age75+ +v.dm+2*+v.stroke+ +v.vascular+ +v.age65;return{value:s+" / 8",eq:"Score 0: Low risk; anticoagulation generally not recommended.\nScore 1: Intermediate; oral anticoagulation should be considered.\nScore ≥2: High risk; oral anticoagulation recommended."}}
-},
-{
-  id:"qsofa",
-  cat:"emergency",
-  name:"qSOFA Score",
-  desc:"Quick bedside tool to identify patients with suspected infection at higher risk of poor outcomes.",
-  guidance:"1. Assess when infection is clinically suspected.\n2. Check for RR ≥ 22, SBP ≤ 100 mmHg, altered mentation (GCS < 15).\n3. Any 2 or more criteria indicates high risk.",
-  contraindications:"Not a diagnostic criterion for sepsis. Should not be used as a sole screening tool as it has low sensitivity compared to SIRS or NEWS2.",
-  references:"1. Singer M, et al. The Third International Consensus Definitions for Sepsis and Septic Shock (Sepsis-3). JAMA. 2016;315(8):801–810.",
-  fields:[N("rr","Respiratory rate (/min)",18,{min:0}),N("sbp","Systolic BP (mmHg)",120,{min:0}),N("gcs","Glasgow Coma Scale (3–15)",15,{min:3,max:15,step:1})],
-  calc:v=>{const rr=v.rr>=22?1:0,bp=v.sbp<=100?1:0,g=v.gcs<15?1:0;const s=rr+bp+g;return{value:s+" / 3",eq:"qSOFA ≥ 2: High risk of in-hospital mortality / prolonged ICU stay. Promptly investigate for organ failure and initiate sepsis bundles.\nqSOFA < 2: Does not rule out life-threatening sepsis."}}
-},
-{
-  id:"bmi",
-  cat:"renal",
-  name:"BMI",
-  desc:"Adult Body Mass Index screening measure.",
-  guidance:"1. Record height in centimeters without shoes.\n2. Record weight in kilograms in light clothing.\n3. Calculate index to classify weight status.",
-  contraindications:"Does not distinguish adipose tissue from lean muscle mass. Misclassifies muscular athletes, pregnant women, and patients with severe edema or ascites.",
-  references:"1. WHO Expert Consultation. Appropriate body-mass index for Asian populations and its implications for policy and intervention strategies. Lancet. 2004;363(9403):157-163.",
-  fields:[N("weight","Weight (kg)",70),N("height","Height (cm)",170)],
-  calc:v=>{const val=(v.weight/(v.height/100)**2).toFixed(1);let c="Normal weight (18.5–24.9)";if(val<18.5)c="Underweight (< 18.5)";else if(val>=30)c="Obese (≥ 30)";else if(val>=25)c="Overweight (25–29.9)";return{value:val+" kg/m²",eq:"Classification: "+c+"\nFormula: Weight (kg) ÷ [Height (m)]²"}}
+  id:"effective_osm",
+  cat:"electrolytes",
+  type:"calc",
+  name:"Effective Osmolality (Tonicity)",
+  desc:"Solutes that do not freely penetrate cell membranes.",
+  guidance:"1. Obtain contemporaneous serum sodium and glucose.",
+  contraindications:"Do not use to assess toxic alcohol osmolar gaps.",
+  references:"1. Gennari FJ. N Engl J Med. 1984;310(2):102-105.",
+  fields:[N("na","Serum sodium (mmol/L)",140,{min:1}),N("glucose","Glucose (mg/dL)",100,{min:0})],
+  calc:v=>({value:(2*+v.na+ +v.glucose/18).toFixed(1)+" mOsm/kg",eq:"Normal reference range: ~275–295 mOsm/kg."})
 }
 ];
 
 const $=id=>document.getElementById(id);
 let currentCategory="cardio";
-let currentTool="effective_osm";
+let currentTool="forrest";
+let currentTypeFilter="all";
 let lastResultText="";
 
 function showPage(page){
-["home","categoryPage","calculatorPage"].forEach(id=>{
-$(id).classList.toggle("hidden",id!==page);
-});
-window.scrollTo(0,0);
+  ["home","categoryPage","calculatorPage"].forEach(id=>{
+    $(id).classList.toggle("hidden",id!==page);
+  });
+  window.scrollTo(0,0);
 }
 
 function appendTool(t,parent){
-const b=document.createElement("button");
-b.type="button";
-b.className="tool";
-const strong=document.createElement("strong");
-strong.textContent=t.name;
-const small=document.createElement("small");
-small.textContent=t.planned?"Planned — not yet implemented":t.desc;
-b.append(strong,small);
-b.addEventListener("click",()=>openTool(t.id));
-parent.appendChild(b);
+  const b=document.createElement("button");
+  b.type="button";
+  b.className="tool";
+  
+  const headerDiv=document.createElement("div");
+  headerDiv.className="tool-header";
+  
+  const strong=document.createElement("strong");
+  strong.textContent=t.name;
+  
+  const badge=document.createElement("span");
+  badge.className=`badge ${t.type==='class'?'badge-class':'badge-calc'}`;
+  badge.textContent=t.type==='class'?'Classification':'Calculator';
+  
+  headerDiv.append(strong,badge);
+  
+  const small=document.createElement("small");
+  small.textContent=t.desc;
+  
+  b.append(headerDiv,small);
+  b.addEventListener("click",()=>openTool(t.id));
+  parent.appendChild(b);
 }
 
 function renderCategories(filter=""){
-const parent=$("categories");
-parent.innerHTML="";
-const q=filter.trim().toLowerCase();
+  const parent=$("categories");
+  parent.innerHTML="";
+  const q=filter.trim().toLowerCase();
 
-categories.forEach(c=>{
-const matches=tools.some(t=>t.cat===c.id&&(t.name+" "+t.desc).toLowerCase().includes(q));
-if(q&&!matches&&!c.name.toLowerCase().includes(q))return;
+  categories.forEach(c=>{
+    const matches=tools.some(t=>t.cat===c.id&&(t.name+" "+t.desc).toLowerCase().includes(q));
+    if(q&&!matches&&!c.name.toLowerCase().includes(q))return;
 
-const b=document.createElement("button");
-b.type="button";
-b.className="card";
+    const b=document.createElement("button");
+    b.type="button";
+    b.className="card";
 
-const icon=document.createElement("span");
-icon.className="ico";
-icon.textContent=c.icon;
+    const icon=document.createElement("span");
+    icon.className="ico";
+    icon.textContent=c.icon;
 
-const name=document.createElement("strong");
-name.textContent=c.name;
+    const name=document.createElement("strong");
+    name.textContent=c.name;
 
-const desc=document.createElement("small");
-desc.textContent=c.desc;
+    const desc=document.createElement("small");
+    desc.textContent=c.desc;
 
-b.append(icon,name,desc);
-b.addEventListener("click",()=>openCategory(c.id));
-parent.appendChild(b);
-});
+    b.append(icon,name,desc);
+    b.addEventListener("click",()=>openCategory(c.id));
+    parent.appendChild(b);
+  });
 }
 
 function renderQuick(){
-const parent=$("quick");
-parent.innerHTML="";
-const preferred=["effective_osm","osmolar_gap","delta_ratio","crcl","cha2ds2va","qsofa","bmi"];
-let chosen=preferred.map(id=>tools.find(t=>t.id===id)).filter(Boolean);
-chosen.forEach(t=>appendTool(t,parent));
+  const parent=$("quick");
+  parent.innerHTML="";
+  const preferred=["forrest","child_pugh","cha2ds2va","crcl","effective_osm"];
+  let chosen=preferred.map(id=>tools.find(t=>t.id===id)).filter(Boolean);
+  chosen.forEach(t=>appendTool(t,parent));
+}
+
+function renderCategoryTools(){
+  const list=$("toolList");
+  list.innerHTML="";
+  
+  const matching=tools.filter(t=>{
+    if(t.cat!==currentCategory) return false;
+    if(currentTypeFilter==="all") return true;
+    return t.type===currentTypeFilter;
+  });
+
+  if(matching.length){
+    matching.forEach(t=>appendTool(t,list));
+  }else{
+    const p=document.createElement("p");
+    p.className="muted";
+    p.textContent="No items match this filter.";
+    list.appendChild(p);
+  }
 }
 
 function openCategory(id){
-const c=categories.find(x=>x.id===id);
-if(!c)return;
+  const c=categories.find(x=>x.id===id);
+  if(!c)return;
 
-currentCategory=id;
-$("categoryTitle").textContent=c.name;
-$("categoryDesc").textContent=c.desc;
+  currentCategory=id;
+  $("categoryTitle").textContent=c.name;
+  $("categoryDesc").textContent=c.desc;
+  
+  // Reset filter to 'All'
+  currentTypeFilter="all";
+  document.querySelectorAll(".tab-btn").forEach(btn=>{
+    btn.classList.toggle("active",btn.dataset.filter==="all");
+  });
 
-const list=$("toolList");
-list.innerHTML="";
-
-const matching=tools.filter(t=>t.cat===id);
-
-if(matching.length){
-matching.forEach(t=>appendTool(t,list));
-}else{
-const p=document.createElement("p");
-p.className="muted";
-p.textContent="No calculators are assigned to this category yet.";
-list.appendChild(p);
-}
-
-showPage("categoryPage");
+  renderCategoryTools();
+  showPage("categoryPage");
 }
 
 function openTool(id){
-const t=tools.find(x=>x.id===id);
-if(!t)return;
+  const t=tools.find(x=>x.id===id);
+  if(!t)return;
 
-currentTool=id;
-currentCategory=t.cat;
-lastResultText="";
+  currentTool=id;
+  currentCategory=t.cat;
+  lastResultText="";
 
-$("title").textContent=t.name;
-$("desc").textContent=t.desc;
+  $("title").textContent=t.name;
+  $("desc").textContent=t.desc;
 
-// Step by step Guidance
-if(t.guidance){
-  $("guidanceText").textContent=t.guidance;
-  $("guidanceBox").classList.remove("hidden");
-} else {
-  $("guidanceBox").classList.add("hidden");
-}
+  const badge=$("toolTypeBadge");
+  badge.className=`badge ${t.type==='class'?'badge-class':'badge-calc'}`;
+  badge.textContent=t.type==='class'?'Classification':'Calculator';
 
-// Contraindications & Caveats
-if(t.contraindications){
-  $("contraText").textContent=t.contraindications;
-  $("contraBox").classList.remove("hidden");
-} else {
-  $("contraBox").classList.add("hidden");
-}
+  if(t.guidance){
+    $("guidanceText").textContent=t.guidance;
+    $("guidanceBox").classList.remove("hidden");
+  } else {
+    $("guidanceBox").classList.add("hidden");
+  }
 
-$("fields").innerHTML="";
+  if(t.contraindications){
+    $("contraText").textContent=t.contraindications;
+    $("contraBox").classList.remove("hidden");
+  } else {
+    $("contraBox").classList.add("hidden");
+  }
 
-t.fields.forEach(f=>{
-const wrap=document.createElement("div");
-const label=document.createElement("label");
-label.htmlFor=f.id;
-label.textContent=f.label;
+  $("fields").innerHTML="";
 
-let el;
-if(f.type==="select"){
-el=document.createElement("select");
-(f.options||[]).forEach(o=>{
-const opt=document.createElement("option");
-if(Array.isArray(o)){
-opt.value=o[0];
-opt.textContent=o[1];
-}else{
-opt.value=o.value;
-opt.textContent=o.label;
-}
-el.appendChild(opt);
-});
-el.value=String(f.value);
-}else{
-el=document.createElement("input");
-el.type="number";
-el.step=f.step||"any";
-el.min=f.min??0;
-if(f.max!==undefined)el.max=f.max;
-el.value=f.value;
-}
+  t.fields.forEach(f=>{
+    const wrap=document.createElement("div");
+    if(f.type==="select") wrap.className="full-width";
+    
+    const label=document.createElement("label");
+    label.htmlFor=f.id;
+    label.textContent=f.label;
 
-el.id=f.id;
-el.name=f.id;
-el.required=true;
+    let el;
+    if(f.type==="select"){
+      el=document.createElement("select");
+      (f.options||[]).forEach(o=>{
+        const opt=document.createElement("option");
+        opt.value=Array.isArray(o)?o[0]:o.value;
+        opt.textContent=Array.isArray(o)?o[1]:o.label;
+        el.appendChild(opt);
+      });
+      el.value=String(f.value);
+    }else{
+      el=document.createElement("input");
+      el.type="number";
+      el.step=f.step||"any";
+      el.min=f.min??0;
+      if(f.max!==undefined)el.max=f.max;
+      el.value=f.value;
+    }
 
-wrap.append(label,el);
-$("fields").appendChild(wrap);
-});
+    el.id=f.id;
+    el.name=f.id;
+    el.required=true;
 
-$("result").classList.remove("show");
-showPage("calculatorPage");
+    wrap.append(label,el);
+    $("fields").appendChild(wrap);
+  });
+
+  // Reference Table Construction
+  const refCard=$("referenceCard");
+  const thead=$("refTableHead");
+  const tbody=$("refTableBody");
+  
+  if(t.table){
+    thead.innerHTML="";
+    tbody.innerHTML="";
+    
+    const trHead=document.createElement("tr");
+    t.table.headers.forEach(h=>{
+      const th=document.createElement("th");
+      th.textContent=h;
+      trHead.appendChild(th);
+    });
+    thead.appendChild(trHead);
+
+    t.table.rows.forEach(r=>{
+      const tr=document.createElement("tr");
+      tr.id=`ref-row-${r.id}`;
+      r.cols.forEach(c=>{
+        const td=document.createElement("td");
+        td.textContent=c;
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+    
+    refCard.classList.remove("hidden");
+  } else {
+    refCard.classList.add("hidden");
+  }
+
+  $("result").classList.remove("show");
+  showPage("calculatorPage");
 }
 
 $("form").addEventListener("submit",e=>{
-e.preventDefault();
+  e.preventDefault();
 
-const t=tools.find(x=>x.id===currentTool);
-if(!t)return;
+  const t=tools.find(x=>x.id===currentTool);
+  if(!t)return;
 
-const v={};
-for(const f of t.fields){
-const el=$(f.id);
-if(f.type==="select"){
-v[f.id]=el.value;
-continue;
-}
-const n=Number(el.value);
-if(el.value===""||!Number.isFinite(n)||n<Number(el.min||0)||(f.max!==undefined&&n>f.max)){
-alert("Check the value for "+f.label);
-return;
-}
-v[f.id]=n;
-}
+  const v={};
+  for(const f of t.fields){
+    const el=$(f.id);
+    if(f.type==="select"){
+      v[f.id]=el.value;
+      continue;
+    }
+    const n=Number(el.value);
+    if(el.value===""||!Number.isFinite(n)||(f.min!==undefined&&n<f.min)||(f.max!==undefined&&n>f.max)){
+      alert("Please check "+f.label);
+      return;
+    }
+    v[f.id]=n;
+  }
 
-const r=t.calc(v);
-$("value").textContent=r.value;
-$("equation").textContent=r.eq;
+  const r=t.calc(v);
+  $("value").textContent=r.value;
+  $("equation").textContent=r.eq;
 
-// References section rendering
-const ref=t.references||"No specific references documented for this prototype.";
-$("referencesText").textContent=ref;
+  // Highlight reference row if matchId exists
+  if(t.table && r.matchId){
+    document.querySelectorAll("#refTable tr").forEach(row=>row.classList.remove("active-grade"));
+    const activeRow=$(`ref-row-${r.matchId}`);
+    if(activeRow){
+      activeRow.classList.add("active-grade");
+      activeRow.scrollIntoView({behavior:"smooth",block:"nearest"});
+    }
+  }
 
-$("result").classList.add("show");
-lastResultText=`${t.name}\nResult: ${r.value}\nInterpretation: ${r.eq}\n\nReferences:\n${ref}`;
+  const ref=t.references||"No specific references documented.";
+  $("referencesText").textContent=ref;
+
+  $("result").classList.add("show");
+  lastResultText=`${t.name}\nResult: ${r.value}\n${r.eq}\n\nReferences:\n${ref}`;
+});
+
+// Category Pill Filter handler
+$("typeFilters").addEventListener("click",e=>{
+  if(!e.target.classList.contains("tab-btn")) return;
+  document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+  e.target.classList.add("active");
+  currentTypeFilter=e.target.dataset.filter;
+  renderCategoryTools();
 });
 
 $("reset").addEventListener("click",()=>openTool(currentTool));
 $("homeBtn").addEventListener("click",()=>showPage("home"));
 $("categoryBtn").addEventListener("click",()=>openCategory(currentCategory));
 
+// Search handler indexing both types
 $("search").addEventListener("input",e=>{
-const q=e.target.value.trim().toLowerCase();
+  const q=e.target.value.trim().toLowerCase();
 
-if(!q){
-renderCategories();
-renderQuick();
-showPage("home");
-return;
-}
+  if(!q){
+    renderCategories();
+    renderQuick();
+    showPage("home");
+    return;
+  }
 
-$("categories").innerHTML="";
-$("quick").innerHTML="";
+  $("categories").innerHTML="";
+  $("quick").innerHTML="";
 
-const found=tools.filter(t=>(t.name+" "+t.desc).toLowerCase().includes(q));
-const shown=new Set();
+  const found=tools.filter(t=>(t.name+" "+t.desc+" "+t.type).toLowerCase().includes(q));
+  const shown=new Set();
 
-found.forEach(t=>{
-if(!shown.has(t.cat)){
-shown.add(t.cat);
-const c=categories.find(x=>x.id===t.cat);
+  found.forEach(t=>{
+    if(!shown.has(t.cat)){
+      shown.add(t.cat);
+      const c=categories.find(x=>x.id===t.cat);
 
-if(c){
-const b=document.createElement("button");
-b.type="button";
-b.className="card";
+      if(c){
+        const b=document.createElement("button");
+        b.type="button";
+        b.className="card";
 
-const icon=document.createElement("span");
-icon.className="ico";
-icon.textContent=c.icon;
+        const icon=document.createElement("span");
+        icon.className="ico";
+        icon.textContent=c.icon;
 
-const name=document.createElement("strong");
-name.textContent=c.name;
+        const name=document.createElement("strong");
+        name.textContent=c.name;
 
-const desc=document.createElement("small");
-desc.textContent="Matching calculators";
+        const desc=document.createElement("small");
+        desc.textContent="Matching results";
 
-b.append(icon,name,desc);
-b.addEventListener("click",()=>openCategory(c.id));
-$("categories").appendChild(b);
-}
-}
-appendTool(t,$("quick"));
-});
+        b.append(icon,name,desc);
+        b.addEventListener("click",()=>openCategory(c.id));
+        $("categories").appendChild(b);
+      }
+    }
+    appendTool(t,$("quick"));
+  });
 
-if(!found.length){
-const p=document.createElement("p");
-p.className="muted";
-p.textContent="No matching calculators found.";
-$("quick").appendChild(p);
-}
-showPage("home");
+  if(!found.length){
+    const p=document.createElement("p");
+    p.className="muted";
+    p.textContent="No matching tools found.";
+    $("quick").appendChild(p);
+  }
+  showPage("home");
 });
 
 $("copy").addEventListener("click",async()=>{
-try{
-await navigator.clipboard.writeText(lastResultText);
-$("copy").textContent="Copied";
-setTimeout(()=>$("copy").textContent="Copy",1200);
-}catch(e){
-alert(lastResultText);
-}
+  try{
+    await navigator.clipboard.writeText(lastResultText);
+    $("copy").textContent="Copied";
+    setTimeout(()=>$("copy").textContent="Copy",1200);
+  }catch(e){
+    alert(lastResultText);
+  }
 });
 
 renderCategories();

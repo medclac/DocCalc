@@ -591,7 +591,7 @@ window.S = S;
   // ==============================================================
   // GOOGLE APPS SCRIPT WEBHOOK CONFIGURATION
   // ==============================================================
-  const GOOGLE_SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzIoxwZFB5kUkrPfQREoxQ_4hEejfcJKQtVEzkEjhlHk-qrBUcuNDxOr7uxFZQK654x/exec";
+  const GOOGLE_SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzbJWYIaP0o209I22wuMjrq3983VIVId_KKM_Q2Qf1HAgGANNk265mZw5hxXwj4qSm0/exec";
 
   function sendDataToWebhook(payload) {
     if (!GOOGLE_SHEET_WEBHOOK_URL || GOOGLE_SHEET_WEBHOOK_URL.includes("PASTE_YOUR_GOOGLE_APPS_SCRIPT")) {
@@ -717,7 +717,7 @@ window.S = S;
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  // --- HASH ROUTER FOR ANDROID BACK BUTTON ---
+  // --- HASH ROUTER FOR ANDROID HARDWARE BACK BUTTON ---
   window.addEventListener("hashchange", function () {
     const rawHash = location.hash.replace(/^#/, "");
 

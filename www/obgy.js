@@ -5,12 +5,13 @@
 (function () {
   "use strict";
 
-  // Use the global constructors declared in the HTML header
-  var makeN = window.N || function (id, label, defaultVal, extra) {
+  // Use the global constructors declared in the HTML header or provide safe fallbacks
+  var makeN = (typeof window !== "undefined" && window.N) ? window.N : function (id, label, defaultVal, extra) {
     extra = extra || {};
     return Object.assign({ id: id, label: label, type: "number", value: defaultVal, default: defaultVal }, extra);
   };
-  var makeS = window.S || function (id, label, defaultVal, options) {
+
+  var makeS = (typeof window !== "undefined" && window.S) ? window.S : function (id, label, defaultVal, options) {
     options = options || [];
     return { id: id, label: label, type: "select", value: defaultVal, default: defaultVal, options: options };
   };
@@ -546,7 +547,7 @@
           ["1", "Present: Hirsutism (mFG ≥4-6), acne, or elevated testosterone"],
           ["0", "Absent: Normal androgens, no hirsutism"]
         ]),
-        makeS("usPco", "3. Polycystic Ovarian Morphology on Ultrasound", "1", [
+        makeS("usPco", "3. PolycystIC Ovarian Morphology on Ultrasound", "1", [
           ["1", "Present: ≥20 follicles (2–9mm) per ovary or ovarian volume ≥10 mL"],
           ["0", "Absent: Normal follicular counts and ovarian volume"]
         ])
@@ -785,30 +786,40 @@
   // ==============================================================
   // REGISTRATION INTO GLOBAL MEMORY
   // ==============================================================
-  window.categories = window.categories || [];
-  window.tools = window.tools || [];
+  try {
+    window.categories = window.categories || [];
+    window.tools = window.tools || [];
 
-  if (!window.categories.some(function (c) { return c.id === obgynCategory.id; })) {
-    window.categories.push(obgynCategory);
-  }
-
-  obgynTools.forEach(function (tool) {
-    var existingIdx = window.tools.findIndex(function (t) { return t.id === tool.id; });
-    if (existingIdx >= 0) {
-      window.tools[existingIdx] = tool;
-    } else {
-      window.tools.push(tool);
+    if (!window.categories.some(function (c) { return c && c.id === obgynCategory.id; })) {
+      window.categories.push(obgynCategory);
     }
-  });
 
-  if (typeof window.SYNONYM_MAP === "object" && window.SYNONYM_MAP !== null) {
-    window.SYNONYM_MAP["obgyn"] = ["obgyn", "pregnancy", "obstetrics", "gynaecology", "gynecology", "fetal", "cervix", "uterus", "ovary"];
-    window.SYNONYM_MAP["preeclampsia"] = ["preeclampsia", "eclampsia", "hellp", "hypertension", "proteinuria", "magnesium"];
-    window.SYNONYM_MAP["cervix"] = ["cervix", "bishop", "ripening", "induction", "dilation", "effacement", "cervical cancer", "figo"];
-  }
+    obgynTools.forEach(function (tool) {
+      var existingIdx = window.tools.findIndex(function (t) { return t && t.id === tool.id; });
+      if (existingIdx >= 0) {
+        window.tools[existingIdx] = tool;
+      } else {
+        window.tools.push(tool);
+      }
+    });
 
-  // Force repaint if the HTML engine has already initialized
-  if (typeof window.renderHome === "function") {
-    window.renderHome();
+    if (typeof window.SYNONYM_MAP === "object" && window.SYNONYM_MAP !== null) {
+      window.SYNONYM_MAP["obgyn"] = ["obgyn", "pregnancy", "obstetrics", "gynaecology", "gynecology", "fetal", "cervix", "uterus", "ovary"];
+      window.SYNONYM_MAP["preeclampsia"] = ["preeclampsia", "eclampsia", "hellp", "hypertension", "proteinuria", "magnesium"];
+      window.SYNONYM_MAP["cervix"] = ["cervix", "bishop", "ripening", "induction", "dilation", "effacement", "cervical cancer", "figo"];
+    }
+
+    // Trigger rendering if HTML engine already finished, or schedule it
+    if (typeof window.renderHome === "function") {
+      window.renderHome();
+    } else {
+      document.addEventListener("DOMContentLoaded", function () {
+        if (typeof window.renderHome === "function") {
+          window.renderHome();
+        }
+      });
+    }
+  } catch (err) {
+    console.error("Critical error registering OB-GYN tools:", err);
   }
 })();

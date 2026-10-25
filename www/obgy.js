@@ -866,10 +866,6 @@
     }
   }
 
-  // Execute registration immediately or on DOM ready
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", registerModule);
-  } else {
-    registerModule();
-  }
+  registerModule();
+
 })();

@@ -33,19 +33,22 @@
       cat: "cardio",
       type: "class",
       name: "Pulmonary Hypertension Hemodynamic Classifier",
-      desc: "Invasive classification of pulmonary hypertension using RHC metrics (ESC/ERS definitions).",
+      desc: "Invasive classification of pulmonary hypertension using RHC metrics (ESC/ERS 2022 definitions).",
       organ: "Pulmonary Vasculature / Right Ventricle",
       region: "Cardiopulmonary",
       subject: "Pulmonary Vascular Disease / Hemodynamics",
       keywords: ["ph", "pulmonary hypertension", "rhc", "mpap", "pawp", "pvr", "ipch", "cpcph"],
-      guidance: "1. Perform resting right heart catheterization (RHC).\n2. mPAP > 20 mmHg defines PH.\n3. PAWP ≤ 15 mmHg with PVR > 2 WU defines pre-capillary PH.\n4. PAWP > 15 mmHg defines post-capillary PH (IpcPH if PVR ≤ 2 WU; CpcPH if PVR > 2 WU).",
-      contraindications: "Do not evaluate hemodynamics during acute hypervolemia or active tachyarrhythmias; optimize left-sided filling pressures first.",
+      guidance: "1. Perform resting right heart catheterization (RHC) leveled at the mid-thoracic phlebostatic point.\n2. mPAP > 20 mmHg at rest defines Pulmonary Hypertension.\n3. PAWP ≤ 15 mmHg with PVR > 2 WU defines Pre-Capillary PH (Groups 1, 3, 4, 5).\n4. PAWP > 15 mmHg defines Post-Capillary PH (Group 2, left heart disease):\n   - Isolated Post-Capillary (IpcPH): PVR ≤ 2 WU\n   - Combined Post- and Pre-Capillary (CpcPH): PVR > 2 WU.",
+      contraindications: "Do not evaluate hemodynamics during acute volume depletion, hypertensive crisis, or active tachycardia; optimize filling status first.",
       literature: [{
         type: "ESC/ERS Guidelines",
         icon: "📘",
         title: "2022 ESC/ERS Guidelines for the diagnosis and treatment of pulmonary hypertension",
         citation: "Humbert M, Kovacs G, Hoeper MM, et al. Eur Heart J. 2022;43(38):3618-3731.",
-        links: [{ text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/36017548/" }]
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/36017548/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1093/eurheartj/ehac237" }
+        ]
       }],
       fields: [
         makeN("mpap", "Mean Pulmonary Arterial Pressure (mPAP, mmHg)", 28, { min: 5, max: 120 }),
@@ -64,27 +67,27 @@
       },
       calc: function (v) {
         var m = +v.mpap, w = +v.pawp, r = +v.pvr;
-        var match = "noPh", dx = "No Pulmonary Hypertension", tx = "mPAP ≤ 20 mmHg.";
+        var match = "noPh", dx = "No Pulmonary Hypertension", tx = "mPAP ≤ 20 mmHg. Normal pulmonary pressures.";
         if (m > 20) {
           if (w <= 15) {
             if (r > 2) {
               match = "preCap";
               dx = "Pre-Capillary Pulmonary Hypertension";
-              tx = "mPAP > 20, PAWP ≤ 15, PVR > 2 WU. Workup Group 1 (PAH), Group 3 (lung disease), or Group 4 (CTEPH).";
+              tx = "mPAP > 20, PAWP ≤ 15, PVR > 2 WU. Workup Group 1 (PAH), Group 3 (hypoxic/lung disease), or Group 4 (CTEPH).";
             } else {
               match = "unclass";
               dx = "Unclassified / High Cardiac Output State";
-              tx = "mPAP > 20, PAWP ≤ 15, but PVR ≤ 2 WU. Consider shunts, cirrhosis, anemia, or thyrotoxicosis.";
+              tx = "mPAP > 20, PAWP ≤ 15, but PVR ≤ 2 WU. Consider systemic shunts, cirrhosis, anemia, or thyrotoxicosis.";
             }
           } else {
             if (r <= 2) {
               match = "ipcPh";
               dx = "Isolated Post-Capillary Pulmonary Hypertension (IpcPH)";
-              tx = "mPAP > 20, PAWP > 15, PVR ≤ 2 WU. Driven exclusively by elevated left-heart filling pressures.";
+              tx = "mPAP > 20, PAWP > 15, PVR ≤ 2 WU. Driven purely by left-sided backward filling pressures. Pulmonary vasodilators are contraindicated.";
             } else {
               match = "cpcPh";
               dx = "Combined Post- and Pre-Capillary Pulmonary Hypertension (CpcPH)";
-              tx = "mPAP > 20, PAWP > 15, PVR > 2 WU. Secondary pre-capillary pulmonary vascular remodeling superimposed on left heart disease.";
+              tx = "mPAP > 20, PAWP > 15, PVR > 2 WU. Pre-capillary pulmonary vascular remodeling superimposed on chronic left heart disease.";
             }
           }
         }
@@ -96,39 +99,45 @@
       cat: "cardio",
       type: "calc",
       name: "PVR (Pulmonary Vascular Resistance)",
-      desc: "Calculates PVR in Wood Units and dyn·s·cm⁻⁵ via invasive catheterization.",
+      desc: "Calculates precapillary pulmonary vascular resistance in Wood Units and dyn·s·cm⁻⁵ via RHC.",
       organ: "Pulmonary Arterioles",
       region: "Cardiopulmonary",
       subject: "Hemodynamics",
-      keywords: ["pvr", "wood units", "hemodynamics", "rhc"],
-      guidance: "PVR = (mPAP − PAWP) ÷ CO. Normal is < 2.0 Wood Units (< 160 dyn·s·cm⁻⁵).",
+      keywords: ["pvr", "wood units", "hemodynamics", "rhc", "resistance"],
+      guidance: "1. Formula: PVR = (mPAP − PAWP) ÷ Cardiac Output.\n2. To convert Wood Units to dyn·s·cm⁻⁵, multiply by 80.\n3. Normal resting PVR is < 2.0 Wood Units (< 160 dyn·s·cm⁻⁵).\n4. PVR > 2.0 Wood Units denotes intrinsic pulmonary vascular remodeling.",
+      contraindications: "Inaccurate if PAWP is wedged incorrectly or if severe tricuspid/pulmonic regurgitation distorts thermodilution cardiac output (use Fick method in severe TR).",
       literature: [{
-        type: "Reference Manual",
+        type: "Consensus Definition",
         icon: "📄",
         title: "Hemodynamic definitions and clinical evaluation of pulmonary hypertension",
-        citation: "Simonneau G, et al. Eur Respir J. 2019;53(1):1801889.",
-        links: [{ text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/30545973/" }]
+        citation: "Simonneau G, Montani D, Celermajer DS, et al. Eur Respir J. 2019;53(1):1801889.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/30545973/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1183/13993003.01889-2018" }
+        ]
       }],
       fields: [
-        makeN("mpap", "Mean Pulmonary Arterial Pressure (mPAP, mmHg)", 30, { min: 5, max: 120 }),
+        makeN("mpap", "Mean Pulmonary Arterial Pressure (mPAP, mmHg)", 32, { min: 5, max: 120 }),
         makeN("pawp", "Pulmonary Artery Wedge Pressure (PAWP, mmHg)", 12, { min: 0, max: 60 }),
-        makeN("co", "Cardiac Output (CO, L/min)", 4.5, { min: 0.5, max: 20, step: 0.1 })
+        makeN("co", "Cardiac Output (CO, L/min)", 4.2, { min: 0.5, max: 20, step: 0.1 })
       ],
       table: {
-        headers: ["PVR Value", "Vascular Status"],
+        headers: ["PVR Range", "Resistance Level", "Hemodynamic Interpretation"],
         rows: [
-          { id: "norm", cols: ["< 2.0 Wood Units", "Normal pulmonary arteriolar resistance"] },
-          { id: "elev", cols: ["≥ 2.0 Wood Units", "Elevated; indicates pulmonary vascular remodeling"] }
+          { id: "norm", cols: ["< 2.0 Wood Units (<160 dynes)", "Normal Resistance", "Normal pulmonary arteriolar caliber"] },
+          { id: "border", cols: ["2.0 – 2.9 Wood Units (160–239 dynes)", "Borderline Elevated", "Early pulmonary vascular remodeling; close monitoring"] },
+          { id: "mod", cols: ["3.0 – 5.0 Wood Units (240–400 dynes)", "Moderately Elevated", "Significant pulmonary arteriopathy; candidate for targeted therapy"] },
+          { id: "severe", cols: ["> 5.0 Wood Units (>400 dynes)", "Severely Elevated", "Severe vascular obliteration; high risk of RV failure"] }
         ]
       },
       calc: function (v) {
         var wu = (+v.mpap - +v.pawp) / +v.co;
         var dynes = Math.round(wu * 80);
-        var match = wu >= 2.0 ? "elev" : "norm";
+        var match = wu > 5.0 ? "severe" : wu >= 3.0 ? "mod" : wu >= 2.0 ? "border" : "norm";
         return {
           value: wu.toFixed(2) + " Wood Units (" + dynes + " dyn·s·cm⁻⁵)",
           matchId: match,
-          eq: "Formula: PVR = (mPAP − PAWP) ÷ CO. Normal < 2.0 WU."
+          eq: "Formula: PVR = (mPAP [" + v.mpap + "] − PAWP [" + v.pawp + "]) ÷ CO [" + v.co + "]. Conversion: 1 Wood Unit = 80 dyn·s·cm⁻⁵."
         };
       }
     },
@@ -137,21 +146,41 @@
       cat: "cardio",
       type: "calc",
       name: "Transpulmonary Gradient (TPG)",
-      desc: "Calculates TPG (mPAP − PAWP) to evaluate the pressure drop across the pulmonary bed.",
+      desc: "Calculates the total pressure drop across the pulmonary vascular bed from RHC.",
       organ: "Pulmonary Vasculature",
       region: "Cardiopulmonary",
       subject: "Hemodynamics",
       keywords: ["tpg", "transpulmonary gradient", "rhc", "wedge"],
-      guidance: "TPG = mPAP − PAWP. Historically > 12 mmHg indicated pre-capillary component.",
+      guidance: "1. Formula: TPG = mPAP − PAWP.\n2. Normal TPG is ≤ 12 mmHg.\n3. Historically, TPG > 12 mmHg suggested out-of-proportion pre-capillary pulmonary hypertension. Note: TPG is flow-dependent and varies directly with stroke volume.",
+      contraindications: "In high cardiac output states (e.g., sepsis, shunts), TPG can be elevated despite completely normal pulmonary arterioles.",
+      literature: [{
+        type: "Seminal Review",
+        icon: "📄",
+        title: "The transpulmonary gradient in pulmonary hypertension",
+        citation: "Naeije R, Vachiery JL, Yerly P, et al. Eur Respir J. 2013;41(1):217-223.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/22903958/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1183/09031936.00078212" }
+        ]
+      }],
       fields: [
-        makeN("mpap", "Mean Pulmonary Arterial Pressure (mmHg)", 32, { min: 5, max: 120 }),
-        makeN("pawp", "Pulmonary Artery Wedge Pressure (mmHg)", 14, { min: 0, max: 60 })
+        makeN("mpap", "Mean Pulmonary Arterial Pressure (mPAP, mmHg)", 32, { min: 5, max: 120 }),
+        makeN("pawp", "Pulmonary Artery Wedge Pressure (PAWP, mmHg)", 14, { min: 0, max: 60 })
       ],
+      table: {
+        headers: ["TPG Range", "Clinical State", "Considerations"],
+        rows: [
+          { id: "norm", cols: ["≤ 12 mmHg", "Normal Transpulmonary Drop", "Passive transmission of pressures"] },
+          { id: "elev", cols: ["> 12 mmHg", "Elevated Transpulmonary Gradient", "Pre-capillary remodeling or high flow; correlate with PVR and DPG"] }
+        ]
+      },
       calc: function (v) {
         var tpg = +v.mpap - +v.pawp;
+        var match = tpg > 12 ? "elev" : "norm";
         return {
           value: tpg + " mmHg (" + (tpg > 12 ? "Elevated > 12 mmHg" : "Normal ≤ 12 mmHg") + ")",
-          eq: "TPG = mPAP − PAWP."
+          matchId: match,
+          eq: "Formula: TPG = mPAP (" + v.mpap + ") − PAWP (" + v.pawp + "). Sensitive to circulating volume and cardiac output."
         };
       }
     },
@@ -160,21 +189,41 @@
       cat: "cardio",
       type: "calc",
       name: "Diastolic Pulmonary Gradient (DPG)",
-      desc: "Calculates DPG (dPAP − PAWP) to identify pre-capillary remodeling in post-capillary PH.",
+      desc: "Calculates dPAP − PAWP to identify pre-capillary vascular remodeling independent of flow.",
       organ: "Pulmonary Arterioles",
       region: "Cardiopulmonary",
       subject: "Hemodynamics",
       keywords: ["dpg", "diastolic gradient", "cpcph", "rhc"],
-      guidance: "DPG = dPAP − PAWP. DPG ≥ 7 mmHg is less flow-dependent and marks pre-capillary remodeling.",
+      guidance: "1. Formula: DPG = dPAP − PAWP.\n2. Normal DPG is < 7 mmHg.\n3. In post-capillary PH (PAWP > 15), a DPG ≥ 7 mmHg marks combined pre-capillary remodeling (CpcPH). Unlike TPG, DPG is less sensitive to stroke volume and flow.",
+      contraindications: "Negative DPG values can occur due to pressure-wave reflection artifacts or improper transducer zeroing.",
+      literature: [{
+        type: "Seminal Study",
+        icon: "📄",
+        title: "The diastolic pulmonary vascular pressure gradient: its definition and significance in heart failure",
+        citation: "Gerges M, Gerges C, Pistritto AM, et al. Chest. 2013;143(3):758-767.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/23117367/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1378/chest.12-1653" }
+        ]
+      }],
       fields: [
         makeN("dpap", "Diastolic Pulmonary Artery Pressure (dPAP, mmHg)", 18, { min: 0, max: 100 }),
         makeN("pawp", "Pulmonary Artery Wedge Pressure (PAWP, mmHg)", 10, { min: 0, max: 60 })
       ],
+      table: {
+        headers: ["DPG Value", "Status", "Clinical Significance"],
+        rows: [
+          { id: "norm", cols: ["< 7 mmHg", "Normal Diastolic Gradient", "No significant precapillary remodeling"] },
+          { id: "elev", cols: ["≥ 7 mmHg", "Elevated Gradient", "Indicates pre-capillary vascular disease in Group 2 PH (CpcPH)"] }
+        ]
+      },
       calc: function (v) {
         var dpg = +v.dpap - +v.pawp;
+        var match = dpg >= 7 ? "elev" : "norm";
         return {
-          value: dpg + " mmHg (" + (dpg >= 7 ? "Elevated ≥ 7 mmHg (Pre-capillary component)" : "Normal < 7 mmHg") + ")",
-          eq: "DPG = dPAP − PAWP."
+          value: dpg + " mmHg (" + (dpg >= 7 ? "Elevated ≥ 7 mmHg" : "Normal < 7 mmHg") + ")",
+          matchId: match,
+          eq: "Formula: DPG = dPAP (" + v.dpap + ") − PAWP (" + v.pawp + "). Flow-independent marker of vascular remodeling."
         };
       }
     },
@@ -185,16 +234,20 @@
       name: "RVSP Estimation (Echocardiography)",
       desc: "Non-invasive echocardiographic screening estimate for pulmonary arterial systolic pressure.",
       organ: "Right Ventricle / Tricuspid Valve",
-      region: "Non-invasive Imaging",
-      subject: "Echocardiography",
+      region: "Echocardiography",
+      subject: "Echocardiography / Pulmonary Hemodynamics",
       keywords: ["rvsp", "pasp", "echo", "tr velocity", "tricuspid regurgitation", "rap"],
-      guidance: "RVSP = 4 × (TR Vmax)² + Estimated RAP.",
+      guidance: "1. Measure peak tricuspid regurgitation (TR) velocity using continuous-wave Doppler aligned parallel to jet.\n2. Estimate Right Atrial Pressure (RAP) from IVC diameter and inspiratory collapsibility.\n3. Modified Bernoulli: RVSP = 4 × (TR Vmax)² + RAP.\n4. In the absence of RVOT obstruction or pulmonic stenosis, RVSP ≈ PASP.",
+      contraindications: "Severe pulmonary valve stenosis or RV outflow tract obstruction causes RVSP to overestimate true pulmonary artery pressure.",
       literature: [{
         type: "ASE Guidelines",
         icon: "📘",
         title: "Recommendations for the evaluation of left ventricular diastolic function by echocardiography",
-        citation: "Nagueh SF, et al. J Am Soc Echocardiogr. 2016;29(4):277-314.",
-        links: [{ text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/27037982/" }]
+        citation: "Nagueh SF, Smiseth OA, Appleton CP, et al. J Am Soc Echocardiogr. 2016;29(4):277-314.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/27037982/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1016/j.echo.2016.01.011" }
+        ]
       }],
       fields: [
         makeN("trv", "Peak TR Velocity (m/s)", 2.8, { min: 0.5, max: 7.0, step: 0.1 }),
@@ -204,12 +257,22 @@
           ["15", "15 mmHg (IVC > 2.1 cm, collapses < 50%)"]
         ])
       ],
+      table: {
+        headers: ["Estimated PASP/RVSP", "PH Probability", "Action"],
+        rows: [
+          { id: "norm", cols: ["≤ 35 mmHg", "Low Probability", "Normal estimated pulmonary pressures"] },
+          { id: "border", cols: ["36 – 50 mmHg", "Intermediate Probability", "Assess secondary echo signs (RV dilation, flattening)"] },
+          { id: "high", cols: ["> 50 mmHg", "High Probability", "Right heart catheterization recommended for confirmation"] }
+        ]
+      },
       calc: function (v) {
         var grad = 4 * Math.pow(+v.trv, 2);
         var rvsp = grad + +v.rap;
+        var match = rvsp > 50 ? "high" : rvsp > 35 ? "border" : "norm";
         return {
-          value: rvsp.toFixed(1) + " mmHg (" + (rvsp > 35 ? "Elevated PASP" : "Normal PASP") + ")",
-          eq: "Modified Bernoulli: RVSP = 4 × (TR Vmax)² + RAP = " + grad.toFixed(1) + " + " + v.rap + " mmHg."
+          value: rvsp.toFixed(1) + " mmHg (" + (rvsp > 35 ? "Elevated RVSP" : "Normal RVSP") + ")",
+          matchId: match,
+          eq: "Formula: RVSP = 4 × (TR Vmax [" + v.trv + "])² + RAP [" + v.rap + "] = " + grad.toFixed(1) + " + " + v.rap + " mmHg."
         };
       }
     },
@@ -218,18 +281,22 @@
       cat: "cardio",
       type: "class",
       name: "TAPSE/PASP Ratio (RV-PA Coupling)",
-      desc: "Echocardiographic surrogate ratio assessing right ventricular functional reserve against afterload.",
+      desc: "Echocardiographic surrogate ratio assessing right ventricular functional reserve against pulmonary afterload.",
       organ: "Right Ventricle / Pulmonary Artery",
       region: "Echocardiography",
       subject: "Right Ventricular Function",
       keywords: ["tapse", "pasp", "rv-pa coupling", "echo"],
-      guidance: "TAPSE (mm) ÷ PASP (mmHg). Ratio < 0.31 mm/mmHg indicates severe uncoupling.",
+      guidance: "1. Measure TAPSE in apical 4-chamber view via M-mode.\n2. Obtain PASP from TR velocity + RAP.\n3. Ratio = TAPSE (mm) ÷ PASP (mmHg).\n4. Ratio < 0.31 mm/mmHg indicates severe RV-PA uncoupling and independently predicts mortality.",
+      contraindications: "Regional wall motion abnormalities of the RV free wall (e.g., McConnell sign in PE) distort TAPSE.",
       literature: [{
         type: "Validation Study",
         icon: "📄",
         title: "Tricuspid annular plane systolic excursion/pulmonary arterial systolic pressure ratio in pulmonary hypertension",
-        citation: "Tello K, et al. Circ Cardiovasc Imaging. 2019;12(11):e009047.",
-        links: [{ text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/31707839/" }]
+        citation: "Tello K, Axmann J, Ghofrani HA, et al. Circ Cardiovasc Imaging. 2019;12(11):e009047.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/31707839/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1161/CIRCIMAGING.119.009047" }
+        ]
       }],
       fields: [
         makeN("tapse", "TAPSE (mm)", 18, { min: 2, max: 40 }),
@@ -238,9 +305,9 @@
       table: {
         headers: ["TAPSE/PASP Ratio", "RV-PA Coupling", "Prognostic Risk"],
         rows: [
-          { id: "good", cols: ["> 0.36 mm/mmHg", "Preserved RV-PA Coupling", "Low clinical risk"] },
-          { id: "mid", cols: ["0.31 – 0.36 mm/mmHg", "Intermediate / Reduced Coupling", "Intermediate risk"] },
-          { id: "poor", cols: ["< 0.31 mm/mmHg", "Severely Impaired RV-PA Coupling", "High mortality / right heart failure risk"] }
+          { id: "good", cols: ["> 0.36 mm/mmHg", "Preserved RV-PA Coupling", "Low clinical risk / good functional reserve"] },
+          { id: "mid", cols: ["0.31 – 0.36 mm/mmHg", "Intermediate Coupling", "Moderate risk; closer surveillance required"] },
+          { id: "poor", cols: ["< 0.31 mm/mmHg", "Severely Impaired Coupling", "High mortality / imminent right ventricular failure"] }
         ]
       },
       calc: function (v) {
@@ -249,7 +316,7 @@
         return {
           value: r.toFixed(2) + " mm/mmHg",
           matchId: match,
-          eq: "TAPSE/PASP = " + v.tapse + " mm ÷ " + v.pasp + " mmHg."
+          eq: "Calculation: TAPSE (" + v.tapse + " mm) ÷ PASP (" + v.pasp + " mmHg) = " + r.toFixed(2) + " mm/mmHg."
         };
       }
     },
@@ -263,13 +330,16 @@
       region: "Echocardiography",
       subject: "RV Systolic Performance",
       keywords: ["rv function", "tapse", "fac", "s prime", "echo"],
-      guidance: "Abnormal if TAPSE < 17 mm, RV FAC < 35%, or Tricuspid S' < 9.5 cm/s.",
+      guidance: "Abnormal if TAPSE < 17 mm, RV FAC < 35%, or Tricuspid S' < 9.5 cm/s per ASE guidelines.",
       literature: [{
         type: "ASE Guidelines",
         icon: "📘",
         title: "Guidelines for the echocardiographic assessment of the right heart in adults",
-        citation: "Rudski LG, et al. J Am Soc Echocardiogr. 2010;23(7):685-713.",
-        links: [{ text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/20620757/" }]
+        citation: "Rudski LG, Lai WW, Afilalo J, et al. J Am Soc Echocardiogr. 2010;23(7):685-713.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/20620757/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1016/j.echo.2010.05.010" }
+        ]
       }],
       fields: [
         makeN("tapse", "TAPSE (mm)", 19, { min: 2, max: 40 }),
@@ -277,10 +347,10 @@
         makeN("sprime", "Tricuspid Lateral Annular S' Velocity (cm/s)", 11, { min: 1, max: 30, step: 0.5 })
       ],
       table: {
-        headers: ["Status", "Criteria"],
+        headers: ["Status", "Criteria Thresholds"],
         rows: [
           { id: "normal", cols: ["Normal RV Function", "TAPSE ≥ 17 mm, FAC ≥ 35%, and S' ≥ 9.5 cm/s"] },
-          { id: "abnormal", cols: ["RV Systolic Dysfunction", "At least one index below standard thresholds"] }
+          { id: "abnormal", cols: ["RV Systolic Dysfunction", "At least one index below standard guideline thresholds"] }
         ]
       },
       calc: function (v) {
@@ -305,7 +375,7 @@
       cat: "cardio",
       type: "class",
       name: "Blood Pressure Category Classifier (ACC/AHA 2017)",
-      desc: "Classifies resting blood pressure per adult hypertension guidelines.",
+      desc: "Classifies resting blood pressure per adult hypertension clinical guidelines.",
       organ: "Arterial Vasculature",
       region: "Cardiovascular Prevention",
       subject: "Hypertension",
@@ -315,8 +385,11 @@
         type: "AHA/ACC Guideline",
         icon: "📘",
         title: "2017 ACC/AHA Guideline for the Prevention, Detection, Evaluation, and Management of High Blood Pressure in Adults",
-        citation: "Whelton PK, et al. J Am Coll Cardiol. 2018;71(19):e127-e248.",
-        links: [{ text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/29146535/" }]
+        citation: "Whelton PK, Carey RM, Aronow WS, et al. J Am Coll Cardiol. 2018;71(19):e127-e248.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/29146535/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1016/j.jacc.2017.11.006" }
+        ]
       }],
       fields: [
         makeN("sbp", "Systolic Blood Pressure (mmHg)", 128, { min: 50, max: 280 }),
@@ -352,14 +425,38 @@
       region: "Hemodynamics",
       subject: "Critical Care / Hemodynamics",
       keywords: ["map", "mean arterial pressure", "perfusion"],
-      guidance: "MAP = DBP + 1/3(SBP − DBP). Adequate organ perfusion typically requires MAP ≥ 65 mmHg.",
+      guidance: "1. Formula: MAP = DBP + 1/3(SBP − DBP) = (SBP + 2×DBP) ÷ 3.\n2. In critical care and shock resuscitation, target MAP is ≥ 65 mmHg to ensure adequate renal and cerebral perfusion.\n3. In acute stroke post-thrombolysis, target MAP is strictly maintained with SBP < 180 and DBP < 105 mmHg.",
+      contraindications: "Does not reflect local microcirculatory autoregulation failure during septic shock.",
+      literature: [{
+        type: "Critical Care Guidelines",
+        icon: "📘",
+        title: "Surviving Sepsis Campaign: International Guidelines for Management of Sepsis and Septic Shock 2021",
+        citation: "Evans L, Rhodes A, Alhazzani W, et al. Crit Care Med. 2021;49(11):e1063-e1143.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/34605781/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1097/CCM.0000000000005337" }
+        ]
+      }],
       fields: [
         makeN("sbp", "Systolic BP (mmHg)", 120, { min: 40, max: 280 }),
         makeN("dbp", "Diastolic BP (mmHg)", 80, { min: 20, max: 200 })
       ],
+      table: {
+        headers: ["MAP Range", "Perfusion Status", "Action"],
+        rows: [
+          { id: "hypo", cols: ["< 65 mmHg", "Hypoperfusion / Shock State", "Resuscitation required: IV fluids, vasopressors (Norepinephrine)"] },
+          { id: "target", cols: ["65 – 100 mmHg", "Adequate Organ Perfusion", "Optimal hemodynamic target for vital organ autoregulation"] },
+          { id: "hyper", cols: ["> 100 mmHg", "Elevated Perfusion Pressure", "Assess for hypertensive emergency or excessive vasopressor dosing"] }
+        ]
+      },
       calc: function (v) {
         var map = +v.dbp + (+v.sbp - +v.dbp) / 3;
-        return { value: map.toFixed(1) + " mmHg", eq: "MAP = (SBP + 2×DBP) ÷ 3." };
+        var match = map < 65 ? "hypo" : map <= 100 ? "target" : "hyper";
+        return {
+          value: map.toFixed(1) + " mmHg",
+          matchId: match,
+          eq: "Formula: MAP = (SBP [" + v.sbp + "] + 2×DBP [" + v.dbp + "]) ÷ 3. Target ≥ 65 mmHg in shock states."
+        };
       }
     },
     {
@@ -372,15 +469,27 @@
       region: "Cardiovascular Prevention",
       subject: "Vascular Stiffness",
       keywords: ["pulse pressure", "arterial stiffness", "aortic regurgitation"],
-      guidance: "Values > 60 mmHg reflect large-artery stiffness; values < 30 mmHg indicate low stroke volume.",
+      guidance: "1. Formula: Pulse Pressure = SBP − DBP.\n2. Values > 60 mmHg reflect large-artery stiffness, advanced aging, or severe aortic regurgitation.\n3. Values < 30 mmHg (narrow pulse pressure) indicate severe stroke volume reduction, cardiac tamponade, or cardiogenic shock.",
       fields: [
         makeN("sbp", "Systolic BP (mmHg)", 130, { min: 50, max: 280 }),
         makeN("dbp", "Diastolic BP (mmHg)", 70, { min: 20, max: 180 })
       ],
+      table: {
+        headers: ["Pulse Pressure", "Classification", "Pathophysiology"],
+        rows: [
+          { id: "narrow", cols: ["< 30 mmHg", "Narrow Pulse Pressure", "Low stroke volume, aortic stenosis, tamponade, hypovolemic shock"] },
+          { id: "normal", cols: ["30 – 60 mmHg", "Normal Pulse Pressure", "Normal arterial compliance and stroke volume"] },
+          { id: "wide", cols: ["> 60 mmHg", "Wide Pulse Pressure", "Arterial stiffness, isolated systolic HTN, severe aortic regurgitation"] }
+        ]
+      },
       calc: function (v) {
         var pp = +v.sbp - +v.dbp;
-        var desc = pp > 60 ? "Wide pulse pressure (>60 mmHg; arterial stiffness, aortic regurgitation)" : pp < 30 ? "Narrow pulse pressure (<30 mmHg; low stroke volume, tamponade)" : "Normal (30–60 mmHg)";
-        return { value: pp + " mmHg (" + desc + ")", eq: "Pulse Pressure = SBP − DBP." };
+        var match = pp > 60 ? "wide" : pp < 30 ? "narrow" : "normal";
+        return {
+          value: pp + " mmHg",
+          matchId: match,
+          eq: "Formula: Pulse Pressure = SBP (" + v.sbp + ") − DBP (" + v.dbp + ") = " + pp + " mmHg."
+        };
       }
     },
     {
@@ -398,8 +507,11 @@
         type: "Consensus Statement",
         icon: "📘",
         title: "Consensus statement on the definition of orthostatic hypotension",
-        citation: "Freeman R, et al. Clin Auton Res. 2011;21(2):69-72.",
-        links: [{ text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/21431377/" }]
+        citation: "Freeman R, Wieling W, Axelrod FB, et al. Clin Auton Res. 2011;21(2):69-72.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/21431377/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1007/s10286-011-0119-5" }
+        ]
       }],
       fields: [
         makeN("sbp_sup", "Supine SBP (mmHg)", 130, { min: 50 }),
@@ -439,13 +551,16 @@
       region: "Cardiovascular Prevention",
       subject: "Primary Prevention / Lipids",
       keywords: ["ascvd", "pooled cohort", "statin", "cholesterol", "risk"],
-      guidance: "Estimates 10-year risk of nonfatal MI, CHD death, and stroke to guide primary prevention statin therapy.",
+      guidance: "Estimates 10-year risk of nonfatal MI, CHD death, and fatal/nonfatal stroke to guide primary prevention statin therapy.",
       literature: [{
         type: "AHA/ACC Guideline",
         icon: "📘",
         title: "2018 AHA/ACC/AACVPR/AAPA/ABC/ACPM/ADA/AGS/APhA/ASPC/NLA/PCNA Guideline on the Management of Blood Cholesterol",
-        citation: "Grundy SM, et al. Circulation. 2019;139(25):e1082-e1143.",
-        links: [{ text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/30586774/" }]
+        citation: "Grundy SM, Stone NJ, Bailey AL, et al. Circulation. 2019;139(25):e1082-e1143.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/30586774/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1161/CIR.0000000000000625" }
+        ]
       }],
       fields: [
         makeN("age", "Age (40–79 years)", 55, { min: 40, max: 79 }),
@@ -507,7 +622,7 @@
         citation: "Khan SS, Matsushita K, Sang Y, et al. Circulation. 2024;149(6):430-449.",
         links: [
           { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/37947116/" },
-          { text: "View DOI ↗", url: "https://doi.org/10.1161/CIRCULATIONAHA.123.067624", secondary: true }
+          { text: "View DOI ↗", url: "https://doi.org/10.1161/CIRCULATIONAHA.123.067624" }
         ]
       }],
       fields: [
@@ -537,7 +652,6 @@
         var rx = v.bpMeds === "1" ? 1 : 0, dm = v.diabetes === "1" ? 1 : 0, sm = v.smoker === "1" ? 1 : 0;
         var nonHdl = tc - hdl;
 
-        // Base CKM logistic weights
         var logitAscvd = isFem
           ? (-6.2 + (0.075 * (a - 55)) + (0.018 * (sbp - 130)) + (0.35 * rx) + (0.007 * (nonHdl - 130)) - (0.015 * (hdl - 50)) + (0.02 * (bmi - 25)) - (0.012 * (egfr - 90)) + (0.72 * dm) + (0.65 * sm))
           : (-5.6 + (0.068 * (a - 55)) + (0.017 * (sbp - 130)) + (0.30 * rx) + (0.006 * (nonHdl - 130)) - (0.012 * (hdl - 45)) + (0.018 * (bmi - 25)) - (0.011 * (egfr - 90)) + (0.62 * dm) + (0.58 * sm));
@@ -569,24 +683,41 @@
       region: "Prevention",
       subject: "Lipidology",
       keywords: ["ldl", "friedewald", "cholesterol", "non-hdl", "triglycerides"],
-      guidance: "Non-HDL-C = Total Cholesterol − HDL. Friedewald LDL-C = TC − HDL − (TG ÷ 5).",
+      guidance: "1. Non-HDL-C = Total Cholesterol − HDL-C (Target: LDL-C goal + 30 mg/dL).\n2. Friedewald LDL-C = TC − HDL − (TG ÷ 5).\n3. Validity: Accurate only when fasting triglycerides are < 400 mg/dL. In severe hypertriglyceridemia, Friedewald severely underestimates LDL-C.",
+      contraindications: "Invalid when Triglycerides ≥ 400 mg/dL or in chylomicronemia (type I/V dyslipidemia); direct LDL measurement is mandatory.",
+      literature: [{
+        type: "Seminal Publication",
+        icon: "📄",
+        title: "Estimation of the concentration of low-density lipoprotein cholesterol in plasma, without use of the preparative ultracentrifuge",
+        citation: "Friedewald WT, Levy RI, Fredrickson DS. Clin Chem. 1972;18(6):499-502.",
+        links: [{ text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/4337382/" }]
+      }],
       fields: [
         makeN("tc", "Total Cholesterol (mg/dL)", 210, { min: 50, max: 600 }),
         makeN("hdl", "HDL Cholesterol (mg/dL)", 48, { min: 10, max: 150 }),
         makeN("tg", "Triglycerides (mg/dL)", 150, { min: 10, max: 1200 })
       ],
+      table: {
+        headers: ["Lipid Fraction", "Calculated Value", "General Target (Primary Prevention)"],
+        rows: [
+          { id: "ldlRow", cols: ["LDL-C (Friedewald)", "Evaluated dynamically", "< 100 mg/dL (< 70 mg/dL in high risk, < 55 mg/dL in very high risk)"] },
+          { id: "nonHdlRow", cols: ["Non-HDL-C (Atherogenic)", "Evaluated dynamically", "< 130 mg/dL (< 100 mg/dL in high risk, < 85 mg/dL in very high risk)"] }
+        ]
+      },
       calc: function (v) {
         var nonHdl = +v.tc - +v.hdl;
         if (+v.tg >= 400) {
           return {
             value: "Non-HDL-C: " + nonHdl + " mg/dL (Friedewald Invalid: TG ≥ 400 mg/dL)",
+            matchId: "nonHdlRow",
             eq: "When TG ≥ 400 mg/dL, direct LDL measurement or Martin-Hopkins equation is required."
           };
         }
         var ldl = +v.tc - +v.hdl - (+v.tg / 5);
         return {
           value: "Calculated LDL-C: " + Math.round(ldl) + " mg/dL | Non-HDL-C: " + nonHdl + " mg/dL",
-          eq: "Friedewald formula: LDL = TC − HDL − (TG / 5)."
+          matchId: "ldlRow",
+          eq: "Friedewald formula: LDL = TC (" + v.tc + ") − HDL (" + v.hdl + ") − (TG [" + v.tg + "] / 5)."
         };
       }
     },
@@ -598,21 +729,42 @@
       desc: "Calculates BMI and Body Surface Area for indexing cardiac hemodynamic and valve metrics.",
       organ: "Metabolism",
       region: "Anthropometrics",
-      subject: "General",
+      subject: "General Cardiology",
       keywords: ["bmi", "bsa", "mosteller", "indexing", "body surface area"],
-      guidance: "BSA (m²) = √((Height(cm) × Weight(kg)) / 3600).",
+      guidance: "1. BMI = Weight (kg) ÷ [Height (m)]².\n2. Mosteller BSA (m²) = √([Height (cm) × Weight (kg)] ÷ 3600).\n3. Used to index Cardiac Output (Cardiac Index = CO ÷ BSA), Aortic Valve Area (AVAi = AVA ÷ BSA), and Left Atrial Volume (LAVI = LAV ÷ BSA).",
+      literature: [{
+        type: "Seminal Publication",
+        icon: "📄",
+        title: "Simplified calculation of body-surface area",
+        citation: "Mosteller RD. N Engl J Med. 1987;317(17):1098.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/3657876/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1056/NEJM198710223171717" }
+        ]
+      }],
       fields: [
         makeN("height", "Height (cm)", 175, { min: 50, max: 250 }),
         makeN("weight", "Weight (kg)", 75, { min: 20, max: 250 })
       ],
+      table: {
+        headers: ["BMI Category", "BMI Range (kg/m²)", "Cardiovascular Risk"],
+        rows: [
+          { id: "under", cols: ["Underweight", "< 18.5", "Increased non-cardiovascular mortality"] },
+          { id: "normal", cols: ["Normal Weight", "18.5 – 24.9", "Lowest baseline cardiovascular mortality"] },
+          { id: "over", cols: ["Overweight", "25.0 – 29.9", "Moderate risk of hypertension, dyslipidemia"] },
+          { id: "obese", cols: ["Obesity (Class I–III)", "≥ 30.0", "High risk of CAD, HFpEF, atrial fibrillation, sleep apnea"] }
+        ]
+      },
       calc: function (v) {
         var htM = +v.height / 100;
         var bmi = +v.weight / (htM * htM);
         var bsa = Math.sqrt((+v.height * +v.weight) / 3600);
+        var match = bmi < 18.5 ? "under" : bmi < 25 ? "normal" : bmi < 30 ? "over" : "obese";
         var tier = bmi < 18.5 ? "Underweight" : bmi < 25 ? "Normal weight" : bmi < 30 ? "Overweight" : "Obese";
         return {
           value: "BMI: " + bmi.toFixed(1) + " kg/m² (" + tier + ") | BSA: " + bsa.toFixed(2) + " m²",
-          eq: "Mosteller BSA = √((Height × Weight) / 3600)."
+          matchId: match,
+          eq: "Mosteller BSA = √((Height [" + v.height + " cm] × Weight [" + v.weight + " kg]) / 3600)."
         };
       }
     },
@@ -630,13 +782,16 @@
       region: "Cath Lab / Heart Team",
       subject: "Interventional Cardiology / Revascularization",
       keywords: ["syntax", "pci", "cabg", "cad", "left main"],
-      guidance: "Low (≤22): PCI or CABG equivalent. High (≥33): CABG confers superior survival.",
+      guidance: "Low (≤22): PCI and CABG equivalent. Intermediate (23–32): CABG preferred in 3-vessel disease. High (≥33): CABG confers superior long-term survival.",
       literature: [{
         type: "Seminal Trial",
         icon: "📄",
         title: "Percutaneous coronary intervention versus coronary-artery bypass grafting for severe coronary artery disease",
-        citation: "Serruys PW, et al. N Engl J Med. 2009;360(10):961-972.",
-        links: [{ text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/19228612/" }]
+        citation: "Serruys PW, Morice MC, Kappetein AP, et al. N Engl J Med. 2009;360(10):961-972.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/19228612/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1056/NEJMoa0804626" }
+        ]
       }],
       fields: [
         makeS("tertile", "Anatomical SYNTAX Score", "low", [
@@ -675,8 +830,11 @@
         type: "Seminal Publication",
         icon: "📄",
         title: "A simple risk score for prediction of contrast-induced nephropathy after percutaneous coronary intervention",
-        citation: "Mehran R, et al. J Am Coll Cardiol. 2004;44(7):1393-1399.",
-        links: [{ text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/15464318/" }]
+        citation: "Mehran R, Aymong ED, Nikolsky E, et al. J Am Coll Cardiol. 2004;44(7):1393-1399.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/15464318/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1016/j.jacc.2004.06.068" }
+        ]
       }],
       fields: [
         makeS("hypotension", "Hypotension (SBP <80 requiring inotrope/IABP)", "0", [["0", "No (0)"], ["5", "Yes (+5)"]]),
@@ -724,8 +882,11 @@
         type: "Validation Study",
         icon: "📄",
         title: "Prediction of premature dual antiplatelet therapy cessation: the PRECISE-DAPT score",
-        citation: "Costa F, et al. Lancet. 2017;389(10073):1025-1034.",
-        links: [{ text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/28290994/" }]
+        citation: "Costa F, van鞭aarhoven D, James S, et al. Lancet. 2017;389(10073):1025-1034.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/28290994/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1016/S0140-6736(17)30838-8" }
+        ]
       }],
       fields: [
         makeN("hb", "Hemoglobin (g/dL)", 13.5, { min: 4, max: 20, step: 0.1 }),
@@ -767,8 +928,11 @@
         type: "Seminal Study",
         icon: "📄",
         title: "Development and validation of the DAPT score",
-        citation: "Yeh RW, et al. JAMA. 2016;315(16):1735-1749.",
-        links: [{ text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/27022970/" }]
+        citation: "Yeh RW, Secemsky EA, Kereiakes DJ, et al. JAMA. 2016;315(16):1735-1749.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/27022970/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1001/jama.2016.3775" }
+        ]
       }],
       fields: [
         makeS("age", "Age", "0", [["0", "<65 years (0)"], ["-1", "65–74 years (−1)"], ["-2", "≥75 years (−2)"]]),
@@ -812,8 +976,11 @@
         type: "Consensus",
         icon: "📘",
         title: "Defining high bleeding risk in patients undergoing percutaneous coronary intervention",
-        citation: "Urban P, et al. Circulation. 2019;140(3):240-261.",
-        links: [{ text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/31116075/" }]
+        citation: "Urban P, Mehran R, Colleran R, et al. Circulation. 2019;140(3):240-261.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/31116075/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1161/CIRCULATIONAHA.119.040167" }
+        ]
       }],
       fields: [
         makeS("major", "Major Criteria (OAC, eGFR<30, Hb<11, prior ICH, active malignancy)", "0", [
@@ -855,8 +1022,11 @@
         type: "Seminal Study",
         icon: "📄",
         title: "A validated risk score for in-hospital major bleeding in patients with NSTE-ACS: the CRUSADE score",
-        citation: "Subherwal S, et al. J Am Coll Cardiol. 2009;53(20):1873-1881.",
-        links: [{ text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/19442887/" }]
+        citation: "Subherwal S, Bach RG, Chen AY, et al. J Am Coll Cardiol. 2009;53(20):1873-1881.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/19442887/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1016/j.jacc.2009.02.044" }
+        ]
       }],
       fields: [
         makeN("hct", "Baseline Hematocrit (%)", 38, { min: 10, max: 60 }),
@@ -904,8 +1074,11 @@
         type: "Seminal Study",
         icon: "📄",
         title: "Quantification of coronary artery calcium using ultrafast computed tomography",
-        citation: "Agatston AS, et al. J Am Coll Cardiol. 1990;15(4):827-832.",
-        links: [{ text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/2407762/" }]
+        citation: "Agatston AS, Janowitz WR, Hildner FJ, et al. J Am Coll Cardiol. 1990;15(4):827-832.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/2407762/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1016/0735-1097(90)90282-t" }
+        ]
       }],
       fields: [
         makeN("cac", "Agatston CAC Score", 85, { min: 0, max: 4000, step: 1 })
@@ -944,8 +1117,11 @@
         type: "ACC/AHA Guideline",
         icon: "📘",
         title: "2020 ACC/AHA Guideline for the Management of Patients With Valvular Heart Disease",
-        citation: "Otto CM, et al. Circulation. 2021;143(5):e72-e227.",
-        links: [{ text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/33332150/" }]
+        citation: "Otto CM, Nishimura RA, Bonow RO, et al. Circulation. 2021;143(5):e72-e227.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/33332150/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1161/CIR.0000000000000923" }
+        ]
       }],
       fields: [
         makeN("vmax", "Peak Jet Velocity (Vmax, m/s)", 4.2, { min: 1.0, max: 8.0, step: 0.1 }),
@@ -981,18 +1157,39 @@
       region: "Echocardiography",
       subject: "Aortic Stenosis",
       keywords: ["ava", "continuity equation", "lvot", "aortic stenosis"],
-      guidance: "AVA = (0.7854 × LVOT diameter² × LVOT VTI) ÷ AV VTI.",
+      guidance: "1. Formula: AVA = (LVOT Area × LVOT VTI) ÷ AV VTI = (0.7854 × LVOT diameter² × LVOT VTI) ÷ AV VTI.\n2. Ensure LVOT diameter is measured in parasternal long-axis at mid-systole from inner edge to inner edge, 3–10 mm apical to aortic annulus.\n3. Continuous-wave Doppler of aortic jet must be aligned parallel to blood flow to obtain true maximal VTI.",
+      contraindications: "Subaortic obstruction (e.g., HOCM with dynamic SAM) or significant aortic regurgitation can overestimate flow across LVOT.",
+      literature: [{
+        type: "EACVI/ASE Recommendations",
+        icon: "📘",
+        title: "Echocardiographic assessment of valve stenosis: EAE/ASE recommendations for clinical practice",
+        citation: "Baumgartner H, Hung J, Bermejo J, et al. J Am Soc Echocardiogr. 2009;22(1):1-23.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/19130998/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1016/j.echo.2008.11.029" }
+        ]
+      }],
       fields: [
         makeN("lvot_d", "LVOT Diameter (cm)", 2.0, { min: 1.2, max: 3.2, step: 0.1 }),
         makeN("lvot_vti", "LVOT VTI (cm)", 18, { min: 5, max: 40, step: 0.5 }),
         makeN("av_vti", "Aortic Valve VTI (cm)", 45, { min: 10, max: 120, step: 0.5 })
       ],
+      table: {
+        headers: ["Calculated AVA", "Severity Grade", "Indexed AVA (BSA ~1.8 m²)"],
+        rows: [
+          { id: "normal", cols: ["> 1.5 cm²", "Mild / Non-significant Stenosis", "> 0.85 cm²/m²"] },
+          { id: "moderate", cols: ["1.0 – 1.5 cm²", "Moderate Aortic Stenosis", "0.60 – 0.85 cm²/m²"] },
+          { id: "severe", cols: ["≤ 1.0 cm²", "Severe Aortic Stenosis", "≤ 0.60 cm²/m²"] }
+        ]
+      },
       calc: function (v) {
         var area = 0.7854 * Math.pow(+v.lvot_d, 2);
         var ava = (area * +v.lvot_vti) / +v.av_vti;
+        var match = ava <= 1.0 ? "severe" : ava <= 1.5 ? "moderate" : "normal";
         return {
           value: ava.toFixed(2) + " cm² (" + (ava <= 1.0 ? "Severe AS" : ava <= 1.5 ? "Moderate AS" : "Mild/Normal") + ")",
-          eq: "Continuity: AVA = (LVOT Area × LVOT VTI) / AV VTI."
+          matchId: match,
+          eq: "Continuity: AVA = (LVOT Area [" + area.toFixed(2) + " cm²] × LVOT VTI [" + v.lvot_vti + "]) / AV VTI [" + v.av_vti + "]."
         };
       }
     },
@@ -1006,14 +1203,38 @@
       region: "Echocardiography",
       subject: "Mitral Stenosis",
       keywords: ["mva", "pressure half time", "pht", "mitral stenosis"],
-      guidance: "Hatle formula: MVA = 220 ÷ PHT (ms). Severe MS is ≤ 1.5 cm².",
+      guidance: "1. Formula: MVA = 220 ÷ PHT (ms).\n2. PHT is the time required for peak trans-mitral pressure gradient to decline by 50%.\n3. Measure continuous-wave Doppler deceleration slope across the mitral valve in early diastole.\n4. Normal MVA is 4.0–5.0 cm²; severe stenosis is ≤ 1.5 cm² (very severe ≤ 1.0 cm²).",
+      contraindications: "Unreliable immediately post-percutaneous mitral balloon valvuloplasty, in severe aortic regurgitation (competes with LV filling), or with marked left ventricular non-compliance.",
+      literature: [{
+        type: "Seminal Publication",
+        icon: "📄",
+        title: "Noninvasive assessment of atrioventricular pressure half-time by Doppler ultrasound",
+        citation: "Hatle L, Angelsen B, Tromsdal A. Circulation. 1979;60(5):1096-1104.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/487541/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1161/01.cir.60.5.1096" }
+        ]
+      }],
       fields: [
         makeN("pht", "Mitral Deceleration PHT (ms)", 160, { min: 40, max: 500, step: 5 })
       ],
+      table: {
+        headers: ["Mitral Valve Area", "Severity Grade", "PHT Range"],
+        rows: [
+          { id: "mild", cols: ["> 1.5 cm²", "Mild Mitral Stenosis", "PHT < 150 ms"] },
+          { id: "severe", cols: ["1.0 – 1.5 cm²", "Severe Mitral Stenosis", "PHT 150 – 220 ms"] },
+          { id: "verySevere", cols: ["< 1.0 cm²", "Very Severe Mitral Stenosis", "PHT > 220 ms"] }
+        ]
+      },
       calc: function (v) {
         var mva = 220 / +v.pht;
+        var match = mva <= 1.0 ? "verySevere" : mva <= 1.5 ? "severe" : "mild";
         var tier = mva <= 1.0 ? "Very Severe MS" : mva <= 1.5 ? "Severe MS" : "Mild-to-Moderate MS";
-        return { value: mva.toFixed(2) + " cm² (" + tier + ")", eq: "MVA = 220 / PHT (ms)." };
+        return {
+          value: mva.toFixed(2) + " cm² (" + tier + ")",
+          matchId: match,
+          eq: "Formula: MVA = 220 / PHT (" + v.pht + " ms)."
+        };
       }
     },
     {
@@ -1026,17 +1247,40 @@
       region: "Echocardiography",
       subject: "Valvular Disease",
       keywords: ["mean gradient", "aortic stenosis", "mitral stenosis"],
-      guidance: "Severe AS ≥ 40 mmHg; Severe MS ≥ 5–10 mmHg.",
+      guidance: "1. Derived by tracing the continuous-wave Doppler velocity time integral (VTI) envelope.\n2. Severe AS is defined as mean gradient ≥ 40 mmHg.\n3. Clinically significant mitral stenosis is mean gradient ≥ 5 mmHg (severe ≥ 10 mmHg at normal heart rates).",
+      contraindications: "Highly flow-dependent; evaluate stroke volume index to avoid misclassifying low-flow states.",
+      literature: [{
+        type: "EACVI/ASE Guidelines",
+        icon: "📘",
+        title: "Recommendations for the Imaging Assessment of Prosthetic Heart Valves",
+        citation: "Lancellotti P, Pibarot P, Chambers J, et al. Eur Heart J Cardiovasc Imaging. 2016;17(6):589-590.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/27143787/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1093/ehjci/jew025" }
+        ]
+      }],
       fields: [
         makeS("valve", "Valve Evaluated", "aortic", [["aortic", "Aortic Valve"], ["mitral", "Mitral Valve"]]),
         makeN("grad", "Mean Doppler Gradient (mmHg)", 35, { min: 1, max: 120 })
       ],
+      table: {
+        headers: ["Valve", "Mild", "Moderate", "Severe"],
+        rows: [
+          { id: "ao", cols: ["Aortic", "< 20 mmHg", "20 – 39 mmHg", "≥ 40 mmHg"] },
+          { id: "mi", cols: ["Mitral", "< 5 mmHg", "5 – 9 mmHg", "≥ 10 mmHg"] }
+        ]
+      },
       calc: function (v) {
         var g = +v.grad;
-        var s = v.valve === "aortic"
+        var isAo = v.valve === "aortic";
+        var s = isAo
           ? (g >= 40 ? "Severe AS range (≥40 mmHg)" : g >= 20 ? "Moderate AS range (20–39 mmHg)" : "Mild AS range")
           : (g >= 10 ? "Severe MS range (≥10 mmHg)" : g >= 5 ? "Significant MS (5–9 mmHg)" : "Mild MS (<5 mmHg)");
-        return { value: g + " mmHg (" + s + ")", eq: "Mean gradient derived from continuous-wave Doppler." };
+        return {
+          value: g + " mmHg (" + s + ")",
+          matchId: isAo ? "ao" : "mi",
+          eq: "Mean gradient derived from CW Doppler envelope integration."
+        };
       }
     },
     {
@@ -1045,19 +1289,42 @@
       type: "calc",
       name: "Regurgitant Fraction Calculator",
       desc: "Calculates regurgitant fraction from total stroke volume and regurgitant volume.",
-      organ: "Valves",
+      organ: "Mitral / Aortic Valve",
       region: "Echocardiography",
       subject: "Valvular Regurgitation",
       keywords: ["regurgitant fraction", "mitral regurgitation", "aortic regurgitation"],
-      guidance: "Regurgitant Fraction (%) = (Regurgitant Volume ÷ Total Stroke Volume) × 100. Severe is ≥ 50%.",
+      guidance: "1. Formula: Regurgitant Fraction (RF) = (Regurgitant Volume ÷ Total Forward Stroke Volume) × 100%.\n2. Severe regurgitation is confirmed when RF ≥ 50%.\n3. Mild: < 30%; Moderate: 30–49%.",
+      literature: [{
+        type: "ASE Guidelines",
+        icon: "📘",
+        title: "Recommendations for noninvasive evaluation of native valvular regurgitation",
+        citation: "Zoghbi WA, Adams D, Bonow RO, et al. J Am Soc Echocardiogr. 2017;30(4):303-371.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/28314623/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1016/j.echo.2017.01.007" }
+        ]
+      }],
       fields: [
         makeN("rvol", "Regurgitant Volume (mL/beat)", 55, { min: 5, max: 200 }),
         makeN("tsv", "Total Forward Stroke Volume (mL/beat)", 100, { min: 20, max: 300 })
       ],
+      table: {
+        headers: ["Regurgitant Fraction", "Grading Tier"],
+        rows: [
+          { id: "mild", cols: ["< 30%", "Mild Regurgitation"] },
+          { id: "mod", cols: ["30% – 49%", "Moderate Regurgitation"] },
+          { id: "severe", cols: ["≥ 50%", "Severe Regurgitation (surgical/interventional threshold)"] }
+        ]
+      },
       calc: function (v) {
         var rf = (+v.rvol / +v.tsv) * 100;
-        var desc = rf >= 50 ? "Severe Regurgitation (≥50%)" : rf >= 40 ? "Moderate-to-Severe" : rf >= 30 ? "Moderate" : "Mild";
-        return { value: rf.toFixed(1) + "% (" + desc + ")", eq: "RF = (RVol / Total SV) × 100%." };
+        var match = rf >= 50 ? "severe" : rf >= 30 ? "mod" : "mild";
+        var desc = rf >= 50 ? "Severe Regurgitation (≥50%)" : rf >= 30 ? "Moderate Regurgitation" : "Mild Regurgitation";
+        return {
+          value: rf.toFixed(1) + "% (" + desc + ")",
+          matchId: match,
+          eq: "Formula: RF = (Regurgitant Volume [" + v.rvol + " mL] ÷ Total SV [" + v.tsv + " mL]) × 100."
+        };
       }
     },
     {
@@ -1070,13 +1337,17 @@
       region: "Echocardiography",
       subject: "Regurgitation",
       keywords: ["pisa", "eroa", "regurgitation", "rvol"],
-      guidance: "Severe MR: EROA ≥ 0.40 cm² or RVol ≥ 60 mL. Severe AR: EROA ≥ 0.30 cm² or RVol ≥ 60 mL.",
+      guidance: "1. Optimize color Doppler baseline shifted in the direction of the regurgitant jet to aliasing velocity 30–40 cm/s.\n2. Measure PISA radius (r) at mid-systole.\n3. Flow = 2π × r² × V_alias.\n4. EROA = Flow ÷ Peak Jet Velocity.\n5. Regurgitant Volume = EROA × Jet VTI.\n6. Severe MR: EROA ≥ 0.40 cm² or RVol ≥ 60 mL.",
+      contraindications: "Inaccurate with non-hemispheric, eccentric wall-hugging jets (e.g., severe leaflet prolapse) or dynamic orifice variation.",
       literature: [{
         type: "ASE Recommendations",
         icon: "📘",
         title: "Recommendations for noninvasive evaluation of native valvular regurgitation",
-        citation: "Zoghbi WA, et al. J Am Soc Echocardiogr. 2017;30(4):303-371.",
-        links: [{ text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/28314623/" }]
+        citation: "Zoghbi WA, Adams D, Bonow RO, et al. J Am Soc Echocardiogr. 2017;30(4):303-371.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/28314623/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1016/j.echo.2017.01.007" }
+        ]
       }],
       fields: [
         makeN("radius", "PISA Radius (r, cm)", 0.9, { min: 0.1, max: 3.0, step: 0.1 }),
@@ -1084,14 +1355,24 @@
         makeN("vmax", "Peak Jet Velocity (m/s)", 5.0, { min: 1.0, max: 7.0, step: 0.1 }),
         makeN("vti", "Regurgitant Jet VTI (cm)", 120, { min: 20, max: 300 })
       ],
+      table: {
+        headers: ["Severity Grade", "EROA (Mitral)", "Regurgitant Volume (RVol)"],
+        rows: [
+          { id: "mild", cols: ["Mild Regurgitation", "< 0.20 cm²", "< 30 mL/beat"] },
+          { id: "mod", cols: ["Moderate Regurgitation", "0.20 – 0.39 cm²", "30 – 59 mL/beat"] },
+          { id: "severe", cols: ["Severe Regurgitation", "≥ 0.40 cm²", "≥ 60 mL/beat"] }
+        ]
+      },
       calc: function (v) {
         var flow = 6.2832 * Math.pow(+v.radius, 2) * +v.valias;
         var eroa = flow / (+v.vmax * 100);
         var rvol = eroa * +v.vti;
+        var match = (eroa >= 0.4 || rvol >= 60) ? "severe" : (eroa >= 0.2 || rvol >= 30) ? "mod" : "mild";
         var tier = (eroa >= 0.4 || rvol >= 60) ? "Severe Regurgitation" : (eroa >= 0.2 || rvol >= 30) ? "Moderate Regurgitation" : "Mild";
         return {
           value: "EROA: " + eroa.toFixed(2) + " cm² | RVol: " + Math.round(rvol) + " mL (" + tier + ")",
-          eq: "Flow = 2π × r² × V_alias. EROA = Flow / Vmax. RVol = EROA × VTI."
+          matchId: match,
+          eq: "Flow = 2π × r² × V_alias = " + Math.round(flow) + " mL/s. EROA = Flow / Vmax. RVol = EROA × VTI."
         };
       }
     },
@@ -1105,13 +1386,16 @@
       region: "Post-Surgical / Valve Clinic",
       subject: "Prosthetic Valves",
       keywords: ["ppm", "prosthetic mismatch", "indexed eoa", "tavr"],
-      guidance: "Aortic: Severe if < 0.65 cm²/m² (obese < 0.55–0.60). Mitral: Severe if < 0.90 cm²/m².",
+      guidance: "Aortic: Severe if < 0.65 cm²/m² (in BMI ≥30 kg/m², severe if < 0.55–0.60 cm²/m²). Mitral: Severe if < 0.90 cm²/m².",
       literature: [{
         type: "Seminal Paper",
         icon: "📄",
         title: "Prosthesis-patient mismatch after aortic valve replacement: effect on long-term survival",
         citation: "Pibarot P, Dumesnil JG. Circulation. 2000;102(19 Suppl 3):III211-III218.",
-        links: [{ text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/11082390/" }]
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/11082390/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1161/01.cir.102.suppl_3.iii-211" }
+        ]
       }],
       fields: [
         makeS("position", "Valve Position", "aortic", [["aortic", "Aortic Prosthesis"], ["mitral", "Mitral Prosthesis"]]),
@@ -1185,8 +1469,11 @@
         type: "AHA/ACC/HFSA Guideline",
         icon: "📘",
         title: "2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure",
-        citation: "Heidenreich PA, et al. Circulation. 2022;145(18):e895-e1032.",
-        links: [{ text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/35363499/" }]
+        citation: "Heidenreich PA, Bozkurt B, Aguilar D, et al. Circulation. 2022;145(18):e895-e1032.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/35363499/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1161/CIR.0000000000001063" }
+        ]
       }],
       fields: [
         makeS("stage", "Clinical & Structural Stage", "C", [
@@ -1224,8 +1511,11 @@
         type: "Seminal Study",
         icon: "📄",
         title: "The survival of patients with heart failure with preserved or reduced left ventricular ejection fraction: an individual patient data meta-analysis (MAGGIC)",
-        citation: "Pocock SJ, et al. Eur Heart J. 2013;34(19):1404-1413.",
-        links: [{ text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/23095984/" }]
+        citation: "Pocock SJ, Ariti CA, McMurray JJ, et al. Eur Heart J. 2013;34(19):1404-1413.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/23095984/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1093/eurheartj/ehs337" }
+        ]
       }],
       fields: [
         makeN("age", "Age (years)", 65, { min: 18, max: 105 }),
@@ -1273,13 +1563,16 @@
       region: "Heart Failure",
       subject: "Heart Failure Prognosis",
       keywords: ["seattle heart failure", "shfm", "survival", "hfref"],
-      guidance: "Incorporates clinical, medication (ACEi/ARNI, beta-blocker, MRA), device (ICD/CRT), and laboratory predictors.",
+      guidance: "1. Calculates personal baseline survival curve from demographic, hemodynamic, laboratory, and medication variables.\n2. Quantifies additive survival benefit of introducing ARNI, Beta-blocker, MRA, SGLT2i, and CRT/ICD devices.",
       literature: [{
         type: "Seminal Publication",
         icon: "📄",
         title: "The Seattle Heart Failure Model: prediction of survival in heart failure",
-        citation: "Levy WC, et al. Circulation. 2006;113(11):1424-1433.",
-        links: [{ text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/16534009/" }]
+        citation: "Levy WC, Mozaffarian D, Linker DT, et al. Circulation. 2006;113(11):1424-1433.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/16534009/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1161/CIRCULATIONAHA.105.584102" }
+        ]
       }],
       fields: [
         makeN("age", "Age (years)", 62, { min: 18, max: 100 }),
@@ -1297,6 +1590,13 @@
           ["crt_d", "CRT-D (Bi-ventricular pacer + ICD)"]
         ])
       ],
+      table: {
+        headers: ["Projected Horizon", "Estimated Patient Survival"],
+        rows: [
+          { id: "surv1", cols: ["1-Year Projected Survival", "Evaluated dynamically"] },
+          { id: "surv2", cols: ["2-Year Projected Survival", "Evaluated dynamically"] }
+        ]
+      },
       calc: function (v) {
         var score = 0;
         score += (+v.age * 0.03);
@@ -1315,6 +1615,7 @@
         var sur2 = Math.max(1, Math.min(99, Math.round(Math.exp(-0.13 * Math.exp(score)) * 100)));
         return {
           value: "Estimated 1-Year Survival: " + sur1 + "% | 2-Year: " + sur2 + "%",
+          matchId: "surv1",
           eq: "Seattle Heart Failure Model (SHFM). Quantifies survival impact of guideline-directed medical and device therapies."
         };
       }
@@ -1334,8 +1635,11 @@
         type: "Seminal Study",
         icon: "📄",
         title: "Risk stratification for in-hospital mortality in acutely decompensated heart failure: classification and regression tree analysis",
-        citation: "Fonarow GC, et al. JAMA. 2005;293(5):572-580.",
-        links: [{ text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/15687312/" }]
+        citation: "Fonarow GC, Adams KF Jr, Abraham WT, et al. JAMA. 2005;293(5):572-580.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/15687312/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1001/jama.293.5.572" }
+        ]
       }],
       fields: [
         makeN("bun", "Blood Urea Nitrogen (BUN, mg/dL)", 32, { min: 5, max: 180 }),
@@ -1377,8 +1681,11 @@
         type: "Seminal Study",
         icon: "📄",
         title: "A simple, evidence-based approach to help guide the diagnosis of heart failure with preserved ejection fraction",
-        citation: "Reddy YNV, et al. Circulation. 2018;138(9):861-870.",
-        links: [{ text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/29792299/" }]
+        citation: "Reddy YNV, Carter RE, Obokata M, et al. Circulation. 2018;138(9):861-870.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/29792299/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1161/CIRCULATIONAHA.118.034646" }
+        ]
       }],
       fields: [
         makeS("heavy", "Heavy (BMI > 30 kg/m²)", "0", [["0", "No (0)"], ["2", "Yes (+2)"]]),
@@ -1421,8 +1728,11 @@
         type: "ESC Consensus",
         icon: "📘",
         title: "How to diagnose heart failure with preserved ejection fraction: the HFA-PEFF diagnostic algorithm",
-        citation: "Pieske B, et al. Eur Heart J. 2019;40(40):3297-3317.",
-        links: [{ text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/31504452/" }]
+        citation: "Pieske B, Tschöpe C, de Boer RA, et al. Eur Heart J. 2019;40(40):3297-3317.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/31504452/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1093/eurheartj/ehz641" }
+        ]
       }],
       fields: [
         makeS("func", "Functional Domain (E/e' ≥15, or septal e'<7, or TRV>2.8 m/s)", "0", [
@@ -1468,8 +1778,11 @@
         type: "Consensus",
         icon: "📘",
         title: "Universal definition and classification of heart failure",
-        citation: "Bozkurt B, et al. J Card Fail. 2021;27(4):387-413.",
-        links: [{ text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/33663991/" }]
+        citation: "Bozkurt B, Coats AJS, Tsutsui H, et al. J Card Fail. 2021;27(4):387-413.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/33663991/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1016/j.cardfail.2021.01.022" }
+        ]
       }],
       fields: [
         makeN("lvef", "Current LVEF (%)", 45, { min: 10, max: 85 }),
@@ -1504,21 +1817,41 @@
       region: "Echocardiography",
       subject: "Hemodynamics",
       keywords: ["cardiac output", "cardiac index", "stroke volume", "lvot vti"],
-      guidance: "SV = 0.7854 × LVOT diameter² × LVOT VTI. CO = SV × HR ÷ 1000. CI = CO ÷ BSA.",
+      guidance: "1. Formula: Stroke Volume = 0.7854 × LVOT diameter² × LVOT VTI.\n2. Cardiac Output (CO) = (Stroke Volume × Heart Rate) ÷ 1000.\n3. Cardiac Index (CI) = CO ÷ BSA (Normal resting CI: 2.5–4.0 L/min/m²).\n4. Stroke Volume Index (SVi) < 35 mL/m² defines low-flow status in aortic stenosis and heart failure.",
+      literature: [{
+        type: "ASE Guidelines",
+        icon: "📘",
+        title: "Recommendations for cardiac chamber quantification by echocardiography in adults",
+        citation: "Lang RM, Badano LP, Mor-Avi V, et al. J Am Soc Echocardiogr. 2015;28(1):1-39.e14.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/25559473/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1016/j.echo.2014.10.003" }
+        ]
+      }],
       fields: [
         makeN("lvot_d", "LVOT Diameter (cm)", 2.0, { min: 1.2, max: 3.2, step: 0.1 }),
         makeN("lvot_vti", "LVOT VTI (cm)", 20, { min: 5, max: 45, step: 0.5 }),
         makeN("hr", "Heart Rate (bpm)", 72, { min: 30, max: 200 }),
         makeN("bsa", "Body Surface Area (BSA, m²)", 1.85, { min: 0.8, max: 3.2, step: 0.05 })
       ],
+      table: {
+        headers: ["Cardiac Index (CI)", "Hemodynamic Status", "Clinical Implication"],
+        rows: [
+          { id: "cardiogenic", cols: ["< 2.2 L/min/m²", "Cardiogenic Shock / Low Output", "Inadequate systemic perfusion; inotropic or mechanical support consideration"] },
+          { id: "normal", cols: ["2.2 – 4.0 L/min/m²", "Normal Resting Cardiac Index", "Normal resting cardiac perfusion"] },
+          { id: "hyper", cols: ["> 4.0 L/min/m²", "Hyperdynamic Output", "Sepsis, liver disease, severe anemia, thyrotoxicosis"] }
+        ]
+      },
       calc: function (v) {
         var area = 0.7854 * Math.pow(+v.lvot_d, 2);
         var sv = area * +v.lvot_vti;
         var co = (sv * +v.hr) / 1000;
         var ci = co / +v.bsa;
+        var match = ci < 2.2 ? "cardiogenic" : ci <= 4.0 ? "normal" : "hyper";
         return {
           value: "CO: " + co.toFixed(2) + " L/min | CI: " + ci.toFixed(2) + " L/min/m² (SV: " + Math.round(sv) + " mL)",
-          eq: "Normal Cardiac Index: 2.5–4.0 L/min/m²."
+          matchId: match,
+          eq: "Normal Cardiac Index: 2.5–4.0 L/min/m². SV = 0.7854 × (" + v.lvot_d + ")² × " + v.lvot_vti + "."
         };
       }
     },
@@ -1541,8 +1874,11 @@
         type: "ESC Guidelines",
         icon: "📘",
         title: "2020 ESC Guidelines for the diagnosis and management of atrial fibrillation",
-        citation: "Hindricks G, et al. Eur Heart J. 2021;42(5):373-498.",
-        links: [{ text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/32860505/" }]
+        citation: "Hindricks G, Potpara T, Dagres N, et al. Eur Heart J. 2021;42(5):373-498.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/32860505/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1093/eurheartj/ehaa612" }
+        ]
       }],
       fields: [
         makeS("chf", "Congestive Heart Failure history", "0", [["0", "No (0)"], ["1", "Yes (+1)"]]),
@@ -1588,8 +1924,11 @@
         type: "Seminal Study",
         icon: "📄",
         title: "A novel user-friendly score (HAS-BLED) to assess 1-year risk of major bleeding in patients with atrial fibrillation",
-        citation: "Pisters R, et al. Chest. 2010;138(5):1093-1100.",
-        links: [{ text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/20299623/" }]
+        citation: "Pisters R, Lane DA, Nieuwlaat R, et al. Chest. 2010;138(5):1093-1100.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/20299623/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1378/chest.10-0134" }
+        ]
       }],
       fields: [
         makeS("h", "Hypertension (uncontrolled SBP >160)", "0", [["0", "No (0)"], ["1", "Yes (+1)"]]),
@@ -1631,11 +1970,14 @@
       keywords: ["orbit", "bleeding score", "doac", "atrial fibrillation"],
       guidance: "Older ≥74 (+1), Reduced Hb/anemia (+2), Bleed history (+2), Insufficient GFR<60 (+1), Treatment with antiplatelet (+1).",
       literature: [{
-        type: "Validation",
+        type: "Validation Study",
         icon: "📄",
         title: "The ORBIT bleeding score: a novel bleeding risk score in atrial fibrillation",
-        citation: "O'Brien EC, et al. Eur Heart J. 2015;36(46):3258-3264.",
-        links: [{ text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/26424865/" }]
+        citation: "O'Brien EC, Holmes DN, Ansell JE, et al. Eur Heart J. 2015;36(46):3258-3264.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/26424865/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1093/eurheartj/ehv476" }
+        ]
       }],
       fields: [
         makeS("older", "Older (Age ≥ 74 years)", "0", [["0", "No (0)"], ["1", "Yes (+1)"]]),
@@ -1670,11 +2012,14 @@
       keywords: ["atria", "stroke risk", "atrial fibrillation"],
       guidance: "0–5 low risk, 6 moderate, 7–15 high risk.",
       literature: [{
-        type: "Validation",
+        type: "Validation Study",
         icon: "📄",
         title: "The ATRIA stroke risk score: a new tool for predicting stroke in atrial fibrillation",
-        citation: "Singer DE, et al. J Am Coll Cardiol. 2013;61(19):1982-1988.",
-        links: [{ text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/23500308/" }]
+        citation: "Singer DE, Chang Y, Borowsky LH, et al. J Am Coll Cardiol. 2013;61(19):1982-1988.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/23500308/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1016/j.jacc.2013.02.018" }
+        ]
       }],
       fields: [
         makeS("age_stroke", "Age and Prior Stroke Interaction", "0", [
@@ -1718,7 +2063,7 @@
         makeS("class", "EHRA Symptom Class", "1", [
           ["1", "EHRA I — No symptoms"],
           ["2a", "EHRA IIa — Mild symptoms; normal daily activity not affected"],
-          ["2b", "EHRA IIb — Moderate symptoms; daily activity not affected, but patient troubled"],
+          ["2b", "EHRA IIb — Moderate symptoms; normal daily activity not affected, but patient troubled"],
           ["3", "EHRA III — Severe symptoms; normal daily activity affected"],
           ["4", "EHRA IV — Disabling symptoms; normal daily activity discontinued"]
         ])
@@ -1747,27 +2092,42 @@
       region: "ECG",
       subject: "Electrophysiology / Drug Safety",
       keywords: ["qtc", "fridericia", "bazett", "long qt", "torsades", "ecg"],
-      guidance: "Fridericia = QT ÷ ∛RR. Bazett = QT ÷ √RR. QTc > 500 ms conveys elevated TdP risk.",
+      guidance: "1. Measure QT interval in lead II or V5 from beginning of QRS to end of T wave.\n2. Fridericia = QT ÷ ∛RR (in seconds).\n3. Bazett = QT ÷ √RR (in seconds).\n4. Bazett overcorrects at heart rates > 80 bpm; Fridericia is the standard for regulatory and drug safety evaluations.\n5. QTc > 500 ms (or increase > 60 ms from baseline) marks a significant risk for Torsades de Pointes.",
+      contraindications: "In wide QRS (> 120 ms from LBBB or pacing), adjust by subtracting the excess QRS duration: Corrected JT = QTc − (QRS − 100 ms).",
       literature: [{
         type: "AHA/ACCF Statement",
         icon: "📘",
         title: "AHA/ACCF/HRS Recommendations for the Standardization and Interpretation of the Electrocardiogram",
-        citation: "Rautaharju PM, et al. J Am Coll Cardiol. 2009;53(11):982-991.",
-        links: [{ text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/19281932/" }]
+        citation: "Rautaharju PM, Surawicz B, Gettes LS. J Am Coll Cardiol. 2009;53(11):982-991.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/19281932/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1016/j.jacc.2008.12.014" }
+        ]
       }],
       fields: [
         makeN("qt", "Measured QT Interval (ms)", 410, { min: 200, max: 800 }),
         makeN("hr", "Heart Rate (bpm)", 72, { min: 30, max: 240 })
       ],
+      table: {
+        headers: ["QTc Range (Fridericia)", "Classification", "Torsadogenic Risk"],
+        rows: [
+          { id: "normal", cols: ["< 450 ms (Men) / < 460 ms (Women)", "Normal QTc", "Baseline arrhythmia risk"] },
+          { id: "border", cols: ["450–480 ms (Men) / 460–480 ms (Women)", "Borderline Prolonged", "Low risk; avoid combining QT-prolonging drugs"] },
+          { id: "prolonged", cols: ["480 – 500 ms", "Prolonged QTc", "Moderate risk; correct electrolytes (K > 4.0, Mg > 2.0)"] },
+          { id: "danger", cols: ["> 500 ms", "Severely Prolonged QTc", "HIGH TORSADOGENIC RISK: Discontinue offending drugs immediately"] }
+        ]
+      },
       calc: function (v) {
         var rr = 60 / +v.hr;
         var qtSec = +v.qt / 1000;
         var qtcB = Math.round((qtSec / Math.sqrt(rr)) * 1000);
         var qtcF = Math.round((qtSec / Math.cbrt(rr)) * 1000);
+        var match = qtcF > 500 ? "danger" : qtcF > 480 ? "prolonged" : qtcF > 450 ? "border" : "normal";
         var note = qtcF > 500 ? "Significantly prolonged (>500 ms; high TdP risk)" : qtcF > 460 ? "Prolonged QTc" : "Normal QTc";
         return {
           value: "Fridericia QTc: " + qtcF + " ms | Bazett QTc: " + qtcB + " ms (" + note + ")",
-          eq: "Fridericia = QT / ∛RR. Bazett = QT / √RR."
+          matchId: match,
+          eq: "Formula: Fridericia = QT / ∛RR. Bazett = QT / √RR. RR interval = " + rr.toFixed(3) + " s."
         };
       }
     },
@@ -1781,7 +2141,17 @@
       region: "Toxicology / Resuscitation",
       subject: "Electrophysiology / Toxicology",
       keywords: ["qt nomogram", "torsades", "overdose", "toxicology"],
-      guidance: "Pairs plotting above the nomogram line carry significant risk for Torsades de Pointes.",
+      guidance: "1. Measure uncorrected QT interval.\n2. Plot directly against heart rate.\n3. Pairs plotting above the nomogram line carry significant risk for drug-induced Torsades de Pointes.",
+      literature: [{
+        type: "Seminal Study",
+        icon: "📄",
+        title: "The QT nomogram: an improved method for detecting drug-induced prolongation of the QT interval",
+        citation: "Chan A, Isbister GK, Kirkpatrick CM, Duffull SB. Clin Toxicol (Phila). 2007;45(7):712-718.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/17952748/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1080/15563650701583277" }
+        ]
+      }],
       fields: [
         makeN("hr", "Heart Rate (bpm)", 75, { min: 30, max: 180 }),
         makeN("qt", "Measured Uncorrected QT (ms)", 440, { min: 200, max: 700 })
@@ -1814,19 +2184,27 @@
       region: "ECG Analysis",
       subject: "Electrophysiology",
       keywords: ["rr interval", "qrs", "pr interval", "heart rate conversion"],
-      guidance: "RR interval (ms) = 60,000 ÷ Heart Rate.",
+      guidance: "1. RR interval (ms) = 60,000 ÷ Heart Rate (bpm).\n2. Standard conduction reference limits: PR interval 120–200 ms; QRS duration < 120 ms.",
       fields: [
         makeN("hr", "Ventricular Heart Rate (bpm)", 75, { min: 20, max: 250 }),
         makeN("qrs", "QRS Duration (ms)", 90, { min: 40, max: 280 }),
         makeN("pr", "PR Interval (ms)", 160, { min: 60, max: 400 })
       ],
+      table: {
+        headers: ["Metric", "Normal Reference", "Clinical Pathology"],
+        rows: [
+          { id: "qrsRow", cols: ["QRS Duration", "< 120 ms", "≥ 120 ms indicates bundle branch block, ventricular pacing, or VT"] },
+          { id: "prRow", cols: ["PR Interval", "120 – 200 ms", "> 200 ms indicates 1st-degree AV block; < 120 ms indicates pre-excitation (WPW)"] }
+        ]
+      },
       calc: function (v) {
         var rr = Math.round(60000 / +v.hr);
         var qrsDesc = +v.qrs >= 120 ? "Wide QRS (≥120 ms; BBB/conduction delay)" : "Normal QRS (<120 ms)";
         var prDesc = +v.pr > 200 ? "First-degree AV block (>200 ms)" : +v.pr < 120 ? "Short PR (<120 ms)" : "Normal PR";
         return {
           value: "RR: " + rr + " ms (" + qrsDesc + "; " + prDesc + ")",
-          eq: "RR (ms) = 60,000 / HR."
+          matchId: "qrsRow",
+          eq: "Formula: RR (ms) = 60,000 / HR (" + v.hr + " bpm)."
         };
       }
     },
@@ -1849,8 +2227,11 @@
         type: "Seminal Study",
         icon: "📄",
         title: "A collateral validation of the HEART score for chest pain patients at the emergency department",
-        citation: "Backus BE, et al. Int J Cardiol. 2013;168(3):2153-2158.",
-        links: [{ text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/23465250/" }]
+        citation: "Backus BE, Six AJ, Kelder JC, et al. Int J Cardiol. 2013;168(3):2153-2158.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/23465250/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1016/j.ijcard.2013.01.255" }
+        ]
       }],
       fields: [
         makeS("h", "History", "0", [["0", "Slightly suspicious (0)"], ["1", "Moderately suspicious (+1)"], ["2", "Highly suspicious (+2)"]]),
@@ -1892,8 +2273,11 @@
         type: "Seminal Study",
         icon: "📄",
         title: "The TIMI risk score for unstable angina/non-ST elevation MI",
-        citation: "Antman EM, et al. JAMA. 2000;284(7):835-842.",
-        links: [{ text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/10938172/" }]
+        citation: "Antman EM, Cohen M, Bernink PJ, et al. JAMA. 2000;284(7):835-842.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/10938172/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1001/jama.284.7.835" }
+        ]
       }],
       fields: [
         makeS("age", "Age ≥ 65 years", "0", [["0", "No (0)"], ["1", "Yes (+1)"]]),
@@ -1937,8 +2321,11 @@
         type: "Seminal Publication",
         icon: "📄",
         title: "Predictors of hospital mortality in the global registry of acute coronary events",
-        citation: "Granger CB, et al. Arch Intern Med. 2003;163(19):2345-2353.",
-        links: [{ text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/14581255/" }]
+        citation: "Granger CB, Goldberg RJ, Dabbous O, et al. Arch Intern Med. 2003;163(19):2345-2353.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/14581255/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1001/archinte.163.19.2345" }
+        ]
       }],
       fields: [
         makeN("age", "Age (years)", 65, { min: 18, max: 105 }),
@@ -1988,8 +2375,11 @@
         type: "Seminal Study",
         icon: "📄",
         title: "Emergency Department Assessment of Chest pain Score (EDACS) to identify patients suitable for safe early discharge",
-        citation: "Than M, et al. J Am Coll Cardiol. 2014;64(7):637-645.",
-        links: [{ text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/25125292/" }]
+        citation: "Than M, Flaws D, Sanders S, et al. J Am Coll Cardiol. 2014;64(7):637-645.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/25125292/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1016/j.jacc.2014.04.052" }
+        ]
       }],
       fields: [
         makeN("age", "Age (years)", 52, { min: 18, max: 100 }),
@@ -2035,7 +2425,10 @@
         icon: "📄",
         title: "Treatment of myocardial infarction in a coronary care unit. A two year experience with 250 patients",
         citation: "Killip T 3rd, Kimball JT. Am J Cardiol. 1967;20(4):457-464.",
-        links: [{ text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/6059183/" }]
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/6059183/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1016/0002-9149(67)90023-9" }
+        ]
       }],
       fields: [
         makeS("class", "Clinical Physical Exam Findings", "1", [
@@ -2077,8 +2470,20 @@
         type: "Seminal Study",
         icon: "📄",
         title: "Electrocardiographic diagnosis of evolving acute myocardial infarction in the presence of left bundle-branch block",
-        citation: "Sgarbossa EB, et al. N Engl J Med. 1996;334(8):481-487.",
-        links: [{ text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/8559200/" }]
+        citation: "Sgarbossa EB, Pinski SL, Barbagelata A, et al. N Engl J Med. 1996;334(8):481-487.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/8559200/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1056/NEJM199602223340801" }
+        ]
+      }, {
+        type: "Smith Modified Rule",
+        icon: "📄",
+        title: "Diagnosis of ST-elevation myocardial infarction in the presence of left bundle branch block with the ST-elevation to S-wave ratio in a modified Sgarbossa rule",
+        citation: "Smith SW, Dodd KW, Henry TD, et al. Ann Emerg Med. 2012;60(6):766-776.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/22939607/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1016/j.annemergmed.2012.07.119" }
+        ]
       }],
       fields: [
         makeS("concord_ste", "Concordant ST elevation ≥ 1 mm in leads with positive QRS", "0", [["0", "No (0)"], ["1", "Yes (+5 Sgarbossa points)"]]),
@@ -2115,13 +2520,16 @@
       region: "Stress Lab",
       subject: "Stress Testing / CAD",
       keywords: ["duke treadmill", "dts", "stress test", "bruce protocol", "angina index"],
-      guidance: "DTS = Exercise time (minutes) − (5 × ST deviation [mm]) − (4 × Angina Index). Angina index: 0 = none, 1 = non-limiting, 2 = exercise-limiting.",
+      guidance: "1. Formula: DTS = Exercise time (minutes) − (5 × ST deviation [mm]) − (4 × Angina Index).\n2. Angina index: 0 = none, 1 = non-limiting, 2 = exercise-limiting angina (test stopped due to chest pain).\n3. Bruce protocol exercise duration is evaluated in minutes.",
       literature: [{
         type: "Seminal Study",
         icon: "📄",
         title: "Prognostic value of a treadmill exercise score in outpatients with suspected coronary artery disease",
-        citation: "Mark DB, et al. N Engl J Med. 1991;325(12):849-853.",
-        links: [{ text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/1875969/" }]
+        citation: "Mark DB, Shaw L, Harrell FE Jr, et al. N Engl J Med. 1991;325(12):849-853.",
+        links: [
+          { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/1875969/" },
+          { text: "View DOI ↗", url: "https://doi.org/10.1056/NEJM199109193251204" }
+        ]
       }],
       fields: [
         makeN("time", "Bruce Protocol Exercise Time (minutes)", 9.0, { min: 1.0, max: 25.0, step: 0.5 }),

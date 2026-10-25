@@ -586,31 +586,57 @@ window.registerModule = function(module) {
 
   // --- HOME & CATEGORY RENDERING ---
   function renderHome() {
-    // 1. Gather all categories explicitly defined or implicitly inferred from tools
-    const catMap = new Map();
+  const catContainer = $("categories");
+  if (!catContainer) return;
 
-    // Ingest explicitly pushed categories
-    (window.categories || []).forEach(cat => {
-      if (cat && cat.id) catMap.set(cat.id, cat);
+  // 1. Collect all known categories
+  const catMap = new Map();
+  (window.categories || []).forEach(c => {
+    if (c && c.id) catMap.set(c.id, c);
+  });
+
+  // 2. Synthesize categories automatically from any loaded tools
+  (window.tools || []).forEach(t => {
+    if (t.cat && !catMap.has(t.cat)) {
+      const prettyName = t.cat.charAt(0).toUpperCase() + t.cat.slice(1);
+      catMap.set(t.cat, {
+        id: t.cat,
+        name: prettyName,
+        icon: "📁",
+        desc: `${prettyName} clinical tools`
+      });
+    }
+
+    if (!t.type) {
+      const isClass = /score|criteria|staging|classification/i.test(t.name + " " + (t.desc || ""));
+      t.type = isClass ? "class" : "calc";
+    }
+  });
+
+  // 3. Render the category cards to the DOM
+  const fullCategories = Array.from(catMap.values());
+  catContainer.innerHTML = "";
+
+  if (fullCategories.length === 0) {
+    catContainer.innerHTML = `<p class="muted" style="grid-column: 1/-1;">Loading specialty tools...</p>`;
+  } else {
+    fullCategories.forEach(cat => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `<span class="ico">${cat.icon || "📁"}</span><strong>${cat.name}</strong><small>${cat.desc || ""}</small>`;
+      card.onclick = () => openCategory(cat.id);
+      catContainer.appendChild(card);
     });
+  }
 
-    // Auto-discover categories from tools if not already present
-    (window.tools || []).forEach(tool => {
-      if (tool.cat && !catMap.has(tool.cat)) {
-        catMap.set(tool.cat, {
-          id: tool.cat,
-          name: capitalize(tool.cat),
-          icon: "📁",
-          desc: `${capitalize(tool.cat)} calculators & staging tools`
-        });
-      }
+  // 4. Update the quick access container
+  const quickContainer = $("quick");
+  if (quickContainer) {
+    quickContainer.innerHTML = "";
+    (window.tools || []).slice(0, 6).forEach(t => quickContainer.appendChild(createToolItem(t)));
+  }
+}
 
-      // Auto-detect classification vs calculator if not explicitly set
-      if (!tool.type) {
-        const isClass = /score|criteria|staging|classification|meows|apgar|bishop|iadpsg|mec|popq|figo|weber|gustilo|tscherne|salter|garden|neer|pauwels|pipkin|rockwood|mason|tile|sins|tlics|meyerding|kellgren/i.test(tool.name + " " + (tool.desc || ""));
-        tool.type = isClass ? "class" : "calc";
-      }
-    });
 
     window.categories = Array.from(catMap.values());
 

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#0f2744">
-<title>MedCalc</title>
+<title>DocCalc</title>
 <link rel="icon" type="image/png" href="logo.png">
 <link rel="apple-touch-icon" href="logo.png">
 
@@ -148,7 +148,7 @@ header {
   align-items: center;
   justify-content: space-between;
 }
-header small { letter-spacing: 1px; text-transform: uppercase; color: var(--header-sub); font-size: 11px; }
+header small { letter-spacing: 0.5px; text-transform: uppercase; color: var(--header-sub); font-size: 11px; }
 h1 { margin: 5px 0; font-size: 28px; }
 header p { margin: 0; color: var(--header-sub); font-size: 14px; }
 main { max-width: 760px; margin: auto; padding: 16px; }
@@ -278,7 +278,7 @@ button { cursor: pointer; font: inherit; }
 .equation { font-size: 12.5px; line-height: 1.6; color: var(--result-text); white-space: pre-line; }
 .copy { float: right; padding: 6px 11px; border: 1px solid var(--result-border); border-radius: 7px; background: var(--bg-card); font-weight: 600; color: var(--result-val); }
 
-/* DYNAMIC SEVERITY THEMES */
+/* SEVERITY DYNAMIC THEMES */
 .result.severity-critical {
   background: var(--contra-bg) !important;
   border-color: var(--contra-border) !important;
@@ -289,9 +289,7 @@ button { cursor: pointer; font: inherit; }
 .result.severity-critical .copy {
   color: var(--contra-text) !important;
 }
-.result.severity-critical .copy {
-  border-color: var(--contra-border) !important;
-}
+.result.severity-critical .copy { border-color: var(--contra-border) !important; }
 
 .result.severity-moderate {
   background: var(--notice-bg) !important;
@@ -303,9 +301,7 @@ button { cursor: pointer; font: inherit; }
 .result.severity-moderate .copy {
   color: var(--notice-text) !important;
 }
-.result.severity-moderate .copy {
-  border-color: var(--notice-border) !important;
-}
+.result.severity-moderate .copy { border-color: var(--notice-border) !important; }
 
 .result.severity-mild {
   background: var(--result-bg) !important;
@@ -317,9 +313,7 @@ button { cursor: pointer; font: inherit; }
 .result.severity-mild .copy {
   color: var(--result-val) !important;
 }
-.result.severity-mild .copy {
-  border-color: var(--result-border) !important;
-}
+.result.severity-mild .copy { border-color: var(--result-border) !important; }
 
 .reference-card { margin-top: 22px; border-top: 1px solid var(--border-color); padding-top: 16px; }
 .ref-heading { font-size: 14px; font-weight: 750; color: var(--text-main); margin: 0 0 6px; display: flex; align-items: center; gap: 6px; }
@@ -336,13 +330,7 @@ table.ref-table tr.active-grade td { border-top: 2px solid #38a169; border-botto
 .ref-card-item { background: var(--ref-card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; margin-bottom: 12px; }
 .ref-card-citation { font-size: 12px; color: var(--text-muted); line-height: 1.5; white-space: pre-line; }
 
-/* REFERENCE LINKS BUTTON STYLING */
-.ref-card-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 10px;
-}
+.ref-card-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
 .ref-btn-link {
   display: inline-flex;
   align-items: center;
@@ -358,17 +346,9 @@ table.ref-table tr.active-grade td { border-top: 2px solid #38a169; border-botto
   transition: all 0.15s ease;
   word-break: break-all;
 }
-.ref-btn-link:hover {
-  filter: brightness(0.95);
-}
-.ref-btn-link.secondary {
-  background: var(--tag-bg);
-  color: var(--tag-text);
-  border: 1px solid var(--border-color);
-}
-.ref-btn-link.secondary:hover {
-  filter: brightness(0.95);
-}
+.ref-btn-link:hover { filter: brightness(0.95); }
+.ref-btn-link.secondary { background: var(--tag-bg); color: var(--tag-text); border: 1px solid var(--border-color); }
+.ref-btn-link.secondary:hover { filter: brightness(0.95); }
 
 .modal-overlay {
   position: fixed;
@@ -420,7 +400,7 @@ footer { text-align: center; font-size: 11px; color: var(--text-muted); padding:
 <body>
 
 <div id="splash">
-  <img src="logo.png" alt="MedCalc Logo" class="splash-logo" onerror="this.style.display='none'">
+  <img src="logo.png" alt="DocCalc Logo" class="splash-logo" onerror="this.style.display='none'">
 </div>
 
 <header>
@@ -428,7 +408,7 @@ footer { text-align: center; font-size: 11px; color: var(--text-muted); padding:
     <small id="clinicianHeaderSub">Clinical tools · prototype</small>
     <button id="openSettingsBtn" class="icon-btn" type="button" aria-label="Settings">⚙ Settings</button>
   </div>
-  <h1>✚ MedCalc</h1>
+  <h1>✚ DocCalc</h1>
   <p>Calculators & criteria-based classifications</p>
 </header>
 
@@ -520,7 +500,7 @@ footer { text-align: center; font-size: 11px; color: var(--text-muted); padding:
     </section>
   </div>
 
-  <footer>MedCalc · Educational prototype · Verify before clinical use</footer>
+  <footer>DocCalc · Educational prototype · Verify before clinical use</footer>
 </main>
 
 <!-- SETTINGS MODAL -->
@@ -567,7 +547,7 @@ footer { text-align: center; font-size: 11px; color: var(--text-muted); padding:
         <input type="text" id="loginDrDegree" placeholder="e.g. MBBS, MD (Medicine), MS (Ortho)" style="width: 100%;">
       </div>
 
-      <button id="submitLoginBtn" class="primary" type="button" style="margin-top: 6px; padding: 12px;">Enter MedCalc →</button>
+      <button id="submitLoginBtn" class="primary" type="button" style="margin-top: 6px; padding: 12px;">Enter DocCalc →</button>
     </div>
   </div>
 </div>
@@ -626,8 +606,8 @@ window.S = S;
   }
 
   function logToolCalculation(toolName, resultVal, formulaText) {
-    const name = localStorage.getItem("medcalc_dr_name") || "Anonymous";
-    const degree = localStorage.getItem("medcalc_dr_degree") || "N/A";
+    const name = localStorage.getItem("doccalc_dr_name") || "Anonymous";
+    const degree = localStorage.getItem("doccalc_dr_degree") || "N/A";
 
     sendDataToWebhook({
       type: "calculation",
@@ -649,8 +629,8 @@ window.S = S;
   }
 
   function checkUserSession() {
-    const savedName = localStorage.getItem("medcalc_dr_name");
-    const savedDegree = localStorage.getItem("medcalc_dr_degree");
+    const savedName = localStorage.getItem("doccalc_dr_name");
+    const savedDegree = localStorage.getItem("doccalc_dr_degree");
 
     if (!savedName || !savedDegree) {
       $("loginModal").classList.remove("hidden");
@@ -668,8 +648,8 @@ window.S = S;
       return;
     }
 
-    localStorage.setItem("medcalc_dr_name", nameInput);
-    localStorage.setItem("medcalc_dr_degree", degreeInput);
+    localStorage.setItem("doccalc_dr_name", nameInput);
+    localStorage.setItem("doccalc_dr_degree", degreeInput);
 
     $("loginModal").classList.add("hidden");
     applyDoctorProfile(nameInput, degreeInput);
@@ -684,8 +664,8 @@ window.S = S;
 
   $("editProfileBtn").onclick = function () {
     $("settingsModal").classList.add("hidden");
-    $("loginDrName").value = localStorage.getItem("medcalc_dr_name") || "";
-    $("loginDrDegree").value = localStorage.getItem("medcalc_dr_degree") || "";
+    $("loginDrName").value = localStorage.getItem("doccalc_dr_name") || "";
+    $("loginDrDegree").value = localStorage.getItem("doccalc_dr_degree") || "";
     $("loginModal").classList.remove("hidden");
   };
 
@@ -696,10 +676,10 @@ window.S = S;
   let activeFilter = "all";
 
   // --- THEME ENGINE ---
-  let activeThemeMode = localStorage.getItem("medcalc_theme") || "system";
+  let activeThemeMode = localStorage.getItem("doccalc_theme") || "system";
   function applyTheme(mode) {
     activeThemeMode = mode;
-    localStorage.setItem("medcalc_theme", mode);
+    localStorage.setItem("doccalc_theme", mode);
     let effective = mode === "system" ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : mode;
     document.documentElement.setAttribute("data-theme", effective);
     document.querySelectorAll(".theme-btn").forEach(btn => btn.classList.toggle("active", btn.dataset.themeVal === mode));
@@ -1096,7 +1076,6 @@ window.S = S;
       setTimeout(() => btn.textContent = "Copy", 1500);
     });
 
-    // Sync calculation directly to the doctor's separate Google Sheet
     logToolCalculation(currentTool.name, valText, eqText);
   };
 

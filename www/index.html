@@ -483,9 +483,8 @@ footer { text-align: center; font-size: 11px; color: var(--text-muted); padding:
 <script>
 window.categories = window.categories || [];
 window.tools = window.tools || [];
-window.MedCalcModules = window.MedCalcModules || [];
+window.SYNONYM_MAP = window.SYNONYM_MAP || {};
 
-// Standard field builders
 function N(id, label, defaultVal, extra) {
   extra = extra || {};
   return Object.assign({ id: id, label: label, type: "number", value: defaultVal, default: defaultVal }, extra);
@@ -497,33 +496,14 @@ function S(id, label, defaultVal, options) {
 
 window.N = N;
 window.S = S;
-
-// Global helper to register tools & categories cleanly from any JS file
-window.registerModule = function(module) {
-  if (module.category) {
-    if (!window.categories.some(c => c.id === module.category.id)) {
-      window.categories.push(module.category);
-    }
-  }
-  if (Array.isArray(module.tools)) {
-    module.tools.forEach(t => {
-      if (!window.tools.some(existing => existing.id === t.id)) {
-        window.tools.push(t);
-      }
-    });
-  }
-  if (window.renderHome) window.renderHome();
-};
 </script>
 
 <!-- ============================================================== -->
 <!-- 2. SPECIALTY MODULE SCRIPTS                                    -->
-<!-- (Add ANY new .js files right here - nothing else needs editing) -->
+<!-- (Add any new script tags here - nothing else needs editing)    -->
 <!-- ============================================================== -->
-<script src="obgyn.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='obgy.js'; document.head.appendChild(s);"></script>
+<script src="obgy.js"></script>
 <script src="ortho.js"></script>
-<!-- <script src="cardiology.js"></script> -->
-<!-- <script src="pulmonology.js"></script> -->
 
 <!-- ============================================================== -->
 <!-- 3. APPLICATION ENGINE & UI CONTROLLER                          -->
@@ -579,74 +559,42 @@ window.registerModule = function(module) {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  // Capitalize helper
-  function capitalize(str) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  }
-
   // --- HOME & CATEGORY RENDERING ---
   function renderHome() {
-  const catContainer = $("categories");
-  if (!catContainer) return;
-
-  // 1. Collect all known categories
-  const catMap = new Map();
-  (window.categories || []).forEach(c => {
-    if (c && c.id) catMap.set(c.id, c);
-  });
-
-  // 2. Synthesize categories automatically from any loaded tools
-  (window.tools || []).forEach(t => {
-    if (t.cat && !catMap.has(t.cat)) {
-      const prettyName = t.cat.charAt(0).toUpperCase() + t.cat.slice(1);
-      catMap.set(t.cat, {
-        id: t.cat,
-        name: prettyName,
-        icon: "📁",
-        desc: `${prettyName} clinical tools`
-      });
-    }
-
-    if (!t.type) {
-      const isClass = /score|criteria|staging|classification/i.test(t.name + " " + (t.desc || ""));
-      t.type = isClass ? "class" : "calc";
-    }
-  });
-
-  // 3. Render the category cards to the DOM
-  const fullCategories = Array.from(catMap.values());
-  catContainer.innerHTML = "";
-
-  if (fullCategories.length === 0) {
-    catContainer.innerHTML = `<p class="muted" style="grid-column: 1/-1;">Loading specialty tools...</p>`;
-  } else {
-    fullCategories.forEach(cat => {
-      const card = document.createElement("div");
-      card.className = "card";
-      card.innerHTML = `<span class="ico">${cat.icon || "📁"}</span><strong>${cat.name}</strong><small>${cat.desc || ""}</small>`;
-      card.onclick = () => openCategory(cat.id);
-      catContainer.appendChild(card);
-    });
-  }
-
-  // 4. Update the quick access container
-  const quickContainer = $("quick");
-  if (quickContainer) {
-    quickContainer.innerHTML = "";
-    (window.tools || []).slice(0, 6).forEach(t => quickContainer.appendChild(createToolItem(t)));
-  }
-}
-
-
-    window.categories = Array.from(catMap.values());
-
     const catContainer = $("categories");
+    if (!catContainer) return;
+
+    // 1. Gather all categories explicitly defined
+    const catMap = new Map();
+    (window.categories || []).forEach(c => {
+      if (c && c.id) catMap.set(c.id, c);
+    });
+
+    // 2. Synthesize categories automatically from any loaded tools
+    (window.tools || []).forEach(t => {
+      if (t.cat && !catMap.has(t.cat)) {
+        const prettyName = t.cat.charAt(0).toUpperCase() + t.cat.slice(1);
+        catMap.set(t.cat, {
+          id: t.cat,
+          name: prettyName,
+          icon: "📁",
+          desc: `${prettyName} clinical tools & calculators`
+        });
+      }
+
+      if (!t.type) {
+        const isClass = /score|criteria|staging|classification|meows|apgar|bishop|iadpsg|mec|popq|figo|weber|gustilo|tscherne|salter|garden|neer|pauwels|pipkin|rockwood|mason|tile|sins|tlics|meyerding|kellgren/i.test(t.name + " " + (t.desc || ""));
+        t.type = isClass ? "class" : "calc";
+      }
+    });
+
+    const fullCategories = Array.from(catMap.values());
     catContainer.innerHTML = "";
-    
-    if (window.categories.length === 0) {
-      catContainer.innerHTML = `<p class="muted" style="grid-column: 1/-1;">Loading categories and tools...</p>`;
+
+    if (fullCategories.length === 0) {
+      catContainer.innerHTML = `<p class="muted" style="grid-column: 1/-1;">Loading specialty tools...</p>`;
     } else {
-      window.categories.forEach(cat => {
+      fullCategories.forEach(cat => {
         const card = document.createElement("div");
         card.className = "card";
         card.innerHTML = `<span class="ico">${cat.icon || "📁"}</span><strong>${cat.name}</strong><small>${cat.desc || ""}</small>`;
@@ -656,10 +604,13 @@ window.registerModule = function(module) {
     }
 
     const quickContainer = $("quick");
-    quickContainer.innerHTML = "";
-    (window.tools || []).slice(0, 6).forEach(t => quickContainer.appendChild(createToolItem(t)));
+    if (quickContainer) {
+      quickContainer.innerHTML = "";
+      (window.tools || []).slice(0, 6).forEach(t => quickContainer.appendChild(createToolItem(t)));
+    }
   }
 
+  // Global hooks for external scripts to request an instant UI repaint
   window.renderHome = renderHome;
   window.renderCategories = renderHome;
   window.renderQuick = renderHome;
@@ -676,9 +627,12 @@ window.registerModule = function(module) {
 
   function openCategory(catId) {
     currentCatId = catId;
-    const cat = window.categories.find(c => c.id === catId);
-    $("categoryTitle").textContent = cat ? cat.name : "Specialty Tools";
-    $("categoryDesc").textContent = cat ? cat.desc : "";
+    let cat = (window.categories || []).find(c => c.id === catId);
+    if (!cat) {
+      cat = { name: catId.toUpperCase(), desc: "Clinical Calculators & Staging" };
+    }
+    $("categoryTitle").textContent = cat.name;
+    $("categoryDesc").textContent = cat.desc || "";
     activeFilter = "all";
     document.querySelectorAll(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.filter === "all"));
     renderCategoryTools();
@@ -688,7 +642,7 @@ window.registerModule = function(module) {
   function renderCategoryTools() {
     const list = $("toolList");
     list.innerHTML = "";
-    const filtered = window.tools.filter(t => (t.cat === currentCatId || currentCatId === "all") && (activeFilter === "all" || t.type === activeFilter));
+    const filtered = (window.tools || []).filter(t => (t.cat === currentCatId || currentCatId === "all") && (activeFilter === "all" || t.type === activeFilter));
     if (filtered.length === 0) {
       list.innerHTML = `<div class="muted" style="padding:20px 0;text-align:center;">No tools found in this category.</div>`;
       return;
@@ -716,7 +670,7 @@ window.registerModule = function(module) {
     }
     $("homeDefaultContent").classList.add("hidden");
     $("searchResultsSection").classList.remove("hidden");
-    const matches = window.tools.filter(t => {
+    const matches = (window.tools || []).filter(t => {
       return (t.name && t.name.toLowerCase().includes(q)) ||
         (t.desc && t.desc.toLowerCase().includes(q)) ||
         (t.guidance && t.guidance.toLowerCase().includes(q)) ||
@@ -898,9 +852,17 @@ window.registerModule = function(module) {
   $("homeBtn").onclick = () => showView("home");
   $("categoryBtn").onclick = () => currentCatId ? openCategory(currentCatId) : showView("home");
 
-  // Re-render when window or resources load
+  // Initial render calls
   renderHome();
   window.addEventListener("load", renderHome);
+
+  // Poll for external JS files that finish loading slightly late
+  let checkCount = 0;
+  const pollTimer = setInterval(() => {
+    renderHome();
+    checkCount++;
+    if (checkCount >= 5) clearInterval(pollTimer);
+  }, 300);
 })();
 </script>
 </body>

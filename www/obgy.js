@@ -834,38 +834,43 @@
   function registerModule() {
     if (typeof window === "undefined") return;
 
+    window.categories = window.categories || [];
+    window.tools = window.tools || [];
+
     // 1. Add category if missing
-    if (Array.isArray(window.categories)) {
-      if (!window.categories.some(c => c.id === obgynCategory.id)) {
-        window.categories.push(obgynCategory);
-      }
+    if (!window.categories.some(c => c.id === obgynCategory.id)) {
+      window.categories.push(obgynCategory);
     }
 
     // 2. Add tools if missing
-    if (Array.isArray(window.tools)) {
-      obgynTools.forEach(tool => {
-        const existingIdx = window.tools.findIndex(t => t.id === tool.id);
-        if (existingIdx >= 0) {
-          window.tools[existingIdx] = tool; // Update with enhanced properties
-        } else {
-          window.tools.push(tool);
-        }
-      });
-    }
+    obgynTools.forEach(tool => {
+      const existingIdx = window.tools.findIndex(t => t.id === tool.id);
+      if (existingIdx >= 0) {
+        window.tools[existingIdx] = tool;
+      } else {
+        window.tools.push(tool);
+      }
+    });
 
-    // 3. Extend search synonym map if present in global scope
+    // 3. Extend search synonym map
     if (typeof window.SYNONYM_MAP === "object" && window.SYNONYM_MAP !== null) {
       window.SYNONYM_MAP["obgyn"] = ["obgyn", "pregnancy", "obstetrics", "gynaecology", "gynecology", "fetal", "cervix", "uterus", "ovary"];
       window.SYNONYM_MAP["preeclampsia"] = ["preeclampsia", "eclampsia", "hellp", "hypertension", "proteinuria", "magnesium"];
       window.SYNONYM_MAP["cervix"] = ["cervix", "bishop", "ripening", "induction", "dilation", "effacement", "cervical cancer", "figo"];
     }
 
-    // 4. Re-render home categories and quick items if DOM is already ready
-    if (typeof window.renderCategories === "function") {
-      window.renderCategories();
+    // 4. Force a render if the UI engine is ready
+    if (typeof window.renderHome === "function") {
+      window.renderHome();
     }
   }
 
+  // Register immediately into arrays
   registerModule();
 
+  // Also trigger render after window fully finishes loading
+  window.addEventListener("load", function () {
+    registerModule();
+  });
 })();
+

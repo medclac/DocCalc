@@ -1,13 +1,13 @@
 {
-  "appId": "com.medcalc.doctor",
-  "appName": "MedCalc",
+  "appId": "com.doccalc.doctor",
+  "appName": "DocCalc",
   "webDir": "www",
   "bundledWebRuntime": false,
   "plugins": {
     "SplashScreen": {
       "launchShowDuration": 0,
       "launchAutoHide": true,
-      "backgroundColor": "#ffffff",
+      "backgroundColor": "#0f2744",
       "androidSplashResourceName": "splash",
       "splashFullScreen": true,
       "splashImmersive": true

@@ -523,14 +523,10 @@ window.S = S;
 <!-- ============================================================== -->
 <!-- 2. SPECIALTY MODULE SCRIPTS                                    -->
 <!-- ============================================================== -->
-<script 
-  src="obgy.js" 
-  onload="if(window.renderHome) window.renderHome();" 
-  onerror="alert('CANNOT FIND obgy.js FILE! Check folder/filename.')">
-</script>
+<script src="obgy.js"></script>
 
 <!-- ============================================================== -->
-<!-- 3. APPLICATION ENGINE & UI CONTROLLER                          -->
+<!-- 3. APPLICATION ENGINE & HASH-BASED ANDROID CONTROLLER          -->
 <!-- ============================================================== -->
 <script>
 (function () {
@@ -575,30 +571,25 @@ window.S = S;
   window.addEventListener("load", () => setTimeout(dismissSplash, 250));
   setTimeout(dismissSplash, 2000);
 
-  // --- ANDROID HARDWARE BACK BUTTON NAVIGATION ---
-  let isPopStateNav = false;
-
-  function showView(view, push = true) {
+  // --- VIEW CONTROLLER ---
+  function showView(view) {
     $("home").classList.toggle("hidden", view !== "home");
     $("categoryPage").classList.toggle("hidden", view !== "category");
     $("calculatorPage").classList.toggle("hidden", view !== "calculator");
     window.scrollTo({ top: 0, behavior: "smooth" });
-
-    if (push && !isPopStateNav) {
-      history.pushState({ view: view, catId: currentCatId, toolId: currentTool ? currentTool.id : null }, "");
-    }
   }
 
-  window.addEventListener("popstate", function (e) {
-    isPopStateNav = true;
+  // --- HASH ROUTER FOR ANDROID BACK BUTTON ---
+  window.addEventListener("hashchange", function () {
+    const rawHash = location.hash.replace(/^#/, "");
 
+    // 1. If Settings modal is open, dismiss it
     const modal = $("settingsModal");
     if (modal && !modal.classList.contains("hidden")) {
       modal.classList.add("hidden");
-      isPopStateNav = false;
-      return;
     }
 
+    // 2. Clear search if any
     const searchInput = $("search");
     if (searchInput && searchInput.value) {
       searchInput.value = "";
@@ -606,25 +597,34 @@ window.S = S;
       $("searchResultsSection").classList.add("hidden");
     }
 
-    if (e.state && e.state.view) {
-      if (e.state.view === "category" && e.state.catId) {
-        currentCatId = e.state.catId;
-        renderCategoryTools();
-        showView("category", false);
-      } else if (e.state.view === "calculator" && e.state.toolId) {
-        const foundTool = (window.tools || []).find(t => t.id === e.state.toolId);
-        if (foundTool) openTool(foundTool, false);
-      } else {
-        showView("home", false);
-      }
-    } else {
-      showView("home", false);
+    // 3. Evaluate Hash
+    if (!rawHash) {
+      showView("home");
+      return;
     }
 
-    isPopStateNav = false;
+    if (rawHash.startsWith("category=")) {
+      const catId = decodeURIComponent(rawHash.replace("category=", ""));
+      currentCatId = catId;
+      renderCategoryTools();
+      showView("category");
+      return;
+    }
+
+    if (rawHash.startsWith("tool=")) {
+      const toolId = decodeURIComponent(rawHash.replace("tool=", ""));
+      const foundTool = (window.tools || []).find(t => t.id === toolId);
+      if (foundTool) {
+        openToolView(foundTool);
+      }
+      return;
+    }
   });
 
-  history.replaceState({ view: "home" }, "");
+  // Ensure fresh start at root
+  if (location.hash) {
+    location.hash = "";
+  }
 
   // --- HOME & CATEGORY RENDERING ---
   function renderHome() {
@@ -663,7 +663,9 @@ window.S = S;
         const card = document.createElement("div");
         card.className = "card";
         card.innerHTML = `<span class="ico">${cat.icon || "📁"}</span><strong>${cat.name}</strong><small>${cat.desc || ""}</small>`;
-        card.onclick = () => openCategory(cat.id);
+        card.onclick = () => {
+          location.hash = "category=" + encodeURIComponent(cat.id);
+        };
         catContainer.appendChild(card);
       });
     }
@@ -685,25 +687,20 @@ window.S = S;
     const badgeLabel = t.type === "class" ? "Classification" : "Calculator";
     const badgeClass = t.type === "class" ? "badge-class" : "badge-calc";
     div.innerHTML = `<div class="tool-header"><strong>${t.name}</strong><span class="badge ${badgeClass}">${badgeLabel}</span></div><small>${t.desc || ""}</small>`;
-    div.onclick = () => openTool(t);
+    div.onclick = () => {
+      location.hash = "tool=" + encodeURIComponent(t.id);
+    };
     return div;
   }
 
-  function openCategory(catId, pushState = true) {
-    currentCatId = catId;
-    let cat = (window.categories || []).find(c => c.id === catId);
+  function renderCategoryTools() {
+    let cat = (window.categories || []).find(c => c.id === currentCatId);
     if (!cat) {
-      cat = { name: catId.toUpperCase(), desc: "Clinical Calculators & Staging" };
+      cat = { name: (currentCatId || "").toUpperCase(), desc: "Clinical Calculators & Staging" };
     }
     $("categoryTitle").textContent = cat.name;
     $("categoryDesc").textContent = cat.desc || "";
-    activeFilter = "all";
-    document.querySelectorAll(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.filter === "all"));
-    renderCategoryTools();
-    showView("category", pushState);
-  }
 
-  function renderCategoryTools() {
     const list = $("toolList");
     list.innerHTML = "";
     const filtered = (window.tools || []).filter(t => (t.cat === currentCatId || currentCatId === "all") && (activeFilter === "all" || t.type === activeFilter));
@@ -758,7 +755,7 @@ window.S = S;
   };
 
   // --- CALCULATOR & CLASSIFICATION INTERFACE ---
-  function openTool(tool, pushState = true) {
+  function openToolView(tool) {
     currentTool = tool;
     $("title").textContent = tool.name;
     $("desc").textContent = tool.desc || "";
@@ -866,7 +863,7 @@ window.S = S;
     }
 
     $("result").classList.remove("show");
-    showView("calculator", pushState);
+    showView("calculator");
     calculate();
   }
 
@@ -901,7 +898,7 @@ window.S = S;
   };
 
   $("reset").onclick = () => {
-    if (currentTool) openTool(currentTool, false);
+    if (currentTool) openToolView(currentTool);
   };
 
   $("copy").onclick = () => {

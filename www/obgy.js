@@ -346,7 +346,6 @@
       },
       calc: v => {
         const b = +v.bpd, h = +v.hc, a = +v.ac, f = +v.fl;
-        // Hadlock formula: Log10(Weight) = 1.3596 - (0.00386*AC*FL) + (0.0064*HC) + (0.00061*BPD*AC) + (0.0424*AC) + (0.0174*FL)
         const logEfw = 1.3596 - (0.00386 * a * f) + (0.0064 * h) + (0.00061 * b * a) + (0.0424 * a) + (0.0174 * f);
         const efwGrams = Math.round(Math.pow(10, logEfw));
         const efwKg = (efwGrams / 1000).toFixed(2);
@@ -829,48 +828,49 @@
   ];
 
   // ==============================================================
-  // REGISTRATION & AUTO-SYNC INTO APPLICATION MEMORY
+  // REGISTRATION & ACTIVE REPAINT CONTROLLER
   // ==============================================================
-  function registerModule() {
-    if (typeof window === "undefined") return;
+  window.categories = window.categories || [];
+  window.tools = window.tools || [];
 
-    window.categories = window.categories || [];
-    window.tools = window.tools || [];
+  // 1. Add category if missing
+  if (!window.categories.some(c => c.id === obgynCategory.id)) {
+    window.categories.push(obgynCategory);
+  }
 
-    // 1. Add category if missing
-    if (!window.categories.some(c => c.id === obgynCategory.id)) {
-      window.categories.push(obgynCategory);
+  // 2. Add tools if missing
+  obgynTools.forEach(tool => {
+    const existingIdx = window.tools.findIndex(t => t.id === tool.id);
+    if (existingIdx >= 0) {
+      window.tools[existingIdx] = tool;
+    } else {
+      window.tools.push(tool);
     }
+  });
 
-    // 2. Add tools if missing
-    obgynTools.forEach(tool => {
-      const existingIdx = window.tools.findIndex(t => t.id === tool.id);
-      if (existingIdx >= 0) {
-        window.tools[existingIdx] = tool;
-      } else {
-        window.tools.push(tool);
-      }
-    });
+  // 3. Extend search synonym map
+  if (typeof window.SYNONYM_MAP === "object" && window.SYNONYM_MAP !== null) {
+    window.SYNONYM_MAP["obgyn"] = ["obgyn", "pregnancy", "obstetrics", "gynaecology", "gynecology", "fetal", "cervix", "uterus", "ovary"];
+    window.SYNONYM_MAP["preeclampsia"] = ["preeclampsia", "eclampsia", "hellp", "hypertension", "proteinuria", "magnesium"];
+    window.SYNONYM_MAP["cervix"] = ["cervix", "bishop", "ripening", "induction", "dilation", "effacement", "cervical cancer", "figo"];
+  }
 
-    // 3. Extend search synonym map
-    if (typeof window.SYNONYM_MAP === "object" && window.SYNONYM_MAP !== null) {
-      window.SYNONYM_MAP["obgyn"] = ["obgyn", "pregnancy", "obstetrics", "gynaecology", "gynecology", "fetal", "cervix", "uterus", "ovary"];
-      window.SYNONYM_MAP["preeclampsia"] = ["preeclampsia", "eclampsia", "hellp", "hypertension", "proteinuria", "magnesium"];
-      window.SYNONYM_MAP["cervix"] = ["cervix", "bishop", "ripening", "induction", "dilation", "effacement", "cervical cancer", "figo"];
-    }
-
-    // 4. Force a render if the UI engine is ready
+  // 4. Repeatedly trigger repaint so it catches the main engine as soon as it initializes
+  function triggerRepaint() {
     if (typeof window.renderHome === "function") {
       window.renderHome();
     }
   }
 
-  // Register immediately into arrays
-  registerModule();
+  triggerRepaint();
+  window.addEventListener("DOMContentLoaded", triggerRepaint);
+  window.addEventListener("load", triggerRepaint);
 
-  // Also trigger render after window fully finishes loading
-  window.addEventListener("load", function () {
-    registerModule();
-  });
+  let attempts = 0;
+  const timer = setInterval(() => {
+    triggerRepaint();
+    attempts++;
+    if (attempts >= 10) clearInterval(timer);
+  }, 250);
+
 })();
-

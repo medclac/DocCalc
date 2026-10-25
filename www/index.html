@@ -425,7 +425,7 @@ footer { text-align: center; font-size: 11px; color: var(--text-muted); padding:
 
 <header>
   <div class="header-top">
-    <small>Clinical tools · prototype</small>
+    <small id="clinicianHeaderSub">Clinical tools · prototype</small>
     <button id="openSettingsBtn" class="icon-btn" type="button" aria-label="Settings">⚙ Settings</button>
   </div>
   <h1>✚ MedCalc</h1>
@@ -537,7 +537,37 @@ footer { text-align: center; font-size: 11px; color: var(--text-muted); padding:
         <button type="button" class="theme-btn" data-theme-val="dark"><span>🌙</span><span>Dark</span></button>
         <button type="button" class="theme-btn" data-theme-val="system"><span>💻</span><span>System</span></button>
       </div>
-      <p class="muted" style="font-size:12px;margin:0">Changes are applied immediately.</p>
+
+      <div style="border-top:1px solid var(--border-color);margin-top:16px;padding-top:16px;">
+        <label style="font-size:13px;font-weight:700">Clinician Profile</label>
+        <p class="muted" style="font-size:12px;margin:4px 0 10px;">Update your professional signature details:</p>
+        <button type="button" id="editProfileBtn" style="width:100%;padding:10px;background:var(--btn-back-bg);color:var(--btn-back-text);border:1px solid var(--border-color);border-radius:8px;font-weight:600;">Edit Profile Details</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ONE-TIME CLINICIAN ONBOARDING MODAL -->
+<div id="loginModal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+  <div class="modal" style="max-width: 400px; text-align: left;">
+    <div style="font-size: 32px; margin-bottom: 8px;">👨‍⚕️</div>
+    <h3 style="margin: 0 0 6px; font-size: 20px;">Clinician Profile</h3>
+    <p class="muted" style="font-size: 12.5px; line-height: 1.5; margin: 0 0 16px;">
+      Enter your professional details once. Your calculations will be recorded and signed automatically.
+    </p>
+
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+      <div>
+        <label for="loginDrName" style="font-size: 11px; font-weight: 700; text-transform: uppercase;">Doctor Name</label>
+        <input type="text" id="loginDrName" placeholder="e.g. Dr. Jane Doe" style="width: 100%;">
+      </div>
+
+      <div>
+        <label for="loginDrDegree" style="font-size: 11px; font-weight: 700; text-transform: uppercase;">Medical Degree & Specialty</label>
+        <input type="text" id="loginDrDegree" placeholder="e.g. MBBS, MD (Medicine), MS (Ortho)" style="width: 100%;">
+      </div>
+
+      <button id="submitLoginBtn" class="primary" type="button" style="margin-top: 6px; padding: 12px;">Enter MedCalc →</button>
     </div>
   </div>
 </div>
@@ -571,12 +601,95 @@ window.S = S;
 <script src="Emgicu.js"></script>
 
 <!-- ============================================================== -->
-<!-- 3. APPLICATION ENGINE & HASH-BASED ANDROID CONTROLLER          -->
+<!-- 3. APPLICATION ENGINE, PROFILE SYNC & CONTROLLER               -->
 <!-- ============================================================== -->
 <script>
 (function () {
   "use strict";
   const $ = id => document.getElementById(id);
+
+  // ==============================================================
+  // GOOGLE APPS SCRIPT WEBHOOK CONFIGURATION
+  // ==============================================================
+  const GOOGLE_SHEET_WEBHOOK_URL = "PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
+
+  function sendDataToWebhook(payload) {
+    if (!GOOGLE_SHEET_WEBHOOK_URL || GOOGLE_SHEET_WEBHOOK_URL.includes("PASTE_YOUR_GOOGLE_APPS_SCRIPT")) {
+      return;
+    }
+    fetch(GOOGLE_SHEET_WEBHOOK_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    }).catch(err => console.warn("Google Sheet sync error:", err));
+  }
+
+  function logToolCalculation(toolName, resultVal, formulaText) {
+    const name = localStorage.getItem("medcalc_dr_name") || "Anonymous";
+    const degree = localStorage.getItem("medcalc_dr_degree") || "N/A";
+
+    sendDataToWebhook({
+      type: "calculation",
+      timestamp: new Date().toLocaleString(),
+      name: name,
+      degree: degree,
+      tool: toolName,
+      result: resultVal,
+      equation: formulaText
+    });
+  }
+
+  // --- USER PROFILE & ONE-TIME LOGIN SETUP ---
+  function applyDoctorProfile(name, degree) {
+    const subHeader = $("clinicianHeaderSub");
+    if (subHeader) {
+      subHeader.textContent = `${name} (${degree}) · Clinical tools`;
+    }
+  }
+
+  function checkUserSession() {
+    const savedName = localStorage.getItem("medcalc_dr_name");
+    const savedDegree = localStorage.getItem("medcalc_dr_degree");
+
+    if (!savedName || !savedDegree) {
+      $("loginModal").classList.remove("hidden");
+    } else {
+      applyDoctorProfile(savedName, savedDegree);
+    }
+  }
+
+  $("submitLoginBtn").onclick = function () {
+    const nameInput = $("loginDrName").value.trim();
+    const degreeInput = $("loginDrDegree").value.trim();
+
+    if (!nameInput || !degreeInput) {
+      alert("Please provide both Doctor Name and Degree to continue.");
+      return;
+    }
+
+    localStorage.setItem("medcalc_dr_name", nameInput);
+    localStorage.setItem("medcalc_dr_degree", degreeInput);
+
+    $("loginModal").classList.add("hidden");
+    applyDoctorProfile(nameInput, degreeInput);
+
+    sendDataToWebhook({
+      type: "registration",
+      timestamp: new Date().toLocaleString(),
+      name: nameInput,
+      degree: degreeInput
+    });
+  };
+
+  $("editProfileBtn").onclick = function () {
+    $("settingsModal").classList.add("hidden");
+    $("loginDrName").value = localStorage.getItem("medcalc_dr_name") || "";
+    $("loginDrDegree").value = localStorage.getItem("medcalc_dr_degree") || "";
+    $("loginModal").classList.remove("hidden");
+  };
+
+  checkUserSession();
 
   let currentCatId = null;
   let currentTool = null;
@@ -628,13 +741,11 @@ window.S = S;
   window.addEventListener("hashchange", function () {
     const rawHash = location.hash.replace(/^#/, "");
 
-    // 1. If Settings modal is open, dismiss it
     const modal = $("settingsModal");
     if (modal && !modal.classList.contains("hidden")) {
       modal.classList.add("hidden");
     }
 
-    // 2. Clear search if any
     const searchInput = $("search");
     if (searchInput && searchInput.value) {
       searchInput.value = "";
@@ -642,7 +753,6 @@ window.S = S;
       $("searchResultsSection").classList.add("hidden");
     }
 
-    // 3. Evaluate Hash
     if (!rawHash) {
       showView("home");
       return;
@@ -666,7 +776,6 @@ window.S = S;
     }
   });
 
-  // Ensure fresh start at root
   if (location.hash) {
     location.hash = "";
   }
@@ -927,7 +1036,6 @@ window.S = S;
       $("value").textContent = res.value || "";
       $("equation").innerHTML = (res.eq || "").replace(/\n/g, "<br>");
 
-      // Reset dynamic severity states
       resBox.classList.remove("severity-mild", "severity-moderate", "severity-critical");
 
       const combinedText = `${res.value || ""} ${res.eq || ""}`.toLowerCase();
@@ -936,20 +1044,15 @@ window.S = S;
 
       let severity = "mild";
 
-      // 1. Explicit tool override
       if (res.severity) {
         severity = res.severity;
-      }
-      // 2. Explicit keyword override takes priority over numbers
-      else if (/\b(mild|low risk|normal|good prognosis|unlikely|negative|grade 1|grade i|stage 1|stage i|class 1|class i)\b/i.test(combinedText)) {
+      } else if (/\b(mild|low risk|normal|good prognosis|unlikely|negative|grade 1|grade i|stage 1|stage i|class 1|class i)\b/i.test(combinedText)) {
         severity = "mild";
       } else if (/\b(critical|severe|high risk|poor|emergency|immediate|grade 3|grade 4|grade iii|grade iv|stage 3|stage 4|stage iii|stage iv|class 3|class 4|class iii|class iv)\b/i.test(combinedText)) {
         severity = "critical";
       } else if (/\b(moderate|intermediate|medium risk|grade 2|grade ii|stage 2|stage ii|class 2|class ii)\b/i.test(combinedText)) {
         severity = "moderate";
-      }
-      // 3. Score fallback when no clinical classification word is stated
-      else if (scoreNum !== null) {
+      } else if (scoreNum !== null) {
         if (scoreNum >= 75) {
           severity = "critical";
         } else if (scoreNum >= 40) {
@@ -983,12 +1086,18 @@ window.S = S;
   };
 
   $("copy").onclick = () => {
-    const txt = `${currentTool.name}\n${$("value").textContent}\n${$("equation").textContent}`;
+    const valText = $("value").textContent;
+    const eqText = $("equation").textContent;
+    const txt = `${currentTool.name}\n${valText}\n${eqText}`;
+
     navigator.clipboard.writeText(txt).then(() => {
       const btn = $("copy");
       btn.textContent = "Copied!";
       setTimeout(() => btn.textContent = "Copy", 1500);
     });
+
+    // Sync calculation directly to the doctor's separate Google Sheet
+    logToolCalculation(currentTool.name, valText, eqText);
   };
 
   renderHome();

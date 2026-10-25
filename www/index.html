@@ -206,9 +206,9 @@ h2 { font-size: 21px; margin: 8px 0; }
   color: var(--text-main);
   min-height: 110px;
   cursor: pointer;
-  transition: border-color 0.15s, transform 0.1s;
+  transition: border-color 0.15s;
 }
-.card:hover { border-color: var(--border-hover); transform: translateY(-1px); }
+.card:hover { border-color: var(--border-hover); }
 .card .ico { font-size: 24px; display: block; margin-bottom: 8px; }
 .card strong { display: block; font-size: 14px; }
 .card small { display: block; color: var(--text-muted); line-height: 1.4; margin-top: 5px; }
@@ -302,25 +302,6 @@ table.ref-table tr.active-grade td { border-top: 2px solid #38a169; border-botto
 .academic-refs { margin-top: 24px; border-top: 1px solid var(--border-color); padding-top: 18px; }
 .ref-card-item { background: var(--ref-card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; margin-bottom: 12px; }
 .ref-card-citation { font-size: 12px; color: var(--text-muted); line-height: 1.5; white-space: pre-line; }
-.ref-card-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-.ref-btn-link {
-  display: inline-flex;
-  align-items: center;
-  font-size: 11px;
-  font-weight: 600;
-  text-decoration: none;
-  padding: 5px 9px;
-  border-radius: 6px;
-  background: var(--badge-calc-bg);
-  color: var(--badge-calc-text);
-  border: 1px solid var(--badge-calc-border);
-}
-.ref-btn-link.secondary {
-  background: var(--tab-bg);
-  color: var(--text-muted);
-  border-color: var(--border-color);
-}
-.ref-btn-link:hover { opacity: 0.85; }
 
 .modal-overlay {
   position: fixed;
@@ -390,8 +371,7 @@ footer { text-align: center; font-size: 11px; color: var(--text-muted); padding:
   <!-- HOME VIEW -->
   <div id="home">
     <div class="search-wrapper">
-      <input class="search" id="search" placeholder="Search by name, organ (cervix, ovary, uterus), or term..." aria-label="Search tools">
-      <div class="search-hints">Quick terms: <code>bishop</code>, <code>preeclampsia</code>, <code>apgar</code>, <code>hadlock</code>, <code>pph</code>, <code>ogtt</code></div>
+      <input class="search" id="search" placeholder="Search by name, organ, or abbreviation..." aria-label="Search tools">
     </div>
     <div id="homeDefaultContent">
       <h2>Browse by specialty</h2>
@@ -503,8 +483,9 @@ footer { text-align: center; font-size: 11px; color: var(--text-muted); padding:
 <script>
 window.categories = window.categories || [];
 window.tools = window.tools || [];
-window.SYNONYM_MAP = window.SYNONYM_MAP || {};
+window.MedCalcModules = window.MedCalcModules || [];
 
+// Standard field builders
 function N(id, label, defaultVal, extra) {
   extra = extra || {};
   return Object.assign({ id: id, label: label, type: "number", value: defaultVal, default: defaultVal }, extra);
@@ -516,30 +497,33 @@ function S(id, label, defaultVal, options) {
 
 window.N = N;
 window.S = S;
-</script>
 
-<!-- ============================================================== -->
-<!-- 2. SPECIALTY MODULE SCRIPTS LOADER                             -->
-<!-- ============================================================== -->
-<script>
-function loadModule(src, fallback) {
-  const s = document.createElement("script");
-  s.src = src;
-  if (fallback) {
-    s.onerror = function() {
-      const fb = document.createElement("script");
-      fb.src = fallback;
-      document.head.appendChild(fb);
-    };
+// Global helper to register tools & categories cleanly from any JS file
+window.registerModule = function(module) {
+  if (module.category) {
+    if (!window.categories.some(c => c.id === module.category.id)) {
+      window.categories.push(module.category);
+    }
   }
-  document.head.appendChild(s);
-}
-
-// Loads obgy.js or obgyn.js seamlessly
-loadModule("obgy.js", "obgyn.js");
-// Safe check for ortho.js if it exists
-loadModule("ortho.js");
+  if (Array.isArray(module.tools)) {
+    module.tools.forEach(t => {
+      if (!window.tools.some(existing => existing.id === t.id)) {
+        window.tools.push(t);
+      }
+    });
+  }
+  if (window.renderHome) window.renderHome();
+};
 </script>
+
+<!-- ============================================================== -->
+<!-- 2. SPECIALTY MODULE SCRIPTS                                    -->
+<!-- (Add ANY new .js files right here - nothing else needs editing) -->
+<!-- ============================================================== -->
+<script src="obgyn.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='obgy.js'; document.head.appendChild(s);"></script>
+<script src="ortho.js"></script>
+<!-- <script src="cardiology.js"></script> -->
+<!-- <script src="pulmonology.js"></script> -->
 
 <!-- ============================================================== -->
 <!-- 3. APPLICATION ENGINE & UI CONTROLLER                          -->
@@ -580,12 +564,12 @@ loadModule("ortho.js");
     if (splash) {
       splash.classList.add("fade-out");
       setTimeout(() => {
-        if (splash && splash.parentNode) splash.parentNode.removeChild(splash);
+        if (splash.parentNode) splash.parentNode.removeChild(splash);
       }, 400);
     }
   }
   window.addEventListener("load", () => setTimeout(dismissSplash, 250));
-  setTimeout(dismissSplash, 1500);
+  setTimeout(dismissSplash, 2000);
 
   // --- NAVIGATION ---
   function showView(view) {
@@ -595,38 +579,46 @@ loadModule("ortho.js");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
+  // Capitalize helper
+  function capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
   // --- HOME & CATEGORY RENDERING ---
   function renderHome() {
-    // Deduplicate categories by ID
-    const uniqueCategories = [];
-    const seenCatIds = new Set();
+    // 1. Gather all categories explicitly defined or implicitly inferred from tools
+    const catMap = new Map();
+
+    // Ingest explicitly pushed categories
     (window.categories || []).forEach(cat => {
-      if (cat && cat.id && !seenCatIds.has(cat.id)) {
-        seenCatIds.add(cat.id);
-        uniqueCategories.push(cat);
+      if (cat && cat.id) catMap.set(cat.id, cat);
+    });
+
+    // Auto-discover categories from tools if not already present
+    (window.tools || []).forEach(tool => {
+      if (tool.cat && !catMap.has(tool.cat)) {
+        catMap.set(tool.cat, {
+          id: tool.cat,
+          name: capitalize(tool.cat),
+          icon: "📁",
+          desc: `${capitalize(tool.cat)} calculators & staging tools`
+        });
+      }
+
+      // Auto-detect classification vs calculator if not explicitly set
+      if (!tool.type) {
+        const isClass = /score|criteria|staging|classification|meows|apgar|bishop|iadpsg|mec|popq|figo|weber|gustilo|tscherne|salter|garden|neer|pauwels|pipkin|rockwood|mason|tile|sins|tlics|meyerding|kellgren/i.test(tool.name + " " + (tool.desc || ""));
+        tool.type = isClass ? "class" : "calc";
       }
     });
 
-    if (uniqueCategories.length > 1) {
-      window.categories = uniqueCategories.filter(c => c.id !== "all");
-    } else {
-      window.categories = uniqueCategories;
-    }
-
-    // Auto-detect tool type if omitted
-    (window.tools || []).forEach(t => {
-      if (!t.type) {
-        const isClass = /score|criteria|staging|classification|meows|apgar|bishop|iadpsg|mec|popq|figo|weber|gustilo|tscherne|salter|garden|neer|pauwels|pipkin|rockwood|mason|tile|sins|tlics|meyerding|kellgren/i.test(t.name + " " + (t.desc || ""));
-        t.type = isClass ? "class" : "calc";
-      }
-    });
+    window.categories = Array.from(catMap.values());
 
     const catContainer = $("categories");
-    if (!catContainer) return;
     catContainer.innerHTML = "";
     
     if (window.categories.length === 0) {
-      catContainer.innerHTML = `<p class="muted">Loading categories...</p>`;
+      catContainer.innerHTML = `<p class="muted" style="grid-column: 1/-1;">Loading categories and tools...</p>`;
     } else {
       window.categories.forEach(cat => {
         const card = document.createElement("div");
@@ -638,12 +630,10 @@ loadModule("ortho.js");
     }
 
     const quickContainer = $("quick");
-    if (!quickContainer) return;
     quickContainer.innerHTML = "";
     (window.tools || []).slice(0, 6).forEach(t => quickContainer.appendChild(createToolItem(t)));
   }
 
-  // Expose hooks globally so specialty modules can trigger a re-render anytime
   window.renderHome = renderHome;
   window.renderCategories = renderHome;
   window.renderQuick = renderHome;
@@ -660,7 +650,7 @@ loadModule("ortho.js");
 
   function openCategory(catId) {
     currentCatId = catId;
-    const cat = (window.categories || []).find(c => c.id === catId);
+    const cat = window.categories.find(c => c.id === catId);
     $("categoryTitle").textContent = cat ? cat.name : "Specialty Tools";
     $("categoryDesc").textContent = cat ? cat.desc : "";
     activeFilter = "all";
@@ -672,7 +662,7 @@ loadModule("ortho.js");
   function renderCategoryTools() {
     const list = $("toolList");
     list.innerHTML = "";
-    const filtered = (window.tools || []).filter(t => (t.cat === currentCatId || currentCatId === "all") && (activeFilter === "all" || t.type === activeFilter));
+    const filtered = window.tools.filter(t => (t.cat === currentCatId || currentCatId === "all") && (activeFilter === "all" || t.type === activeFilter));
     if (filtered.length === 0) {
       list.innerHTML = `<div class="muted" style="padding:20px 0;text-align:center;">No tools found in this category.</div>`;
       return;
@@ -700,7 +690,7 @@ loadModule("ortho.js");
     }
     $("homeDefaultContent").classList.add("hidden");
     $("searchResultsSection").classList.remove("hidden");
-    const matches = (window.tools || []).filter(t => {
+    const matches = window.tools.filter(t => {
       return (t.name && t.name.toLowerCase().includes(q)) ||
         (t.desc && t.desc.toLowerCase().includes(q)) ||
         (t.guidance && t.guidance.toLowerCase().includes(q)) ||
@@ -882,9 +872,9 @@ loadModule("ortho.js");
   $("homeBtn").onclick = () => showView("home");
   $("categoryBtn").onclick = () => currentCatId ? openCategory(currentCatId) : showView("home");
 
-  // Initial renders
+  // Re-render when window or resources load
   renderHome();
-  document.addEventListener("DOMContentLoaded", renderHome);
+  window.addEventListener("load", renderHome);
 })();
 </script>
 </body>

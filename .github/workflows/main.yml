@@ -1,92 +1,49 @@
-name: Build MedCalc Android APK
-on:
-  workflow_dispatch:
-  push:
-    branches: 
-      - main
+name: Build DocCalc Android APK
 
-permissions:
-  contents: read
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out project
+      - name: Checkout repository
         uses: actions/checkout@v4
-        
-      - name: Set up Node
+
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          
-      - name: Set up Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: 17
-    
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v4
-        with:
-          packages: 'platform-tools'
+          cache: 'npm'
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Check web assets
         run: |
-          pwd
-          ls -la
-          ls -la www
-          test -f www/index.html
-          
-      - name: Create Android project
-        run: npx cap add android
+          test -f www/index.html || { echo "Missing www/index.html"; exit 1; }
 
-      - name: Set MedCalc APK icon
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: 17
+
+      - name: Sync Capacitor Android
         run: |
-          npm install --save-dev @capacitor/assets
-          mkdir -p assets
-          cp www/logo.png assets/icon.png
-          npx capacitor-assets generate --android
+          npx cap sync android
 
-      - name: Sync app assets
-        run: npx cap sync android
-
-      # This step configures Android to let the WebView go back instead of exiting
-      - name: Patch MainActivity for Hardware Back Button
+      - name: Build Android Debug APK
         run: |
-          MAIN_ACTIVITY=$(find android/app/src/main/java -name "MainActivity.java")
-          echo "Found MainActivity at: $MAIN_ACTIVITY"
-          cat << 'EOF' > "$MAIN_ACTIVITY"
-          package com.medcalc.doctor;
-
-          import android.os.Bundle;
-          import android.webkit.WebView;
-          import com.getcapacitor.BridgeActivity;
-
-          public class MainActivity extends BridgeActivity {
-              @Override
-              public void onBackPressed() {
-                  WebView webView = getBridge().getWebView();
-                  if (webView != null && webView.canGoBack()) {
-                      webView.goBack();
-                  } else {
-                      super.onBackPressed();
-                  }
-              }
-          }
-          EOF
-
-      - name: Build debug APK
-        working-directory: android
-        run: chmod +x gradlew && ./gradlew assembleDebug
+          cd android
+          chmod +x ./gradlew
+          ./gradlew assembleDebug --no-daemon
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: MedCalc-o.1v-APK
+          name: DocCalc-v0.1-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
-          

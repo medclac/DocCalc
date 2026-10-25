@@ -504,6 +504,17 @@ window.S = S;
 <!-- ============================================================== -->
 <script src="obgy.js"></script>
 
+<!-- DIAGNOSTIC TEST: Paste this right below the script tag -->
+<script>
+  window.addEventListener("load", function () {
+    const status = document.createElement("div");
+    status.style = "position:fixed;bottom:10px;left:10px;right:10px;background:#172b4d;color:#fff;padding:12px;border-radius:8px;font-size:12px;z-index:99999;";
+    const hasTools = window.tools && window.tools.length > 0;
+    const hasCats = window.categories && window.categories.length > 0;
+    status.innerHTML = `<b>Debug Status:</b><br>Categories loaded: ${hasCats ? window.categories.length : 0}<br>Tools loaded: ${hasTools ? window.tools.length : 0}`;
+    document.body.appendChild(status);
+  });
+
 <!-- ============================================================== -->
 <!-- 3. APPLICATION ENGINE & UI CONTROLLER                          -->
 <!-- ============================================================== -->

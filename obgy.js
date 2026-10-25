@@ -30,20 +30,20 @@
 
   var obgynTools = [
     // ==============================================================
-    // 1. PREGNANCY DATING: LMP, EDD & GESTATIONAL AGE CALCULATOR
+    // PREGNANCY DATING: LMP, EDD & GESTATIONAL AGE
     // ==============================================================
     {
       id: "pregnancyDating",
       cat: "obgyn",
       type: "calc",
       name: "Pregnancy Dating (LMP, EDD & Gestational Age)",
-      desc: "Calculates Estimated Due Date (Naegele's rule adjusted for cycle length), current Gestational Age, trimester, and milestone dates.",
+      desc: "Calculates Estimated Due Date (Naegele's rule adjusted for cycle length), current Gestational Age, and antenatal milestones.",
       organ: "Uterus / Fetus / Placenta",
       region: "Obstetric Antenatal Care",
       subject: "Obstetric Dating / Routine Antenatal Care",
       keywords: ["lmp", "edd", "edc", "dating", "gestational age", "due date", "naegele", "trimester", "pregnancy"],
-      guidance: "1. Confirm the first day of the Last Normal Menstrual Period (LMP).\n2. Adjust for average cycle length (Naegele's rule assumes a standard 28-day cycle).\n3. If a first-trimester crown-rump length (CRL) ultrasound differs by >5–7 days from LMP dating, ultrasound dating supersedes LMP per ACOG/SMFM guidelines.",
-      contraindications: "Unreliable in women with irregular menses, recent cessation of hormonal contraception, oligomenorrhea, or breastfeeding amenorrhea. Use early ultrasound dating instead.",
+      guidance: "1. Enter the Day, Month, and 4-digit Year of the first day of the Last Normal Menstrual Period (LMP).\n2. Specify average cycle length in days (default 28).\n3. If ultrasound CRL differs by >5–7 days, ultrasound dating takes precedence.",
+      contraindications: "Unreliable in irregular cycles or recent hormonal contraception use.",
       literature: [
         {
           type: "ACOG Committee Opinion",
@@ -56,64 +56,108 @@
         }
       ],
       fields: [
-        makeD("lmp", "First Day of Last Menstrual Period (LMP)", new Date(Date.now() - 70 * 86400000).toISOString().split("T")[0]),
+        makeN("lmpDay", "LMP Day (1–31)", new Date(Date.now() - 70 * 86400000).getDate(), { min: 1, max: 31, step: 1 }),
+        makeN("lmpMonth", "LMP Month (1–12)", new Date(Date.now() - 70 * 86400000).getMonth() + 1, { min: 1, max: 12, step: 1 }),
+        makeN("lmpYear", "LMP Year (e.g. 2026)", new Date(Date.now() - 70 * 86400000).getFullYear(), { min: 2020, max: 2035, step: 1 }),
         makeN("cycleLength", "Average Menstrual Cycle Length (Days)", 28, { min: 21, max: 45, step: 1 })
       ],
       table: {
         headers: ["Gestational Stage", "Gestational Weeks", "Key Antenatal Milestones & Routine Testing"],
         rows: [
-          { id: "tri1", cols: ["1st Trimester", "0+0 to 13+6 Weeks", "Dating scan (CRL), baseline bloods, aneuploidy screening (NIPT/combined screen)"] },
-          { id: "tri2", cols: ["2nd Trimester", "14+0 to 27+6 Weeks", "Fetal anomaly ultrasound (18–20 wks), 75g OGTT screening (24–28 wks), Anti-D if Rh-negative"] },
-          { id: "tri3", cols: ["3rd Trimester", "28+0 to 40+6 Weeks", "Growth surveillance, GBS screening (36–37 wks), labor preparation, fetal kick counts"] },
-          { id: "postterm", cols: ["Post-Term Period", "≥ 41+0 Weeks", "Membrane sweeping, biophysical profile/monitoring, induction of labor before 42+0 weeks"] }
+          { id: "tri1", cols: ["1st Trimester", "0+0 to 13+6 Weeks", "Dating scan (CRL), baseline bloods, aneuploidy screening"] },
+          { id: "tri2", cols: ["2nd Trimester", "14+0 to 27+6 Weeks", "Anomaly scan (18–20 wks), 75g OGTT (24–28 wks), Anti-D if Rh-negative"] },
+          { id: "tri3", cols: ["3rd Trimester", "28+0 to 40+6 Weeks", "Growth scans, GBS screening (36–37 wks), labor preparation"] },
+          { id: "postterm", cols: ["Post-Term Period", "≥ 41+0 Weeks", "Membrane sweep, biophysical profile, induction before 42+0 weeks"] }
         ]
       },
       calc: function (v) {
-        if (!v.lmp) {
-          return { value: "Incomplete Date", eq: "Please enter a valid LMP date." };
-        }
-        var lmpParts = v.lmp.split("-");
-        var lmpDate = new Date(parseInt(lmpParts[0], 10), parseInt(lmpParts[1], 10) - 1, parseInt(lmpParts[2], 10));
-        if (isNaN(lmpDate.getTime())) {
-          return { value: "Invalid Date", eq: "Unable to parse LMP date." };
+        var day = Math.floor(+v.lmpDay);
+        var month = Math.floor(+v.lmpMonth);
+        var year = Math.floor(+v.lmpYear);
+        var cycle = +v.cycleLength || 28;
+
+        var monthNames = [
+          "January", "February", "March", "April", "May", "June",
+          "July", "August", "September", "October", "November", "December"
+        ];
+
+        // 1. Basic range check
+        if (month < 1 || month > 12) {
+          return { value: "Invalid Month", eq: "Please enter a valid month between 1 and 12." };
         }
 
-        var cycleDiff = (+v.cycleLength || 28) - 28;
-        var eddTime = lmpDate.getTime() + (280 + cycleDiff) * 86400000;
-        var eddDate = new Date(eddTime);
+        // 2. Exact days-per-month computation (day 0 of month + 1 returns last day of target month)
+        var maxDaysInMonth = new Date(year, month, 0).getDate();
+        var selectedMonthName = monthNames[month - 1];
 
+        if (day < 1 || day > maxDaysInMonth) {
+          return {
+            value: "Invalid Day for " + selectedMonthName,
+            eq: selectedMonthName + " " + year + " has only " + maxDaysInMonth + " days. You entered Day " + day + "."
+          };
+        }
+
+        var lmpDate = new Date(year, month - 1, day);
+
+        // 3. Prevent future LMP calculation
         var today = new Date();
         today.setHours(0, 0, 0, 0);
-        var diffDays = Math.floor((today.getTime() - lmpDate.getTime()) / 86400000);
 
-        var weeks = Math.floor(diffDays / 7);
-        var days = diffDays % 7;
-
-        var trimester = "1st Trimester";
-        var match = "tri1";
-        if (weeks >= 41) {
-          trimester = "Late / Post-Term";
-          match = "postterm";
-        } else if (weeks >= 28) {
-          trimester = "3rd Trimester";
-          match = "tri3";
-        } else if (weeks >= 14) {
-          trimester = "2nd Trimester";
-          match = "tri2";
+        var totalDays = Math.floor((today.getTime() - lmpDate.getTime()) / 86400000);
+        if (totalDays < 0) {
+          return { 
+            value: "Future Date Entered", 
+            eq: "The LMP date cannot be in the future relative to today's date." 
+          };
         }
 
-        var eddString = eddDate.toLocaleDateString(undefined, { weekday: "short", year: "numeric", month: "short", day: "numeric" });
+        // 4. Naegele's rule adjusted for cycle length: LMP + 280 days + (cycle - 28)
+        var cycleDiff = cycle - 28;
+        var eddDate = new Date(lmpDate.getTime() + (280 + cycleDiff) * 86400000);
+
+        // 5. Gestational Age & Trimester breakdown
+        var weeks = Math.floor(totalDays / 7);
+        var days = totalDays % 7;
+
+        var stage = "tri1";
+        var triName = "1st Trimester";
+        if (weeks >= 41) {
+          stage = "postterm";
+          triName = "Late / Post-Term";
+        } else if (weeks >= 28) {
+          stage = "tri3";
+          triName = "3rd Trimester";
+        } else if (weeks >= 14) {
+          stage = "tri2";
+          triName = "2nd Trimester";
+        }
+
+        var eddString = eddDate.toLocaleDateString(undefined, { 
+          weekday: "short", 
+          year: "numeric", 
+          month: "short", 
+          day: "numeric" 
+        });
+
+        var conceptionDate = new Date(lmpDate.getTime() + (14 + cycleDiff) * 86400000);
+        var conceptionStr = conceptionDate.toLocaleDateString(undefined, {
+          year: "numeric",
+          month: "short",
+          day: "numeric"
+        });
 
         return {
-          value: weeks + " Weeks, " + days + " Days (" + trimester + ")",
-          matchId: match,
+          value: weeks + " Weeks, " + days + " Days (" + triName + ")",
+          matchId: stage,
           eq: "Estimated Date of Delivery (EDD): " + eddString + "\n" +
-              "• Calculation: Naegele's rule adjusted for " + (+v.cycleLength || 28) + "-day cycle\n" +
-              "• Conception Estimate: ~" + new Date(lmpDate.getTime() + (14 + cycleDiff) * 86400000).toLocaleDateString() + "\n" +
-              "• ACOG Guideline: Confirm by first-trimester ultrasound (CRL) if discrepancy exceeds 5–7 days."
+              "• Method: Naegele's rule adjusted for " + cycle + "-day cycle\n" +
+              "• Estimated Conception: ~" + conceptionStr + "\n" +
+              "• Month Check: " + selectedMonthName + " " + year + " validated (" + maxDaysInMonth + " days max)\n" +
+              "• Clinical Note: Ultrasound CRL dating takes precedence if difference > 5–7 days."
         };
       }
-    },
+    }
+,
 
     // ==============================================================
     // 2. BISHOP SCORE FOR CERVICAL RIPENING & INDUCTION

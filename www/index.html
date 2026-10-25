@@ -278,6 +278,49 @@ button { cursor: pointer; font: inherit; }
 .equation { font-size: 12.5px; line-height: 1.6; color: var(--result-text); white-space: pre-line; }
 .copy { float: right; padding: 6px 11px; border: 1px solid var(--result-border); border-radius: 7px; background: var(--bg-card); font-weight: 600; color: var(--result-val); }
 
+/* DYNAMIC SEVERITY THEMES */
+.result.severity-critical {
+  background: var(--contra-bg) !important;
+  border-color: var(--contra-border) !important;
+}
+.result.severity-critical .value,
+.result.severity-critical .caption,
+.result.severity-critical .res-subhead,
+.result.severity-critical .copy {
+  color: var(--contra-text) !important;
+}
+.result.severity-critical .copy {
+  border-color: var(--contra-border) !important;
+}
+
+.result.severity-moderate {
+  background: var(--notice-bg) !important;
+  border-color: var(--notice-border) !important;
+}
+.result.severity-moderate .value,
+.result.severity-moderate .caption,
+.result.severity-moderate .res-subhead,
+.result.severity-moderate .copy {
+  color: var(--notice-text) !important;
+}
+.result.severity-moderate .copy {
+  border-color: var(--notice-border) !important;
+}
+
+.result.severity-mild {
+  background: var(--result-bg) !important;
+  border-color: var(--result-border) !important;
+}
+.result.severity-mild .value,
+.result.severity-mild .caption,
+.result.severity-mild .res-subhead,
+.result.severity-mild .copy {
+  color: var(--result-val) !important;
+}
+.result.severity-mild .copy {
+  border-color: var(--result-border) !important;
+}
+
 .reference-card { margin-top: 22px; border-top: 1px solid var(--border-color); padding-top: 16px; }
 .ref-heading { font-size: 14px; font-weight: 750; color: var(--text-main); margin: 0 0 6px; display: flex; align-items: center; gap: 6px; }
 .ref-desc { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; }
@@ -879,8 +922,44 @@ window.S = S;
 
     try {
       const res = currentTool.calc(vals);
+      const resBox = $("result");
+
       $("value").textContent = res.value || "";
       $("equation").innerHTML = (res.eq || "").replace(/\n/g, "<br>");
+
+      // Reset dynamic severity states
+      resBox.classList.remove("severity-mild", "severity-moderate", "severity-critical");
+
+      const combinedText = `${res.value || ""} ${res.eq || ""}`.toLowerCase();
+      const numMatch = String(res.value || "").match(/-?\d+(\.\d+)?/);
+      const scoreNum = numMatch ? parseFloat(numMatch[0]) : null;
+
+      let severity = "mild";
+
+      // 1. Explicit tool override
+      if (res.severity) {
+        severity = res.severity;
+      }
+      // 2. Explicit keyword override takes priority over numbers
+      else if (/\b(mild|low risk|normal|good prognosis|unlikely|negative|grade 1|grade i|stage 1|stage i|class 1|class i)\b/i.test(combinedText)) {
+        severity = "mild";
+      } else if (/\b(critical|severe|high risk|poor|emergency|immediate|grade 3|grade 4|grade iii|grade iv|stage 3|stage 4|stage iii|stage iv|class 3|class 4|class iii|class iv)\b/i.test(combinedText)) {
+        severity = "critical";
+      } else if (/\b(moderate|intermediate|medium risk|grade 2|grade ii|stage 2|stage ii|class 2|class ii)\b/i.test(combinedText)) {
+        severity = "moderate";
+      }
+      // 3. Score fallback when no clinical classification word is stated
+      else if (scoreNum !== null) {
+        if (scoreNum >= 75) {
+          severity = "critical";
+        } else if (scoreNum >= 40) {
+          severity = "moderate";
+        } else {
+          severity = "mild";
+        }
+      }
+
+      resBox.classList.add(`severity-${severity}`);
 
       if (res.matchId) {
         document.querySelectorAll("#refTable tr").forEach(r => r.classList.remove("active-grade"));
@@ -888,7 +967,7 @@ window.S = S;
         if (activeRow) activeRow.classList.add("active-grade");
       }
 
-      $("result").classList.add("show");
+      resBox.classList.add("show");
     } catch (err) {
       console.error("Calculation error:", err);
     }

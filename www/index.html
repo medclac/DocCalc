@@ -206,9 +206,9 @@ h2 { font-size: 21px; margin: 8px 0; }
   color: var(--text-main);
   min-height: 110px;
   cursor: pointer;
-  transition: border-color 0.15s;
+  transition: border-color 0.15s, transform 0.1s;
 }
-.card:hover { border-color: var(--border-hover); }
+.card:hover { border-color: var(--border-hover); transform: translateY(-1px); }
 .card .ico { font-size: 24px; display: block; margin-bottom: 8px; }
 .card strong { display: block; font-size: 14px; }
 .card small { display: block; color: var(--text-muted); line-height: 1.4; margin-top: 5px; }
@@ -302,6 +302,25 @@ table.ref-table tr.active-grade td { border-top: 2px solid #38a169; border-botto
 .academic-refs { margin-top: 24px; border-top: 1px solid var(--border-color); padding-top: 18px; }
 .ref-card-item { background: var(--ref-card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; margin-bottom: 12px; }
 .ref-card-citation { font-size: 12px; color: var(--text-muted); line-height: 1.5; white-space: pre-line; }
+.ref-card-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.ref-btn-link {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 5px 9px;
+  border-radius: 6px;
+  background: var(--badge-calc-bg);
+  color: var(--badge-calc-text);
+  border: 1px solid var(--badge-calc-border);
+}
+.ref-btn-link.secondary {
+  background: var(--tab-bg);
+  color: var(--text-muted);
+  border-color: var(--border-color);
+}
+.ref-btn-link:hover { opacity: 0.85; }
 
 .modal-overlay {
   position: fixed;
@@ -371,8 +390,8 @@ footer { text-align: center; font-size: 11px; color: var(--text-muted); padding:
   <!-- HOME VIEW -->
   <div id="home">
     <div class="search-wrapper">
-      <input class="search" id="search" placeholder="Search by name, organ (bone, knee, liver), or abbreviation..." aria-label="Search tools">
-      <div class="search-hints">Quick terms: <code>gustilo</code>, <code>ottawa</code>, <code>kellgren</code>, <code>ga</code>, <code>bpp</code>, <code>bishop</code></div>
+      <input class="search" id="search" placeholder="Search by name, organ (cervix, ovary, uterus), or term..." aria-label="Search tools">
+      <div class="search-hints">Quick terms: <code>bishop</code>, <code>preeclampsia</code>, <code>apgar</code>, <code>hadlock</code>, <code>pph</code>, <code>ogtt</code></div>
     </div>
     <div id="homeDefaultContent">
       <h2>Browse by specialty</h2>
@@ -484,9 +503,8 @@ footer { text-align: center; font-size: 11px; color: var(--text-muted); padding:
 <script>
 window.categories = window.categories || [];
 window.tools = window.tools || [];
-window.MedCalcModules = window.MedCalcModules || [];
+window.SYNONYM_MAP = window.SYNONYM_MAP || {};
 
-// Defined as standard functions so they are available in the global scope
 function N(id, label, defaultVal, extra) {
   extra = extra || {};
   return Object.assign({ id: id, label: label, type: "number", value: defaultVal, default: defaultVal }, extra);
@@ -501,11 +519,27 @@ window.S = S;
 </script>
 
 <!-- ============================================================== -->
-<!-- 2. SPECIALTY MODULE SCRIPTS                                    -->
-<!-- (Supports both 'obgyn.js' and 'obgy.js' naming)               -->
+<!-- 2. SPECIALTY MODULE SCRIPTS LOADER                             -->
 <!-- ============================================================== -->
-<script src="obgyn.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='obgy.js'; document.head.appendChild(s);"></script>
-<script src="ortho.js"></script>
+<script>
+function loadModule(src, fallback) {
+  const s = document.createElement("script");
+  s.src = src;
+  if (fallback) {
+    s.onerror = function() {
+      const fb = document.createElement("script");
+      fb.src = fallback;
+      document.head.appendChild(fb);
+    };
+  }
+  document.head.appendChild(s);
+}
+
+// Loads obgy.js or obgyn.js seamlessly
+loadModule("obgy.js", "obgyn.js");
+// Safe check for ortho.js if it exists
+loadModule("ortho.js");
+</script>
 
 <!-- ============================================================== -->
 <!-- 3. APPLICATION ENGINE & UI CONTROLLER                          -->
@@ -546,12 +580,12 @@ window.S = S;
     if (splash) {
       splash.classList.add("fade-out");
       setTimeout(() => {
-        if (splash.parentNode) splash.parentNode.removeChild(splash);
+        if (splash && splash.parentNode) splash.parentNode.removeChild(splash);
       }, 400);
     }
   }
   window.addEventListener("load", () => setTimeout(dismissSplash, 250));
-  setTimeout(dismissSplash, 2000);
+  setTimeout(dismissSplash, 1500);
 
   // --- NAVIGATION ---
   function showView(view) {
@@ -566,23 +600,21 @@ window.S = S;
     // Deduplicate categories by ID
     const uniqueCategories = [];
     const seenCatIds = new Set();
-    window.categories.forEach(cat => {
+    (window.categories || []).forEach(cat => {
       if (cat && cat.id && !seenCatIds.has(cat.id)) {
         seenCatIds.add(cat.id);
         uniqueCategories.push(cat);
       }
     });
-    window.categories = uniqueCategories;
 
-    // Remove fallback if actual categories exist
-    if (window.categories.length > 1) {
-      window.categories = window.categories.filter(c => c.id !== "all");
-    } else if (window.categories.length === 0) {
-      window.categories.push({ id: "all", name: "General Medicine", icon: "🩺", desc: "Clinical calculators and staging tools" });
+    if (uniqueCategories.length > 1) {
+      window.categories = uniqueCategories.filter(c => c.id !== "all");
+    } else {
+      window.categories = uniqueCategories;
     }
 
-    // Auto-detect tool type
-    window.tools.forEach(t => {
+    // Auto-detect tool type if omitted
+    (window.tools || []).forEach(t => {
       if (!t.type) {
         const isClass = /score|criteria|staging|classification|meows|apgar|bishop|iadpsg|mec|popq|figo|weber|gustilo|tscherne|salter|garden|neer|pauwels|pipkin|rockwood|mason|tile|sins|tlics|meyerding|kellgren/i.test(t.name + " " + (t.desc || ""));
         t.type = isClass ? "class" : "calc";
@@ -590,21 +622,28 @@ window.S = S;
     });
 
     const catContainer = $("categories");
+    if (!catContainer) return;
     catContainer.innerHTML = "";
-    window.categories.forEach(cat => {
-      const card = document.createElement("div");
-      card.className = "card";
-      card.innerHTML = `<span class="ico">${cat.icon || "📁"}</span><strong>${cat.name}</strong><small>${cat.desc}</small>`;
-      card.onclick = () => openCategory(cat.id);
-      catContainer.appendChild(card);
-    });
+    
+    if (window.categories.length === 0) {
+      catContainer.innerHTML = `<p class="muted">Loading categories...</p>`;
+    } else {
+      window.categories.forEach(cat => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `<span class="ico">${cat.icon || "📁"}</span><strong>${cat.name}</strong><small>${cat.desc || ""}</small>`;
+        card.onclick = () => openCategory(cat.id);
+        catContainer.appendChild(card);
+      });
+    }
 
     const quickContainer = $("quick");
+    if (!quickContainer) return;
     quickContainer.innerHTML = "";
-    window.tools.slice(0, 6).forEach(t => quickContainer.appendChild(createToolItem(t)));
+    (window.tools || []).slice(0, 6).forEach(t => quickContainer.appendChild(createToolItem(t)));
   }
 
-  // Expose hooks globally so specialty modules can trigger a re-render
+  // Expose hooks globally so specialty modules can trigger a re-render anytime
   window.renderHome = renderHome;
   window.renderCategories = renderHome;
   window.renderQuick = renderHome;
@@ -621,7 +660,7 @@ window.S = S;
 
   function openCategory(catId) {
     currentCatId = catId;
-    const cat = window.categories.find(c => c.id === catId);
+    const cat = (window.categories || []).find(c => c.id === catId);
     $("categoryTitle").textContent = cat ? cat.name : "Specialty Tools";
     $("categoryDesc").textContent = cat ? cat.desc : "";
     activeFilter = "all";
@@ -633,7 +672,7 @@ window.S = S;
   function renderCategoryTools() {
     const list = $("toolList");
     list.innerHTML = "";
-    const filtered = window.tools.filter(t => (t.cat === currentCatId || currentCatId === "all") && (activeFilter === "all" || t.type === activeFilter));
+    const filtered = (window.tools || []).filter(t => (t.cat === currentCatId || currentCatId === "all") && (activeFilter === "all" || t.type === activeFilter));
     if (filtered.length === 0) {
       list.innerHTML = `<div class="muted" style="padding:20px 0;text-align:center;">No tools found in this category.</div>`;
       return;
@@ -661,7 +700,7 @@ window.S = S;
     }
     $("homeDefaultContent").classList.add("hidden");
     $("searchResultsSection").classList.remove("hidden");
-    const matches = window.tools.filter(t => {
+    const matches = (window.tools || []).filter(t => {
       return (t.name && t.name.toLowerCase().includes(q)) ||
         (t.desc && t.desc.toLowerCase().includes(q)) ||
         (t.guidance && t.guidance.toLowerCase().includes(q)) ||
@@ -843,7 +882,7 @@ window.S = S;
   $("homeBtn").onclick = () => showView("home");
   $("categoryBtn").onclick = () => currentCatId ? openCategory(currentCatId) : showView("home");
 
-  // Initial render calls
+  // Initial renders
   renderHome();
   document.addEventListener("DOMContentLoaded", renderHome);
 })();

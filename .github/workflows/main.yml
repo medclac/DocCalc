@@ -30,6 +30,12 @@ jobs:
           distribution: 'zulu'
           java-version: 17
 
+      - name: Add Android platform if missing
+        run: |
+          if [ ! -d "android" ]; then
+            npx cap add android
+          fi
+
       - name: Sync Capacitor Android
         run: |
           npx cap sync android

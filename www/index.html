@@ -499,9 +499,13 @@ window.S = S;
 </script>
 
 <!-- ============================================================== -->
-<!-- 2. SPECIALTY MODULE SCRIPTS                                    -->
+<!-- 2. SPECIALTY MODULE SCRIPTS WITH LOAD / ERROR DETECTION        -->
 <!-- ============================================================== -->
-<script src="obgy.js"></script>
+<script 
+  src="obgy.js" 
+  onload="alert('obgy.js LOADED SUCCESSFULLY!')" 
+  onerror="alert('CANNOT FIND obgy.js FILE! Check folder/filename.')">
+</script>
 
 <!-- ON-SCREEN DIAGNOSTIC TOOL -->
 <script>

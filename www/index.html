@@ -500,9 +500,20 @@ window.S = S;
 
 <!-- ============================================================== -->
 <!-- 2. SPECIALTY MODULE SCRIPTS                                    -->
-<!-- (Add any new script tags here - nothing else needs editing)    -->
 <!-- ============================================================== -->
 <script src="obgy.js"></script>
+
+<!-- ON-SCREEN DIAGNOSTIC TOOL -->
+<script>
+  window.addEventListener("load", function () {
+    const status = document.createElement("div");
+    status.style = "position:fixed;bottom:10px;left:10px;right:10px;background:#0f2744;color:#ffffff;border:1px solid #38a169;padding:12px 14px;border-radius:10px;font-size:12px;z-index:99999;box-shadow:0 4px 15px rgba(0,0,0,0.4);font-family:monospace;";
+    const hasTools = window.tools && window.tools.length > 0;
+    const hasCats = window.categories && window.categories.length > 0;
+    status.innerHTML = `<b>Diagnostics:</b> Categories loaded = <b>${hasCats ? window.categories.length : 0}</b> | Tools loaded = <b>${hasTools ? window.tools.length : 0}</b>`;
+    document.body.appendChild(status);
+  });
+</script>
 
 <!-- ============================================================== -->
 <!-- 3. APPLICATION ENGINE & UI CONTROLLER                          -->

@@ -478,7 +478,7 @@ footer { text-align: center; font-size: 11px; color: var(--text-muted); padding:
 </div>
 
 <!-- ============================================================== -->
-<!-- 1. CORE DATA REGISTRY & GLOBAL HELPERS                         -->
+<!-- 1. CORE DATA REGISTRY & GLOBAL CONSTRUCTORS                    -->
 <!-- ============================================================== -->
 <script>
 window.categories = window.categories || [];
@@ -499,28 +499,7 @@ window.S = S;
 </script>
 
 <!-- ============================================================== -->
-<!-- 2. SPECIALTY MODULE SCRIPTS WITH LOAD / ERROR DETECTION        -->
-<!-- ============================================================== -->
-<script 
-  src="obgy.js" 
-  onload="alert('obgy.js LOADED SUCCESSFULLY!')" 
-  onerror="alert('CANNOT FIND obgy.js FILE! Check folder/filename.')">
-</script>
-
-<!-- ON-SCREEN DIAGNOSTIC TOOL -->
-<script>
-  window.addEventListener("load", function () {
-    const status = document.createElement("div");
-    status.style = "position:fixed;bottom:10px;left:10px;right:10px;background:#0f2744;color:#ffffff;border:1px solid #38a169;padding:12px 14px;border-radius:10px;font-size:12px;z-index:99999;box-shadow:0 4px 15px rgba(0,0,0,0.4);font-family:monospace;";
-    const hasTools = window.tools && window.tools.length > 0;
-    const hasCats = window.categories && window.categories.length > 0;
-    status.innerHTML = `<b>Diagnostics:</b> Categories loaded = <b>${hasCats ? window.categories.length : 0}</b> | Tools loaded = <b>${hasTools ? window.tools.length : 0}</b>`;
-    document.body.appendChild(status);
-  });
-</script>
-
-<!-- ============================================================== -->
-<!-- 3. APPLICATION ENGINE & UI CONTROLLER                          -->
+<!-- 2. APPLICATION ENGINE & UI CONTROLLER (INITIALIZED FIRST)       -->
 <!-- ============================================================== -->
 <script>
 (function () {
@@ -622,12 +601,23 @@ window.S = S;
       quickContainer.innerHTML = "";
       (window.tools || []).slice(0, 6).forEach(t => quickContainer.appendChild(createToolItem(t)));
     }
+
+    // Refresh diagnostic badge if present
+    updateDiagnostics();
   }
 
-  // Global hooks for external scripts to request an instant UI repaint
   window.renderHome = renderHome;
   window.renderCategories = renderHome;
   window.renderQuick = renderHome;
+
+  function updateDiagnostics() {
+    const diag = $("diagnosticStatus");
+    if (diag) {
+      const hasTools = window.tools && window.tools.length > 0;
+      const hasCats = window.categories && window.categories.length > 0;
+      diag.innerHTML = `<b>Diagnostics:</b> Categories loaded = <b>${hasCats ? window.categories.length : 0}</b> | Tools loaded = <b>${hasTools ? window.tools.length : 0}</b>`;
+    }
+  }
 
   function createToolItem(t) {
     const div = document.createElement("div");
@@ -866,18 +856,23 @@ window.S = S;
   $("homeBtn").onclick = () => showView("home");
   $("categoryBtn").onclick = () => currentCatId ? openCategory(currentCatId) : showView("home");
 
-  // Initial render calls
   renderHome();
-  window.addEventListener("load", renderHome);
-
-  // Poll for external JS files that finish loading slightly late
-  let checkCount = 0;
-  const pollTimer = setInterval(() => {
-    renderHome();
-    checkCount++;
-    if (checkCount >= 8) clearInterval(pollTimer);
-  }, 250);
 })();
 </script>
+
+<!-- ============================================================== -->
+<!-- 3. LOAD MODULE SCRIPTS (LOADED AFTER CORE ENGINE IS READY)     -->
+<!-- ============================================================== -->
+<script 
+  src="obgy.js" 
+  onload="if(window.renderHome) window.renderHome();" 
+  onerror="alert('CANNOT FIND obgy.js FILE! Make sure it is in the same folder and named obgy.js')">
+</script>
+
+<!-- DIAGNOSTIC OVERLAY -->
+<div id="diagnosticStatus" style="position:fixed;bottom:10px;left:10px;right:10px;background:#0f2744;color:#ffffff;border:1px solid #38a169;padding:12px 14px;border-radius:10px;font-size:12px;z-index:99999;box-shadow:0 4px 15px rgba(0,0,0,0.4);font-family:monospace;">
+  <b>Diagnostics:</b> Initializing modules...
+</div>
+
 </body>
 </html>

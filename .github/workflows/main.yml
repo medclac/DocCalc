@@ -2,8 +2,8 @@ name: Build MedCalc Android APK
 on:
   workflow_dispatch:
   push:
-      branches: 
-        - main
+    branches: 
+      - main
 
 permissions:
   contents: read
@@ -54,6 +54,31 @@ jobs:
       - name: Sync app assets
         run: npx cap sync android
 
+      # This step configures Android to let the WebView go back instead of exiting
+      - name: Patch MainActivity for Hardware Back Button
+        run: |
+          MAIN_ACTIVITY=$(find android/app/src/main/java -name "MainActivity.java")
+          echo "Found MainActivity at: $MAIN_ACTIVITY"
+          cat << 'EOF' > "$MAIN_ACTIVITY"
+          package com.medcalc.doctor;
+
+          import android.os.Bundle;
+          import android.webkit.WebView;
+          import com.getcapacitor.BridgeActivity;
+
+          public class MainActivity extends BridgeActivity {
+              @Override
+              public void onBackPressed() {
+                  WebView webView = getBridge().getWebView();
+                  if (webView != null && webView.canGoBack()) {
+                      webView.goBack();
+                  } else {
+                      super.onBackPressed();
+                  }
+              }
+          }
+          EOF
+
       - name: Build debug APK
         working-directory: android
         run: chmod +x gradlew && ./gradlew assembleDebug
@@ -64,3 +89,4 @@ jobs:
           name: MedCalc-o.1v-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
+          

@@ -1,8 +1,8 @@
 {
-  "name": "medcalc-doctor",
+  "name": "doccalc-doctor",
   "version": "0.1.0",
   "private": true,
-  "description": "Offline-first medical calculator prototype",
+  "description": "Offline-first clinical calculators and classifications",
   "dependencies": {
     "@capacitor/android": "6.2.1",
     "@capacitor/app": "6.0.2",

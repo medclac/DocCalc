@@ -302,24 +302,6 @@ table.ref-table tr.active-grade td { border-top: 2px solid #38a169; border-botto
 .academic-refs { margin-top: 24px; border-top: 1px solid var(--border-color); padding-top: 18px; }
 .ref-card-item { background: var(--ref-card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; margin-bottom: 12px; }
 .ref-card-citation { font-size: 12px; color: var(--text-muted); line-height: 1.5; white-space: pre-line; }
-.ref-card-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
-.ref-btn-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 4px 10px;
-  border-radius: 6px;
-  background: #2463eb;
-  color: white;
-  text-decoration: none;
-  font-size: 11px;
-  font-weight: 600;
-}
-.ref-btn-link.secondary {
-  background: var(--btn-back-bg);
-  color: var(--btn-back-text);
-  border: 1px solid var(--border-color);
-}
 
 .modal-overlay {
   position: fixed;
@@ -497,26 +479,32 @@ footer { text-align: center; font-size: 11px; color: var(--text-muted); padding:
 </div>
 
 <!-- ============================================================== -->
-<!-- 1. CORE DATA REGISTRY & HELPER CONSTRUCTORS                    -->
+<!-- 1. CORE DATA REGISTRY & GLOBAL HELPERS                         -->
 <!-- ============================================================== -->
 <script>
 window.categories = window.categories || [];
 window.tools = window.tools || [];
 window.MedCalcModules = window.MedCalcModules || [];
 
-// Unified constructor functions compatible with both .value and .default schema
-window.N = function (id, label, defaultVal, extra = {}) {
-  return { id, label, type: "number", value: defaultVal, default: defaultVal, ...extra };
-};
-window.S = function (id, label, defaultVal, options = []) {
-  return { id, label, type: "select", value: defaultVal, default: defaultVal, options };
-};
+// Defined as standard functions so they are available in the global scope
+function N(id, label, defaultVal, extra) {
+  extra = extra || {};
+  return Object.assign({ id: id, label: label, type: "number", value: defaultVal, default: defaultVal }, extra);
+}
+function S(id, label, defaultVal, options) {
+  options = options || [];
+  return { id: id, label: label, type: "select", value: defaultVal, default: defaultVal, options: options };
+}
+
+window.N = N;
+window.S = S;
 </script>
 
 <!-- ============================================================== -->
 <!-- 2. SPECIALTY MODULE SCRIPTS                                    -->
+<!-- (Supports both 'obgyn.js' and 'obgy.js' naming)               -->
 <!-- ============================================================== -->
-<script src="obgy.js"></script>
+<script src="obgyn.js" onerror="this.onerror=null; var s=document.createElement('script'); s.src='obgy.js'; document.head.appendChild(s);"></script>
 <script src="ortho.js"></script>
 
 <!-- ============================================================== -->
@@ -575,12 +563,25 @@ window.S = function (id, label, defaultVal, options = []) {
 
   // --- HOME & CATEGORY RENDERING ---
   function renderHome() {
+    // Deduplicate categories by ID
+    const uniqueCategories = [];
+    const seenCatIds = new Set();
+    window.categories.forEach(cat => {
+      if (cat && cat.id && !seenCatIds.has(cat.id)) {
+        seenCatIds.add(cat.id);
+        uniqueCategories.push(cat);
+      }
+    });
+    window.categories = uniqueCategories;
+
+    // Remove fallback if actual categories exist
     if (window.categories.length > 1) {
       window.categories = window.categories.filter(c => c.id !== "all");
     } else if (window.categories.length === 0) {
       window.categories.push({ id: "all", name: "General Medicine", icon: "🩺", desc: "Clinical calculators and staging tools" });
     }
 
+    // Auto-detect tool type
     window.tools.forEach(t => {
       if (!t.type) {
         const isClass = /score|criteria|staging|classification|meows|apgar|bishop|iadpsg|mec|popq|figo|weber|gustilo|tscherne|salter|garden|neer|pauwels|pipkin|rockwood|mason|tile|sins|tlics|meyerding|kellgren/i.test(t.name + " " + (t.desc || ""));
@@ -603,7 +604,7 @@ window.S = function (id, label, defaultVal, options = []) {
     window.tools.slice(0, 6).forEach(t => quickContainer.appendChild(createToolItem(t)));
   }
 
-  // Expose hooks so external module scripts can trigger UI refreshes upon loading
+  // Expose hooks globally so specialty modules can trigger a re-render
   window.renderHome = renderHome;
   window.renderCategories = renderHome;
   window.renderQuick = renderHome;
@@ -707,7 +708,6 @@ window.S = function (id, label, defaultVal, options = []) {
       $("contraBox").classList.add("hidden");
     }
 
-    // Build form input fields
     const fieldsContainer = $("fields");
     fieldsContainer.innerHTML = "";
     (tool.fields || []).forEach(f => {
@@ -752,7 +752,6 @@ window.S = function (id, label, defaultVal, options = []) {
       fieldsContainer.appendChild(wrap);
     });
 
-    // Reference Table
     const refCard = $("referenceCard");
     const head = $("refTableHead");
     const body = $("refTableBody");
@@ -768,7 +767,6 @@ window.S = function (id, label, defaultVal, options = []) {
       refCard.classList.add("hidden");
     }
 
-    // Academic & Clinical Literature References
     const refsSec = $("academicRefsSection");
     const refsList = $("academicRefsList");
     refsList.innerHTML = "";
@@ -812,7 +810,6 @@ window.S = function (id, label, defaultVal, options = []) {
       $("value").textContent = res.value || "";
       $("equation").innerHTML = (res.eq || "").replace(/\n/g, "<br>");
 
-      // Active table grade row highlighting
       if (res.matchId) {
         document.querySelectorAll("#refTable tr").forEach(r => r.classList.remove("active-grade"));
         const activeRow = $(`ref-row-${res.matchId}`);

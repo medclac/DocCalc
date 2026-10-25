@@ -14,6 +14,10 @@
     options = options || [];
     return { id: id, label: label, type: "select", value: defaultVal, default: defaultVal, options: options };
   };
+  var makeD = (typeof window !== "undefined" && window.D) ? window.D : function (id, label, defaultVal, extra) {
+    extra = extra || {};
+    return Object.assign({ id: id, label: label, type: "date", value: defaultVal, default: defaultVal }, extra);
+  };
 
   var obgynCategory = {
     id: "obgyn",
@@ -26,7 +30,93 @@
 
   var obgynTools = [
     // ==============================================================
-    // 1. BISHOP SCORE FOR CERVICAL RIPENING & INDUCTION
+    // 1. PREGNANCY DATING: LMP, EDD & GESTATIONAL AGE CALCULATOR
+    // ==============================================================
+    {
+      id: "pregnancyDating",
+      cat: "obgyn",
+      type: "calc",
+      name: "Pregnancy Dating (LMP, EDD & Gestational Age)",
+      desc: "Calculates Estimated Due Date (Naegele's rule adjusted for cycle length), current Gestational Age, trimester, and milestone dates.",
+      organ: "Uterus / Fetus / Placenta",
+      region: "Obstetric Antenatal Care",
+      subject: "Obstetric Dating / Routine Antenatal Care",
+      keywords: ["lmp", "edd", "edc", "dating", "gestational age", "due date", "naegele", "trimester", "pregnancy"],
+      guidance: "1. Confirm the first day of the Last Normal Menstrual Period (LMP).\n2. Adjust for average cycle length (Naegele's rule assumes a standard 28-day cycle).\n3. If a first-trimester crown-rump length (CRL) ultrasound differs by >5–7 days from LMP dating, ultrasound dating supersedes LMP per ACOG/SMFM guidelines.",
+      contraindications: "Unreliable in women with irregular menses, recent cessation of hormonal contraception, oligomenorrhea, or breastfeeding amenorrhea. Use early ultrasound dating instead.",
+      literature: [
+        {
+          type: "ACOG Committee Opinion",
+          icon: "📘",
+          title: "ACOG Committee Opinion No. 700: Methods for Estimating the Due Date",
+          citation: "American College of Obstetricians and Gynecologists. Obstet Gynecol. 2017;129(5):e150-e154.",
+          links: [
+            { text: "View Guideline (ACOG) ↗", url: "https://www.acog.org/clinical/clinical-guidance/committee-opinion/articles/2017/05/methods-for-estimating-the-due-date" }
+          ]
+        }
+      ],
+      fields: [
+        makeD("lmp", "First Day of Last Menstrual Period (LMP)", new Date(Date.now() - 70 * 86400000).toISOString().split("T")[0]),
+        makeN("cycleLength", "Average Menstrual Cycle Length (Days)", 28, { min: 21, max: 45, step: 1 })
+      ],
+      table: {
+        headers: ["Gestational Stage", "Gestational Weeks", "Key Antenatal Milestones & Routine Testing"],
+        rows: [
+          { id: "tri1", cols: ["1st Trimester", "0+0 to 13+6 Weeks", "Dating scan (CRL), baseline bloods, aneuploidy screening (NIPT/combined screen)"] },
+          { id: "tri2", cols: ["2nd Trimester", "14+0 to 27+6 Weeks", "Fetal anomaly ultrasound (18–20 wks), 75g OGTT screening (24–28 wks), Anti-D if Rh-negative"] },
+          { id: "tri3", cols: ["3rd Trimester", "28+0 to 40+6 Weeks", "Growth surveillance, GBS screening (36–37 wks), labor preparation, fetal kick counts"] },
+          { id: "postterm", cols: ["Post-Term Period", "≥ 41+0 Weeks", "Membrane sweeping, biophysical profile/monitoring, induction of labor before 42+0 weeks"] }
+        ]
+      },
+      calc: function (v) {
+        if (!v.lmp) {
+          return { value: "Incomplete Date", eq: "Please enter a valid LMP date." };
+        }
+        var lmpParts = v.lmp.split("-");
+        var lmpDate = new Date(parseInt(lmpParts[0], 10), parseInt(lmpParts[1], 10) - 1, parseInt(lmpParts[2], 10));
+        if (isNaN(lmpDate.getTime())) {
+          return { value: "Invalid Date", eq: "Unable to parse LMP date." };
+        }
+
+        var cycleDiff = (+v.cycleLength || 28) - 28;
+        var eddTime = lmpDate.getTime() + (280 + cycleDiff) * 86400000;
+        var eddDate = new Date(eddTime);
+
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+        var diffDays = Math.floor((today.getTime() - lmpDate.getTime()) / 86400000);
+
+        var weeks = Math.floor(diffDays / 7);
+        var days = diffDays % 7;
+
+        var trimester = "1st Trimester";
+        var match = "tri1";
+        if (weeks >= 41) {
+          trimester = "Late / Post-Term";
+          match = "postterm";
+        } else if (weeks >= 28) {
+          trimester = "3rd Trimester";
+          match = "tri3";
+        } else if (weeks >= 14) {
+          trimester = "2nd Trimester";
+          match = "tri2";
+        }
+
+        var eddString = eddDate.toLocaleDateString(undefined, { weekday: "short", year: "numeric", month: "short", day: "numeric" });
+
+        return {
+          value: weeks + " Weeks, " + days + " Days (" + trimester + ")",
+          matchId: match,
+          eq: "Estimated Date of Delivery (EDD): " + eddString + "\n" +
+              "• Calculation: Naegele's rule adjusted for " + (+v.cycleLength || 28) + "-day cycle\n" +
+              "• Conception Estimate: ~" + new Date(lmpDate.getTime() + (14 + cycleDiff) * 86400000).toLocaleDateString() + "\n" +
+              "• ACOG Guideline: Confirm by first-trimester ultrasound (CRL) if discrepancy exceeds 5–7 days."
+        };
+      }
+    },
+
+    // ==============================================================
+    // 2. BISHOP SCORE FOR CERVICAL RIPENING & INDUCTION
     // ==============================================================
     {
       id: "bishopScore",
@@ -118,7 +208,7 @@
     },
 
     // ==============================================================
-    // 2. PREECLAMPSIA DIAGNOSIS & SEVERITY ASSESSMENT (ACOG 2020)
+    // 3. PREECLAMPSIA DIAGNOSIS & SEVERITY ASSESSMENT (ACOG 2020)
     // ==============================================================
     {
       id: "preeclampsiaAssessment",
@@ -140,7 +230,7 @@
           citation: "American College of Obstetricians and Gynecologists. Obstet Gynecol. 2020;135(6):e237-e260.",
           links: [
             { text: "View Guideline (PubMed) ↗", url: "https://pubmed.ncbi.nlm.nih.gov/32443079/" },
-            { text: "DOI: 10.1097/AOG.0000000000003891", url: "https://doi.org/10.1097/AOG.0000000000003891", secondary: true }
+            { text: "View DOI ↗", url: "https://doi.org/10.1097/AOG.0000000000003891", secondary: true }
           ]
         },
         {
@@ -209,7 +299,7 @@
     },
 
     // ==============================================================
-    // 3. APGAR SCORE (NEONATAL ASSESSMENT)
+    // 4. APGAR SCORE (NEONATAL ASSESSMENT)
     // ==============================================================
     {
       id: "apgarScore",
@@ -240,7 +330,7 @@
           citation: "American Academy of Pediatrics, ACOG. Pediatrics. 2015;136(4):819-822.",
           links: [
             { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/26416932/" },
-            { text: "DOI: 10.1542/peds.2015-2651", url: "https://doi.org/10.1542/peds.2015-2651", secondary: true }
+            { text: "View DOI ↗", url: "https://doi.org/10.1542/peds.2015-2651", secondary: true }
           ]
         }
       ],
@@ -299,7 +389,7 @@
     },
 
     // ==============================================================
-    // 4. HADLOCK ESTIMATED FETAL WEIGHT (EFW)
+    // 5. HADLOCK ESTIMATED FETAL WEIGHT (EFW)
     // ==============================================================
     {
       id: "hadlockEfw",
@@ -321,7 +411,7 @@
           citation: "Hadlock FP, Harrist RB, Sharman RS, Deter RL, Park SK. Am J Obstet Gynecol. 1985;151(3):333-337.",
           links: [
             { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/3881966/" },
-            { text: "DOI: 10.1016/0002-9378(85)90298-4", url: "https://doi.org/10.1016/0002-9378(85)90298-4", secondary: true }
+            { text: "View DOI ↗", url: "https://doi.org/10.1016/0002-9378(85)90298-4", secondary: true }
           ]
         },
         {
@@ -367,7 +457,7 @@
     },
 
     // ==============================================================
-    // 5. POSTPARTUM HAEMORRHAGE (PPH) SEVERITY STAGING
+    // 6. POSTPARTUM HAEMORRHAGE (PPH) SEVERITY STAGING
     // ==============================================================
     {
       id: "pphSeverityAssessment",
@@ -398,7 +488,7 @@
           citation: "WOMAN Trial Collaborators. Lancet. 2017;389(10084):2105-2116.",
           links: [
             { text: "View on PubMed ↗", url: "https://pubmed.ncbi.nlm.nih.gov/28456509/" },
-            { text: "DOI: 10.1016/S0140-6736(17)30638-4", url: "https://doi.org/10.1016/S0140-6736(17)30638-4", secondary: true }
+            { text: "View DOI ↗", url: "https://doi.org/10.1016/S0140-6736(17)30638-4", secondary: true }
           ]
         }
       ],
@@ -450,7 +540,7 @@
     },
 
     // ==============================================================
-    // 6. GESTATIONAL DIABETES 75g OGTT INTERPRETATION
+    // 7. GESTATIONAL DIABETES 75g OGTT INTERPRETATION
     // ==============================================================
     {
       id: "ogttInterpretation",
@@ -512,7 +602,7 @@
     },
 
     // ==============================================================
-    // 7. ROTTERDAM PCOS CRITERIA
+    // 8. ROTTERDAM PCOS CRITERIA
     // ==============================================================
     {
       id: "rotterdamPcos",
@@ -589,7 +679,7 @@
     },
 
     // ==============================================================
-    // 8. RISK OF MALIGNANCY INDEX (RMI I) FOR ADNEXAL MASSES
+    // 9. RISK OF MALIGNANCY INDEX (RMI I) FOR ADNEXAL MASSES
     // ==============================================================
     {
       id: "rmiOvarianCancer",
@@ -658,7 +748,7 @@
     },
 
     // ==============================================================
-    // 9. FIGO CERVICAL CANCER STAGING (2018 REVISED)
+    // 10. FIGO CERVICAL CANCER STAGING (2018 REVISED)
     // ==============================================================
     {
       id: "figoCervicalCancer",
@@ -737,7 +827,7 @@
     },
 
     // ==============================================================
-    // 10. GANZONI FORMULA (IRON DEFICIT CALCULATOR)
+    // 11. GANZONI FORMULA (IRON DEFICIT CALCULATOR)
     // ==============================================================
     {
       id: "ganzoniFormula",
@@ -782,7 +872,7 @@
     },
 
     // ==============================================================
-    // 11. MANNING'S BIOPHYSICAL PROFILE (BPP)
+    // 12. MANNING'S BIOPHYSICAL PROFILE (BPP)
     // ==============================================================
     {
       id: "manningBpp",
@@ -876,7 +966,7 @@
     },
 
     // ==============================================================
-    // 12. AMNIOTIC FLUID ASSESSMENT (AFI & SINGLE DEEPEST POCKET)
+    // 13. AMNIOTIC FLUID ASSESSMENT (AFI & SDP / MVP)
     // ==============================================================
     {
       id: "amnioticFluidAssessment",
@@ -952,7 +1042,7 @@
     },
 
     // ==============================================================
-    // 13. FETAL DOPPLER FLOW SURVEILLANCE
+    // 14. FETAL DOPPLER FLOW SURVEILLANCE
     // ==============================================================
     {
       id: "fetalDopplerSurveillance",
@@ -1045,7 +1135,7 @@
     },
 
     // ==============================================================
-    // 14. MODIFIED EARLY OBSTETRIC WARNING SYSTEM (MEOWS)
+    // 15. MODIFIED EARLY OBSTETRIC WARNING SYSTEM (MEOWS)
     // ==============================================================
     {
       id: "meowsScore",
@@ -1109,30 +1199,22 @@
         var reds = 0, yellows = 0;
         var redReasons = [], yellowReasons = [];
 
-        // Heart Rate
         if (hr < 50 || hr > 120) { reds++; redReasons.push("HR " + hr); }
         else if ((hr >= 50 && hr < 60) || (hr > 100 && hr <= 120)) { yellows++; yellowReasons.push("HR " + hr); }
 
-        // Systolic BP
         if (sbp < 90 || sbp >= 160) { reds++; redReasons.push("SBP " + sbp); }
         else if ((sbp >= 90 && sbp < 100) || (sbp >= 140 && sbp < 160)) { yellows++; yellowReasons.push("SBP " + sbp); }
 
-        // Diastolic BP
         if (dbp >= 100) { reds++; redReasons.push("DBP " + dbp); }
         else if (dbp >= 90 && dbp < 100) { yellows++; yellowReasons.push("DBP " + dbp); }
 
-        // Respiratory Rate
         if (rr < 10 || rr > 30) { reds++; redReasons.push("RR " + rr); }
         else if ((rr >= 10 && rr < 12) || (rr >= 21 && rr <= 30)) { yellows++; yellowReasons.push("RR " + rr); }
 
-        // Temperature
         if (t < 35.0 || t >= 38.0) { reds++; redReasons.push("Temp " + t + "°C"); }
         else if (t >= 37.5 && t < 38.0) { yellows++; yellowReasons.push("Temp " + t + "°C"); }
 
-        // Neuro
         if (v.neuro !== "A") { reds++; redReasons.push("AVPU: " + v.neuro); }
-
-        // Lochia
         if (v.lochia === "heavy") { yellows++; yellowReasons.push("Abnormal lochia"); }
 
         var match = "normal", title = "MEOWS Normal: Physiological Vitals Stable", act = "Maintain routine ward observations.";
@@ -1143,7 +1225,7 @@
           act = "CRITICAL ALERT: Immediate bedside review by Senior Obstetrician and Anaesthetist within 15 minutes. Evaluate for maternal sepsis, severe preeclampsia, or concealed hemorrhage. Reasons: " + redReasons.concat(yellowReasons).join("; ") + ".";
         } else if (yellows === 1) {
           match = "yellow";
-          title = "MEOWS Yellow Trigger (Single abnormal parameter)",
+          title = "MEOWS Yellow Trigger (Single abnormal parameter)";
           act = "Mild warning trigger (" + yellowReasons.join(", ") + "). Repeat observations in 30–60 minutes. Inform charge midwife.";
         }
 
@@ -1156,7 +1238,7 @@
     },
 
     // ==============================================================
-    // 15. GROBMAN VBAC SUCCESS PREDICTOR
+    // 16. GROBMAN VBAC SUCCESS PREDICTOR
     // ==============================================================
     {
       id: "grobmanVbac",
@@ -1218,7 +1300,6 @@
         var age = +v.age, bmi = +v.bmi;
         var priorVag = +v.priorVag, vbacPrior = +v.vbacPrior, arrest = +v.indicationArrest;
 
-        // Grobman validated regression coefficients
         var logit = 2.659 - (0.040 * age) - (0.052 * bmi) + (0.915 * priorVag) + (0.630 * vbacPrior) - (0.651 * arrest);
         var prob = Math.round((Math.exp(logit) / (1 + Math.exp(logit))) * 100);
 
@@ -1241,7 +1322,7 @@
     },
 
     // ==============================================================
-    // 16. INTRAPARTUM CTG CLASSIFICATION (FIGO / NICHD 3-TIER)
+    // 17. INTRAPARTUM CTG CLASSIFICATION (FIGO / NICHD 3-TIER)
     // ==============================================================
     {
       id: "ctgInterpretation",
@@ -1307,11 +1388,9 @@
         var b = v.baseline, varb = v.variability, dec = v.decelerations;
         var cat = "cat2", name = "Category II (Indeterminate)", mgmt = "Initiate conservative intrauterine resuscitation maneuvers and continuous monitoring.";
 
-        // Category III criteria
         var isCat3 = (dec === "sinusoidal") ||
           (varb === "absent" && (dec === "late" || dec === "variable" || b === "brady"));
 
-        // Category I criteria
         var isCat1 = (b === "normal") && (varb === "moderate") && (dec === "none");
 
         if (isCat3) {
@@ -1333,7 +1412,7 @@
     },
 
     // ==============================================================
-    // 17. PERINEAL TEAR CLASSIFICATION (SULTAN CLASSIFICATION)
+    // 18. PERINEAL TEAR CLASSIFICATION (SULTAN CLASSIFICATION)
     // ==============================================================
     {
       id: "perinealTearClassification",
@@ -1413,7 +1492,7 @@
     },
 
     // ==============================================================
-    // 18. BALLARD NEWBORN MATURITY RATING SCORE
+    // 19. BALLARD NEWBORN MATURITY RATING SCORE
     // ==============================================================
     {
       id: "ballardMaturity",
@@ -1499,7 +1578,6 @@
       },
       calc: function (v) {
         var raw = +v.posture + +v.squareWin + +v.armRecoil + +v.popliteal + +v.skin + +v.plantar;
-        // Standard Ballard scaling normalized to 12 parameters (here calculated from the 6 representative hallmarks × 2)
         var totalEstimatedScore = raw * 2;
         var weeks = Math.round(((totalEstimatedScore * 2) + 120) / 5);
         weeks = Math.max(20, Math.min(44, weeks));
@@ -1518,7 +1596,7 @@
     },
 
     // ==============================================================
-    // 19. MISSISSIPPI TRIPLE-CLASS HELLP SYNDROME STAGING
+    // 20. MISSISSIPPI TRIPLE-CLASS HELLP SYNDROME STAGING
     // ==============================================================
     {
       id: "hellpStaging",
@@ -1594,7 +1672,7 @@
     },
 
     // ==============================================================
-    // 20. RCOG GREEN-TOP VTE RISK SCORE IN PREGNANCY
+    // 21. RCOG GREEN-TOP VTE RISK SCORE IN PREGNANCY
     // ==============================================================
     {
       id: "rcogVteScore",
@@ -1684,7 +1762,7 @@
     },
 
     // ==============================================================
-    // 21. FIGO PALM-COEIN SYSTEM FOR ABNORMAL UTERINE BLEEDING
+    // 22. FIGO PALM-COEIN SYSTEM FOR ABNORMAL UTERINE BLEEDING
     // ==============================================================
     {
       id: "palmCoeinClassification",
@@ -1778,7 +1856,7 @@
     },
 
     // ==============================================================
-    // 22. MODIFIED FERRIMAN-GALLWEY (mFG) SCORE FOR HIRSUTISM
+    // 23. MODIFIED FERRIMAN-GALLWEY (mFG) SCORE FOR HIRSUTISM
     // ==============================================================
     {
       id: "ferrimanGallwey",
@@ -1894,7 +1972,7 @@
     },
 
     // ==============================================================
-    // 23. REVISED ASRM (rASRM) ENDOMETRIOSIS STAGING
+    // 24. REVISED ASRM (rASRM) ENDOMETRIOSIS STAGING
     // ==============================================================
     {
       id: "rasrmEndometriosis",
@@ -1981,7 +2059,7 @@
     },
 
     // ==============================================================
-    // 24. POP-Q PELVIC ORGAN PROLAPSE QUANTIFICATION SYSTEM
+    // 25. POP-Q PELVIC ORGAN PROLAPSE QUANTIFICATION SYSTEM
     // ==============================================================
     {
       id: "popqClassification",
@@ -2047,7 +2125,7 @@
     },
 
     // ==============================================================
-    // 25. FIGO LEIOMYOMA SUBCLASSIFICATION SYSTEM
+    // 26. FIGO LEIOMYOMA SUBCLASSIFICATION SYSTEM
     // ==============================================================
     {
       id: "figoLeiomyoma",
@@ -2120,7 +2198,7 @@
     },
 
     // ==============================================================
-    // 26. O-RADS ULTRASOUND RISK STRATIFICATION FOR ADNEXAL LESIONS
+    // 27. O-RADS ULTRASOUND RISK STRATIFICATION FOR ADNEXAL LESIONS
     // ==============================================================
     {
       id: "oradsClassification",
@@ -2185,7 +2263,7 @@
     },
 
     // ==============================================================
-    // 27. ROMA (RISK OF OVARIAN MALIGNANCY ALGORITHM)
+    // 28. ROMA (RISK OF OVARIAN MALIGNANCY ALGORITHM)
     // ==============================================================
     {
       id: "romaScore",
@@ -2254,7 +2332,7 @@
     },
 
     // ==============================================================
-    // 28. FIGO ENDOMETRIAL CANCER STAGING (2023 REVISION)
+    // 29. FIGO ENDOMETRIAL CANCER STAGING (2023 REVISION)
     // ==============================================================
     {
       id: "figoEndometrialCancer",
@@ -2335,7 +2413,7 @@
     },
 
     // ==============================================================
-    // 29. FIGO OVARIAN / FALLOPIAN TUBE CANCER STAGING (2014)
+    // 30. FIGO OVARIAN / FALLOPIAN TUBE CANCER STAGING (2014)
     // ==============================================================
     {
       id: "figoOvarianCancer",
@@ -2399,7 +2477,7 @@
     },
 
     // ==============================================================
-    // 30. FIGO / WHO PROGNOSTIC SCORING FOR GTN
+    // 31. FIGO / WHO PROGNOSTIC SCORING FOR GTN
     // ==============================================================
     {
       id: "gtnPrognosticScore",
@@ -2507,7 +2585,6 @@
   // REGISTRATION INTO GLOBAL MEMORY (DOM COLLISION-PROOF)
   // ==============================================================
   try {
-    // Force window.categories and window.tools to be real Arrays, ignoring the HTML DOM element
     if (!Array.isArray(window.categories)) {
       window.categories = [];
     }
@@ -2515,7 +2592,6 @@
       window.tools = [];
     }
 
-    // 1. Safely add category using standard loop
     var catExists = false;
     for (var i = 0; i < window.categories.length; i++) {
       if (window.categories[i] && window.categories[i].id === obgynCategory.id) {
@@ -2527,7 +2603,6 @@
       window.categories.push(obgynCategory);
     }
 
-    // 2. Safely add tools using standard loop
     obgynTools.forEach(function (tool) {
       var existingIdx = -1;
       for (var j = 0; j < window.tools.length; j++) {
@@ -2544,14 +2619,13 @@
     });
 
     if (typeof window.SYNONYM_MAP === "object" && window.SYNONYM_MAP !== null) {
-      window.SYNONYM_MAP["obgyn"] = ["obgyn", "pregnancy", "obstetrics", "gynaecology", "gynecology", "fetal", "cervix", "uterus", "ovary", "doppler", "bpp", "vbac", "meows", "oasis", "hellp", "popq", "orads", "roma", "figo"];
+      window.SYNONYM_MAP["obgyn"] = ["obgyn", "pregnancy", "obstetrics", "gynaecology", "gynecology", "fetal", "cervix", "uterus", "ovary", "dating", "edd", "lmp", "doppler", "bpp", "vbac", "meows", "oasis", "hellp", "popq", "orads", "roma", "figo"];
       window.SYNONYM_MAP["preeclampsia"] = ["preeclampsia", "eclampsia", "hellp", "hypertension", "proteinuria", "magnesium"];
       window.SYNONYM_MAP["cervix"] = ["cervix", "bishop", "ripening", "induction", "dilation", "effacement", "cervical cancer", "figo"];
-      window.SYNONYM_MAP["fetal"] = ["hadlock", "efw", "bpp", "manning", "afi", "amniotic", "doppler", "ctg", "ballard"];
+      window.SYNONYM_MAP["fetal"] = ["hadlock", "efw", "bpp", "manning", "afi", "amniotic", "doppler", "ctg", "ballard", "lmp", "edd"];
       window.SYNONYM_MAP["oncology"] = ["rmi", "orads", "roma", "figo", "cervical cancer", "endometrial cancer", "ovarian cancer", "gtn"];
     }
 
-    // Force repaint if the HTML engine has already initialized
     if (typeof window.renderHome === "function") {
       window.renderHome();
     }

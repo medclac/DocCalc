@@ -215,16 +215,6 @@ h2 { font-size: 21px; margin: 8px 0; }
 
 .section { margin-top: 23px; }
 .row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
-.back {
-  border: 0;
-  border-radius: 9px;
-  background: var(--btn-back-bg);
-  color: var(--btn-back-text);
-  padding: 10px 14px;
-  font-weight: 700;
-  cursor: pointer;
-}
-.back:hover { background: var(--btn-back-hover); }
 
 .filter-tabs { display: flex; gap: 6px; margin: 12px 0 16px; background: var(--tab-bg); padding: 4px; border-radius: 10px; }
 .tab-btn { flex: 1; padding: 8px; font-size: 12.5px; font-weight: 600; background: transparent; border: 0; border-radius: 7px; color: var(--text-muted); cursor: pointer; }
@@ -302,6 +292,40 @@ table.ref-table tr.active-grade td { border-top: 2px solid #38a169; border-botto
 .academic-refs { margin-top: 24px; border-top: 1px solid var(--border-color); padding-top: 18px; }
 .ref-card-item { background: var(--ref-card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; margin-bottom: 12px; }
 .ref-card-citation { font-size: 12px; color: var(--text-muted); line-height: 1.5; white-space: pre-line; }
+
+/* REFERENCE LINKS BUTTON STYLING */
+.ref-card-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+.ref-btn-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  font-size: 11.5px;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 6px;
+  background: var(--badge-calc-bg);
+  color: var(--badge-calc-text);
+  border: 1px solid var(--badge-calc-border);
+  transition: all 0.15s ease;
+  word-break: break-all;
+}
+.ref-btn-link:hover {
+  filter: brightness(0.95);
+}
+.ref-btn-link.secondary {
+  background: var(--tag-bg);
+  color: var(--tag-text);
+  border: 1px solid var(--border-color);
+}
+.ref-btn-link.secondary:hover {
+  filter: brightness(0.95);
+}
 
 .modal-overlay {
   position: fixed;
@@ -385,7 +409,7 @@ footer { text-align: center; font-size: 11px; color: var(--text-muted); padding:
     <div id="searchResultsSection" class="hidden">
       <div class="row" style="justify-content:space-between">
         <h2 id="searchResultHeading" style="margin:0">Search Results</h2>
-        <button class="back" id="clearSearchBtn" type="button">Clear</button>
+        <button style="border:0;border-radius:9px;background:var(--btn-back-bg);color:var(--btn-back-text);padding:10px 14px;font-weight:700;cursor:pointer;" id="clearSearchBtn" type="button">Clear</button>
       </div>
       <p class="muted" id="searchResultSubheading"></p>
       <div id="searchToolList"></div>
@@ -395,7 +419,6 @@ footer { text-align: center; font-size: 11px; color: var(--text-muted); padding:
   <!-- CATEGORY VIEW -->
   <div id="categoryPage" class="hidden">
     <div class="row">
-      <button class="back" id="homeBtn" type="button">← Home</button>
       <div><h2 id="categoryTitle" style="margin:0"></h2><div class="muted" id="categoryDesc"></div></div>
     </div>
     <div class="filter-tabs" id="typeFilters">
@@ -408,7 +431,6 @@ footer { text-align: center; font-size: 11px; color: var(--text-muted); padding:
 
   <!-- CALCULATOR & CLASSIFICATION INTERFACE -->
   <div id="calculatorPage" class="hidden">
-    <div class="row"><button class="back" id="categoryBtn" type="button">← Back</button></div>
     <section class="panel">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
         <h2 id="title" style="margin:0"></h2>
@@ -478,7 +500,7 @@ footer { text-align: center; font-size: 11px; color: var(--text-muted); padding:
 </div>
 
 <!-- ============================================================== -->
-<!-- 1. CORE DATA REGISTRY & GLOBAL CONSTRUCTORS                    -->
+<!-- 1. CORE DATA REGISTRY & GLOBAL HELPERS                         -->
 <!-- ============================================================== -->
 <script>
 window.categories = window.categories || [];
@@ -499,7 +521,16 @@ window.S = S;
 </script>
 
 <!-- ============================================================== -->
-<!-- 2. APPLICATION ENGINE & UI CONTROLLER (INITIALIZED FIRST)       -->
+<!-- 2. SPECIALTY MODULE SCRIPTS                                    -->
+<!-- ============================================================== -->
+<script 
+  src="obgy.js" 
+  onload="if(window.renderHome) window.renderHome();" 
+  onerror="alert('CANNOT FIND obgy.js FILE! Check folder/filename.')">
+</script>
+
+<!-- ============================================================== -->
+<!-- 3. APPLICATION ENGINE & UI CONTROLLER                          -->
 <!-- ============================================================== -->
 <script>
 (function () {
@@ -544,26 +575,67 @@ window.S = S;
   window.addEventListener("load", () => setTimeout(dismissSplash, 250));
   setTimeout(dismissSplash, 2000);
 
-  // --- NAVIGATION ---
-  function showView(view) {
+  // --- ANDROID HARDWARE BACK BUTTON NAVIGATION ---
+  let isPopStateNav = false;
+
+  function showView(view, push = true) {
     $("home").classList.toggle("hidden", view !== "home");
     $("categoryPage").classList.toggle("hidden", view !== "category");
     $("calculatorPage").classList.toggle("hidden", view !== "calculator");
     window.scrollTo({ top: 0, behavior: "smooth" });
+
+    if (push && !isPopStateNav) {
+      history.pushState({ view: view, catId: currentCatId, toolId: currentTool ? currentTool.id : null }, "");
+    }
   }
+
+  window.addEventListener("popstate", function (e) {
+    isPopStateNav = true;
+
+    const modal = $("settingsModal");
+    if (modal && !modal.classList.contains("hidden")) {
+      modal.classList.add("hidden");
+      isPopStateNav = false;
+      return;
+    }
+
+    const searchInput = $("search");
+    if (searchInput && searchInput.value) {
+      searchInput.value = "";
+      $("homeDefaultContent").classList.remove("hidden");
+      $("searchResultsSection").classList.add("hidden");
+    }
+
+    if (e.state && e.state.view) {
+      if (e.state.view === "category" && e.state.catId) {
+        currentCatId = e.state.catId;
+        renderCategoryTools();
+        showView("category", false);
+      } else if (e.state.view === "calculator" && e.state.toolId) {
+        const foundTool = (window.tools || []).find(t => t.id === e.state.toolId);
+        if (foundTool) openTool(foundTool, false);
+      } else {
+        showView("home", false);
+      }
+    } else {
+      showView("home", false);
+    }
+
+    isPopStateNav = false;
+  });
+
+  history.replaceState({ view: "home" }, "");
 
   // --- HOME & CATEGORY RENDERING ---
   function renderHome() {
     const catContainer = $("categories");
     if (!catContainer) return;
 
-    // 1. Gather all categories explicitly defined
     const catMap = new Map();
     (window.categories || []).forEach(c => {
       if (c && c.id) catMap.set(c.id, c);
     });
 
-    // 2. Synthesize categories automatically from any loaded tools
     (window.tools || []).forEach(t => {
       if (t.cat && !catMap.has(t.cat)) {
         const prettyName = t.cat.charAt(0).toUpperCase() + t.cat.slice(1);
@@ -601,23 +673,11 @@ window.S = S;
       quickContainer.innerHTML = "";
       (window.tools || []).slice(0, 6).forEach(t => quickContainer.appendChild(createToolItem(t)));
     }
-
-    // Refresh diagnostic badge if present
-    updateDiagnostics();
   }
 
   window.renderHome = renderHome;
   window.renderCategories = renderHome;
   window.renderQuick = renderHome;
-
-  function updateDiagnostics() {
-    const diag = $("diagnosticStatus");
-    if (diag) {
-      const hasTools = window.tools && window.tools.length > 0;
-      const hasCats = window.categories && window.categories.length > 0;
-      diag.innerHTML = `<b>Diagnostics:</b> Categories loaded = <b>${hasCats ? window.categories.length : 0}</b> | Tools loaded = <b>${hasTools ? window.tools.length : 0}</b>`;
-    }
-  }
 
   function createToolItem(t) {
     const div = document.createElement("div");
@@ -629,7 +689,7 @@ window.S = S;
     return div;
   }
 
-  function openCategory(catId) {
+  function openCategory(catId, pushState = true) {
     currentCatId = catId;
     let cat = (window.categories || []).find(c => c.id === catId);
     if (!cat) {
@@ -640,7 +700,7 @@ window.S = S;
     activeFilter = "all";
     document.querySelectorAll(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.filter === "all"));
     renderCategoryTools();
-    showView("category");
+    showView("category", pushState);
   }
 
   function renderCategoryTools() {
@@ -698,7 +758,7 @@ window.S = S;
   };
 
   // --- CALCULATOR & CLASSIFICATION INTERFACE ---
-  function openTool(tool) {
+  function openTool(tool, pushState = true) {
     currentTool = tool;
     $("title").textContent = tool.name;
     $("desc").textContent = tool.desc || "";
@@ -806,7 +866,7 @@ window.S = S;
     }
 
     $("result").classList.remove("show");
-    showView("calculator");
+    showView("calculator", pushState);
     calculate();
   }
 
@@ -841,7 +901,7 @@ window.S = S;
   };
 
   $("reset").onclick = () => {
-    if (currentTool) openTool(currentTool);
+    if (currentTool) openTool(currentTool, false);
   };
 
   $("copy").onclick = () => {
@@ -853,26 +913,16 @@ window.S = S;
     });
   };
 
-  $("homeBtn").onclick = () => showView("home");
-  $("categoryBtn").onclick = () => currentCatId ? openCategory(currentCatId) : showView("home");
-
   renderHome();
+  window.addEventListener("load", renderHome);
+
+  let checkCount = 0;
+  const pollTimer = setInterval(() => {
+    renderHome();
+    checkCount++;
+    if (checkCount >= 8) clearInterval(pollTimer);
+  }, 250);
 })();
 </script>
-
-<!-- ============================================================== -->
-<!-- 3. LOAD MODULE SCRIPTS (LOADED AFTER CORE ENGINE IS READY)     -->
-<!-- ============================================================== -->
-<script 
-  src="obgy.js" 
-  onload="if(window.renderHome) window.renderHome();" 
-  onerror="alert('CANNOT FIND obgy.js FILE! Make sure it is in the same folder and named obgy.js')">
-</script>
-
-<!-- DIAGNOSTIC OVERLAY -->
-<div id="diagnosticStatus" style="position:fixed;bottom:10px;left:10px;right:10px;background:#0f2744;color:#ffffff;border:1px solid #38a169;padding:12px 14px;border-radius:10px;font-size:12px;z-index:99999;box-shadow:0 4px 15px rgba(0,0,0,0.4);font-family:monospace;">
-  <b>Diagnostics:</b> Initializing modules...
-</div>
-
 </body>
 </html>

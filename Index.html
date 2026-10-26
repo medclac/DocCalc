@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Docstat - Clinical & Medical Calculator</title>
+  <style>
+    :root {
+      --primary: #0284c7;
+      --primary-hover: #0369a1;
+      --primary-light: #f0f9ff;
+      --teal: #0d9488;
+      --teal-light: #f0fdfa;
+      --dark: #0f172a;
+      --slate: #475569;
+      --light-slate: #64748b;
+      --border: #e2e8f0;
+      --card-bg: rgba(255, 255, 255, 0.95);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: var(--dark);
+      background-color: #f8fafc;
+      /* Default clean medical gradient pattern if no custom background image is found */
+      background-image: radial-gradient(#e0f2fe 1px, transparent 1px), radial-gradient(#f1f5f9 1px, #f8fafc 1px);
+      background-size: 24px 24px;
+      background-position: 0 0, 12px 12px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2.5rem 1rem 4rem 1rem;
+      transition: background 0.3s ease;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 680px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2.25rem 2rem;
+      box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+    }
+
+    .header-section {
+      text-align: center;
+    }
+
+    /* Logo handling */
+    .logo-container {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 1.25rem auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #0284c7, #0d9488);
+      box-shadow: 0 8px 16px rgba(2, 132, 199, 0.25);
+      overflow: hidden;
+    }
+
+    .logo-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none; /* Shown dynamically if image exists */
+    }
+
+    .logo-svg {
+      width: 44px;
+      height: 44px;
+      fill: none;
+      stroke: #ffffff;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--dark);
+      letter-spacing: -0.025em;
+    }
+
+    .tagline {
+      color: var(--light-slate);
+      font-size: 1rem;
+      margin-top: 0.5rem;
+      line-height: 1.5;
+    }
+
+    .badge-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 1.25rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 9999px;
+    }
+
+    .badge-android {
+      background: #e0f2fe;
+      color: #0369a1;
+      border: 1px solid #bae6fd;
+    }
+
+    .badge-ios {
+      background: #f1f5f9;
+      color: #334155;
+      border: 1px solid #e2e8f0;
+    }
+
+    .actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 2rem;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 22px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+      border: 1px solid var(--primary);
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.2);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn-outline {
+      background: #ffffff;
+      color: var(--teal);
+      border: 2px solid var(--teal);
+    }
+
+    .btn-outline:hover {
+      background: var(--teal-light);
+    }
+
+    .section-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 1rem;
+    }
+
+    .steps-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .step-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      font-size: 0.92rem;
+      color: var(--slate);
+      line-height: 1.45;
+    }
+
+    .step-num {
+      flex-shrink: 0;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+    }
+
+    .ios-step-num {
+      background: #f1f5f9;
+      color: #334155;
+    }
+
+    /* Accordion / Terms */
+    details {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #ffffff;
+      overflow: hidden;
+      margin-top: 0.5rem;
+    }
+
+    summary {
+      padding: 14px 16px;
+      font-weight: 600;
+      color: var(--dark);
+      cursor: pointer;
+      user-select: none;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    summary::after {
+      content: '+';
+      font-size: 1.3rem;
+      color: var(--light-slate);
+    }
+
+    details[open] summary::after {
+      content: '−';
+    }
+
+    .accordion-content {
+      padding: 0 16px 16px 16px;
+      color: var(--slate);
+      font-size: 0.88rem;
+      line-height: 1.6;
+      border-top: 1px solid var(--border);
+    }
+
+    .contact-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 12px 16px;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-top: 0.5rem;
+    }
+
+    .email-link {
+      font-weight: 600;
+      color: var(--primary);
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+
+    .email-link:hover {
+      text-decoration: underline;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--light-slate);
+      font-size: 0.8rem;
+      margin-top: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- HERO CARD -->
+    <div class="card header-section">
+      <!-- Logo Container with Dynamic Fallback -->
+      <div class="logo-container" id="logoBox">
+        <!-- Default SVG Medical Cross & Pulse Icon -->
+        <svg class="logo-svg" id="logoSvg" viewBox="0 0 24 24">
+          <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+        </svg>
+        <img src="" alt="Docstat Logo" class="logo-img" id="logoImg">
+      </div>
+
+      <h1>Docstat</h1>
+      <p class="tagline">Clinical statistics and medical risk scoring calculator for healthcare professionals.</p>
+
+      <div class="badge-bar">
+        <span class="badge badge-android">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.551 0 .9993.4482.9993.9993.0001.5511-.4483.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.551 0 .9993.4482.9993.9993 0 .5511-.4483.9997-.9993.9997m11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.0223 3.503C15.5902 8.4116 13.8533 8.125 12 8.125c-1.8533 0-3.5902.2866-5.1368.8247L4.8409 5.4467a.4161.4161 0 00-.5677-.1521.4157.4157 0 00-.1521.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.775h24c-.3432-4.1161-2.6889-7.5883-6.1185-9.4536"/></svg>
+          APK: Android Only
+        </span>
+        <span class="badge badge-ios">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.63-.79 1.06-1.88.94-2.98-.98.04-2.13.67-2.8 1.46-.59.68-1.11 1.79-.97 2.87 1.09.08 2.19-.57 2.83-1.35z"/></svg>
+          iOS: Web App / Home Screen
+        </span>
+      </div>
+
+      <div class="actions">
+        <!-- Direct Web App Link -->
+        <a href="app.html" class="btn btn-primary">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+          Open Web Version (Browser)
+        </a>
+
+        <!-- Direct APK Download Link -->
+        <a href="Docstat.apk" download="Docstat.apk" class="btn btn-outline">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+          Download Android APK (~15 MB)
+        </a>
+      </div>
+    </div>
+
+    <!-- HOW TO USE IN IOS (HOME SCREEN) -->
+    <div class="card">
+      <div class="section-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="3" ry="3"/><line x1="12" y1="18" x2="12" y2="18"/></svg>
+        How to Use on iPhone / iPad (iOS)
+      </div>
+      <p style="color: var(--slate); font-size: 0.92rem; margin-bottom: 1rem; line-height: 1.5;">
+        Since the downloadable file is strictly an Android APK, iOS users can install Docstat directly to their home screen as a standalone web app:
+      </p>
+      <ul class="steps-list">
+        <li class="step-item">
+          <span class="step-num ios-step-num">1</span>
+          <div>Open this website in <strong>Safari</strong> on your iPhone or iPad.</div>
+        </li>
+        <li class="step-item">
+          <span class="step-num ios-step-num">2</span>
+          <div>Tap the <strong>Share</strong> button (the square icon with an arrow pointing upward at the bottom of the screen).</div>
+        </li>
+        <li class="step-item">
+          <span class="step-num ios-step-num">3</span>
+          <div>Scroll down and select <strong>"Add to Home Screen"</strong>.</div>
+        </li>
+        <li class="step-item">
+          <span class="step-num ios-step-num">4</span>
+          <div>Name it <strong>Docstat</strong> and tap <strong>Add</strong> in the top-right corner. It will now launch like a native app without browser bars.</div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- ANDROID INSTALLATION & COMPATIBILITY -->
+    <div class="card">
+      <div class="section-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        Android Compatibility & Installation
+      </div>
+
+      <div style="background: var(--teal-light); border-left: 4px solid var(--teal); padding: 10px 14px; border-radius: 6px; font-size: 0.88rem; color: #115e59; margin-bottom: 1.25rem;">
+        <strong>System Requirement:</strong> Android 8.0 (Oreo) or higher (API level 26+). Compatible with phones and tablets.
+      </div>
+
+      <ul class="steps-list">
+        <li class="step-item">
+          <span class="step-num">1</span>
+          <div>Tap <strong>Download Android APK</strong> above and wait for the file to finish saving.</div>
+        </li>
+        <li class="step-item">
+          <span class="step-num">2</span>
+          <div>Open your device's <strong>Files</strong> or <strong>Downloads</strong> manager and tap <code>Docstat.apk</code>.</div>
+        </li>
+        <li class="step-item">
+          <span class="step-num">3</span>
+          <div>If prompted with <em>"For security, your phone is not allowed to install unknown apps"</em>, tap <strong>Settings</strong> and toggle on <strong>"Allow from this source"</strong>.</div>
+        </li>
+        <li class="step-item">
+          <span class="step-num">4</span>
+          <div>Return to the installer screen and tap <strong>Install</strong> to finish setup.</div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- SUPPORT SECTION -->
+    <div class="card">
+      <div class="section-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Support & Queries
+      </div>
+      <p style="color: var(--slate); font-size: 0.92rem;">
+        For feature suggestions, clinical formula feedback, or bug reports:
+      </p>
+      <div class="contact-box">
+        <span style="font-size: 0.9rem; color: var(--light-slate);">Email Support:</span>
+        <a href="mailto:docstat.data@gmail.com" class="email-link">docstat.data@gmail.com</a>
+      </div>
+    </div>
+
+    <!-- TERMS & CONDITIONS (EXPANDABLE) -->
+    <div class="card">
+      <div class="section-title" style="margin-bottom: 0.5rem;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--light-slate)" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Legal & Clinical Disclaimer
+      </div>
+
+      <details>
+        <summary>Terms & Conditions</summary>
+        <div class="accordion-content">
+          <p style="margin-top: 10px;"><strong>1. Clinical Judgment:</strong> Docstat is designed solely as an informational reference and decision-support calculator for trained healthcare professionals. It does not replace independent clinical evaluation or diagnostic judgment.</p>
+          <p style="margin-top: 10px;"><strong>2. No Doctor-Patient Relationship:</strong> The calculations, values, and guidelines generated by Docstat do not constitute medical consultations or patient-specific treatment directives.</p>
+          <p style="margin-top: 10px;"><strong>3. Updates & Edits:</strong> You can append your future legal statements, terms of use, or data privacy guidelines directly in this section.</p>
+        </div>
+      </details>
+    </div>
+
+    <footer>
+      &copy; Docstat • Built for clinical decision support
+    </footer>
+
+  </div>
+
+  <!-- DYNAMIC IMAGE RESOLVER SCRIPT -->
+  <script>
+    // 1. Dynamic Background Loader
+    function tryBackgroundCandidates(urls) {
+      if (urls.length === 0) return;
+      const currentUrl = urls[0];
+      const img = new Image();
+      img.onload = function() {
+        document.body.style.backgroundImage = `linear-gradient(rgba(15, 23, 42, 0.72), rgba(15, 23, 42, 0.72)), url('${currentUrl}')`;
+        document.body.style.backgroundSize = 'cover';
+        document.body.style.backgroundPosition = 'center center';
+        document.body.style.backgroundAttachment = 'fixed';
+      };
+      img.onerror = function() {
+        tryBackgroundCandidates(urls.slice(1));
+      };
+      img.src = currentUrl;
+    }
+
+    // 2. Dynamic Logo Loader
+    function tryLogoCandidates(urls) {
+      if (urls.length === 0) return;
+      const currentUrl = urls[0];
+      const img = new Image();
+      img.onload = function() {
+        const logoImg = document.getElementById('logoImg');
+        const logoSvg = document.getElementById('logoSvg');
+        logoImg.src = currentUrl;
+        logoImg.style.display = 'block';
+        logoSvg.style.display = 'none';
+      };
+      img.onerror = function() {
+        tryLogoCandidates(urls.slice(1));
+      };
+      img.src = currentUrl;
+    }
+
+    // Auto-detect files present in the repo
+    window.addEventListener('DOMContentLoaded', () => {
+      tryBackgroundCandidates([
+        'background.jpg',
+        'background.png',
+        'assets/background.jpg',
+        'assets/background.png'
+      ]);
+
+      tryLogoCandidates([
+        'logo.png',
+        'logo.jpg',
+        'assets/logo.png',
+        'assets/logo.jpg'
+      ]);
+    });
+  </script>
+</body>
+</html>

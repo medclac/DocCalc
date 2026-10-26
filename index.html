@@ -116,7 +116,7 @@ body {
 }
 
 /* ============================================================== */
-/* ANIMATED SPLASH SCREEN (SNAKE DRAW & D REVEAL ON WHITE)        */
+/* ANIMATED SPLASH SCREEN (SNAKE DRAW & D REVEAL ON WHITE) */
 /* ============================================================== */
 #splash {
  position: fixed;
@@ -189,8 +189,8 @@ body {
 
 @keyframes letterReveal {
  to {
-   opacity: 1;
-   transform: scale(1);
+ opacity: 1;
+ transform: scale(1);
  }
 }
 
@@ -224,8 +224,8 @@ body {
 
 @keyframes textSlideUp {
  to {
-   opacity: 1;
-   transform: translateY(0);
+ opacity: 1;
+ transform: translateY(0);
  }
 }
 
@@ -505,69 +505,69 @@ footer { text-align: center; font-size: 11px; color: var(--text-muted); padding:
 <body>
 
 <!-- ============================================================== -->
-<!-- ANIMATED DOCSTAT SPLASH OVERLAY                                -->
+<!-- ANIMATED DOCSTAT SPLASH OVERLAY -->
 <!-- ============================================================== -->
 <div id="splash">
-  <div class="splash-content" id="splashContent">
-    <div class="splash-svg-wrap" id="splashLogoWrap">
-      <svg viewBox="0 0 200 200">
-        <defs>
-          <linearGradient id="dGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#38bdf8" />
-            <stop offset="50%" stop-color="#2563eb" />
-            <stop offset="100%" stop-color="#1d4ed8" />
-          </linearGradient>
-          <filter id="dGlow" x="-20%" y="-20%" width="140%" height="140%">
-            <feDropShadow dx="0" dy="6" stdDeviation="7" flood-color="#2563eb" flood-opacity="0.25" />
-          </filter>
-        </defs>
+ <div class="splash-content" id="splashContent">
+ <div class="splash-svg-wrap" id="splashLogoWrap">
+ <svg viewBox="0 0 200 200">
+ <defs>
+ <linearGradient id="dGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+ <stop offset="0%" stop-color="#38bdf8" />
+ <stop offset="50%" stop-color="#2563eb" />
+ <stop offset="100%" stop-color="#1d4ed8" />
+ </linearGradient>
+ <filter id="dGlow" x="-20%" y="-20%" width="140%" height="140%">
+ <feDropShadow dx="0" dy="6" stdDeviation="7" flood-color="#2563eb" flood-opacity="0.25" />
+ </filter>
+ </defs>
 
-        <!-- Capital "D" (Clean, no square box) -->
-        <g class="letter-d" filter="url(#dGlow)">
-          <path d="M 46 28 H 104 C 148 28, 178 58, 178 100 C 178 142, 148 172, 104 172 H 46 Z" fill="url(#dGrad)" />
-          <path d="M 72 52 H 100 C 128 52, 148 72, 148 100 C 148 128, 128 148, 100 148 H 72 Z" fill="#ffffff" />
-        </g>
+ <!-- Capital "D" (Clean, no square box) -->
+ <g class="letter-d" filter="url(#dGlow)">
+ <path d="M 46 28 H 104 C 148 28, 178 58, 178 100 C 178 142, 148 172, 104 172 H 46 Z" fill="url(#dGrad)" />
+ <path d="M 72 52 H 100 C 128 52, 148 72, 148 100 C 148 128, 128 148, 100 148 H 72 Z" fill="#ffffff" />
+ </g>
 
-        <!-- Stethoscope Contrast Border -->
-        <path class="steth-border"
-              d="M 74 36 
-                 C 74 65, 82 88, 100 110 
-                 C 100 110, 100 128, 100 144
-                 C 100 162, 84 174, 68 174
-                 C 52 174, 42 162, 42 146
-                 C 42 128, 56 116, 74 116
-                 C 98 116, 114 136, 128 152
-                 L 146 165
-                 M 100 110
-                 C 118 88, 126 65, 126 36" />
+ <!-- Stethoscope Contrast Border -->
+ <path class="steth-border"
+ d="M 74 36 
+C 74 65, 82 88, 100 110 
+C 100 110, 100 128, 100 144
+ C 100 162, 84 174, 68 174
+ C 52 174, 42 162, 42 146
+ C 42 128, 56 116, 74 116
+ C 98 116, 114 136, 128 152
+ L 146 165
+ M 100 110
+ C 118 88, 126 65, 126 36" />
 
-        <!-- Stethoscope Snake Tube (White Core) -->
-        <path class="steth-path"
-              d="M 74 36 
-                 C 74 65, 82 88, 100 110 
-                 C 100 110, 100 128, 100 144
-                 C 100 162, 84 174, 68 174
-                 C 52 174, 42 162, 42 146
-                 C 42 128, 56 116, 74 116
-                 C 98 116, 114 136, 128 152
-                 L 146 165
-                 M 100 110
-                 C 118 88, 126 65, 126 36" />
+ <!-- Stethoscope Snake Tube (White Core) -->
+ <path class="steth-path"
+ d="M 74 36 
+C 74 65, 82 88, 100 110 
+C 100 110, 100 128, 100 144
+ C 100 162, 84 174, 68 174
+ C 52 174, 42 162, 42 146
+ C 42 128, 56 116, 74 116
+ C 98 116, 114 136, 128 152
+ L 146 165
+ M 100 110
+ C 118 88, 126 65, 126 36" />
 
-        <!-- Earpieces -->
-        <circle class="eartip" cx="74" cy="36" r="7" fill="#ffffff" stroke="#1e3a8a" stroke-width="4" />
-        <circle class="eartip" cx="126" cy="36" r="7" fill="#ffffff" stroke="#1e3a8a" stroke-width="4" />
+ <!-- Earpieces -->
+ <circle class="eartip" cx="74" cy="36" r="7" fill="#ffffff" stroke="#1e3a8a" stroke-width="4" />
+ <circle class="eartip" cx="126" cy="36" r="7" fill="#ffffff" stroke="#1e3a8a" stroke-width="4" />
 
-        <!-- Chestpiece / Bell -->
-        <g class="chestpiece">
-          <circle cx="158" cy="165" r="15" fill="#ffffff" stroke="#1e3a8a" stroke-width="4" />
-          <circle cx="158" cy="165" r="7" fill="#2563eb" />
-        </g>
-      </svg>
-    </div>
+ <!-- Chestpiece / Bell -->
+ <g class="chestpiece">
+ <circle cx="158" cy="165" r="15" fill="#ffffff" stroke="#1e3a8a" stroke-width="4" />
+ <circle cx="158" cy="165" r="7" fill="#2563eb" />
+ </g>
+ </svg>
+ </div>
 
-    <div class="splash-brand">Doc<span>Stat</span></div>
-  </div>
+ <div class="splash-brand">Doc<span>Stat</span></div>
+ </div>
 </div>
 
 <header>
@@ -751,7 +751,7 @@ window.S = S;
 <script src="endo.js"></script>
 
 <!-- ============================================================== -->
-<!-- 3. APPLICATION ENGINE, PROFILE SYNC & CONTROLLER -->
+<!-- 3. APPLICATION ENGINE, OFFLINE SYNC QUEUE & CONTROLLER -->
 <!-- ============================================================== -->
 <script>
 (function () {
@@ -759,84 +759,148 @@ window.S = S;
  const $ = id => document.getElementById(id);
 
  // ==============================================================
- // GOOGLE APPS SCRIPT WEBHOOK CONFIGURATION
+ // GOOGLE APPS SCRIPT WEBHOOK CONFIGURATION (WITH OFFLINE QUEUE)
  // ==============================================================
  const GOOGLE_SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzbJWYIaP0o209I22wuMjrq3983VIVId_KKM_Q2Qf1HAgGANNk265mZw5hxXwj4qSm0/exec";
+ const OFFLINE_QUEUE_KEY = "doccalc_offline_sync_queue";
+ let isSyncingQueue = false;
 
- function sendDataToWebhook(payload) {
-   if (!GOOGLE_SHEET_WEBHOOK_URL || GOOGLE_SHEET_WEBHOOK_URL.includes("PASTE_YOUR_GOOGLE_APPS_SCRIPT")) {
-     return;
-   }
-   fetch(GOOGLE_SHEET_WEBHOOK_URL, {
-     method: "POST",
-     mode: "no-cors",
-     headers: { "Content-Type": "application/json" },
-     body: JSON.stringify(payload)
-   }).catch(err => console.warn("Google Sheet sync error:", err));
+ function enqueueOfflinePayload(payload) {
+ try {
+ const queue = JSON.parse(localStorage.getItem(OFFLINE_QUEUE_KEY) || "[]");
+ queue.push(payload);
+ localStorage.setItem(OFFLINE_QUEUE_KEY, JSON.stringify(queue));
+ } catch (e) {
+ console.warn("Offline queue storage error:", e);
+ }
  }
 
- function logToolCalculation(toolName, resultVal, formulaText) {
-   const name = localStorage.getItem("doccalc_dr_name") || "Anonymous";
-   const degree = localStorage.getItem("doccalc_dr_degree") || "N/A";
+ function sendDataToWebhook(payload) {
+ if (!GOOGLE_SHEET_WEBHOOK_URL || GOOGLE_SHEET_WEBHOOK_URL.includes("PASTE_YOUR_GOOGLE_APPS_SCRIPT")) {
+ return;
+ }
 
-   sendDataToWebhook({
-     type: "calculation",
-     timestamp: new Date().toLocaleString(),
-     name: name,
-     degree: degree,
-     tool: toolName,
-     result: resultVal,
-     equation: formulaText
-   });
+ // If offline, save immediately to localStorage queue so it sends once online
+ if (!navigator.onLine) {
+ enqueueOfflinePayload(payload);
+ return;
+ }
+
+ fetch(GOOGLE_SHEET_WEBHOOK_URL, {
+ method: "POST",
+ mode: "no-cors",
+ headers: { "Content-Type": "text/plain;charset=utf-8" },
+ body: JSON.stringify(payload)
+ }).catch(() => {
+ enqueueOfflinePayload(payload);
+ });
+ }
+
+ async function flushOfflineQueue() {
+ if (isSyncingQueue || !navigator.onLine) return;
+ let queue = [];
+ try {
+ queue = JSON.parse(localStorage.getItem(OFFLINE_QUEUE_KEY) || "[]");
+ } catch (e) {
+ queue = [];
+ }
+ if (queue.length === 0) return;
+
+ isSyncingQueue = true;
+ const remainingQueue = [];
+
+ for (let i = 0; i < queue.length; i++) {
+ if (!navigator.onLine) {
+ remainingQueue.push(...queue.slice(i));
+ break;
+ }
+ try {
+ await fetch(GOOGLE_SHEET_WEBHOOK_URL, {
+ method: "POST",
+ mode: "no-cors",
+ headers: { "Content-Type": "text/plain;charset=utf-8" },
+ body: JSON.stringify(queue[i])
+ });
+ await new Promise(res => setTimeout(res, 400));
+ } catch (err) {
+ remainingQueue.push(queue[i]);
+ }
+ }
+
+ localStorage.setItem(OFFLINE_QUEUE_KEY, JSON.stringify(remainingQueue));
+ isSyncingQueue = false;
+ }
+
+ window.addEventListener("online", flushOfflineQueue);
+ window.addEventListener("load", flushOfflineQueue);
+ setInterval(flushOfflineQueue, 30000);
+ window.sendDataToWebhook = sendDataToWebhook;
+ window.GOOGLE_SHEET_WEBHOOK_URL = GOOGLE_SHEET_WEBHOOK_URL;
+
+ function logToolCalculation(toolName, resultVal, formulaText) {
+ const name = localStorage.getItem("doccalc_dr_name") || "Anonymous";
+ const degree = localStorage.getItem("doccalc_dr_degree") || "N/A";
+ const specialty = (currentTool && currentTool.cat) ? currentTool.cat.toUpperCase() : "";
+
+ sendDataToWebhook({
+ type: "calculation",
+ timestamp: new Date().toLocaleString(),
+ name: name,
+ degree: degree,
+ specialty: specialty,
+ tool: toolName,
+ result: resultVal,
+ equation: formulaText
+ });
  }
 
  // --- USER PROFILE & ONE-TIME LOGIN SETUP ---
  function applyDoctorProfile(name, degree) {
-   const subHeader = $("clinicianHeaderSub");
-   if (subHeader) {
-     subHeader.textContent = `${name} (${degree}) · Clinical tools`;
-   }
+ const subHeader = $("clinicianHeaderSub");
+ if (subHeader) {
+ subHeader.textContent = `${name} (${degree}) · Clinical tools`;
+ }
  }
 
  function checkUserSession() {
-   const savedName = localStorage.getItem("doccalc_dr_name");
-   const savedDegree = localStorage.getItem("doccalc_dr_degree");
+ const savedName = localStorage.getItem("doccalc_dr_name");
+ const savedDegree = localStorage.getItem("doccalc_dr_degree");
 
-   if (!savedName || !savedDegree) {
-     $("loginModal").classList.remove("hidden");
-   } else {
-     applyDoctorProfile(savedName, savedDegree);
-   }
+ if (!savedName || !savedDegree) {
+ $("loginModal").classList.remove("hidden");
+ } else {
+ applyDoctorProfile(savedName, savedDegree);
+ }
  }
 
  $("submitLoginBtn").onclick = function () {
-   const nameInput = $("loginDrName").value.trim();
-   const degreeInput = $("loginDrDegree").value.trim();
+ const nameInput = $("loginDrName").value.trim();
+ const degreeInput = $("loginDrDegree").value.trim();
 
-   if (!nameInput || !degreeInput) {
-     alert("Please provide both Doctor Name and Degree to continue.");
-     return;
-   }
+ if (!nameInput || !degreeInput) {
+ alert("Please provide both Doctor Name and Degree to continue.");
+ return;
+ }
 
-   localStorage.setItem("doccalc_dr_name", nameInput);
-   localStorage.setItem("doccalc_dr_degree", degreeInput);
+ localStorage.setItem("doccalc_dr_name", nameInput);
+ localStorage.setItem("doccalc_dr_degree", degreeInput);
 
-   $("loginModal").classList.add("hidden");
-   applyDoctorProfile(nameInput, degreeInput);
+ $("loginModal").classList.add("hidden");
+ applyDoctorProfile(nameInput, degreeInput);
 
-   sendDataToWebhook({
-     type: "registration",
-     timestamp: new Date().toLocaleString(),
-     name: nameInput,
-     degree: degreeInput
-   });
+ sendDataToWebhook({
+ type: "registration",
+ timestamp: new Date().toLocaleString(),
+ name: nameInput,
+ degree: degreeInput
+ });
  };
 
  $("editProfileBtn").onclick = function () {
-   $("settingsModal").classList.add("hidden");
-   $("loginDrName").value = localStorage.getItem("doccalc_dr_name") || "";
-   $("loginDrDegree").value = localStorage.getItem("doccalc_dr_degree") || "";
-   $("loginModal").classList.remove("hidden");
+ $("settingsModal").classList.add("hidden");
+ $("loginDrName").value = localStorage.getItem("doccalc_dr_name") || "";
+ $("loginDrDegree").value = localStorage.getItem("doccalc_dr_degree") || "";
+ $("loginModal").classList.remove("hidden");
  };
 
  checkUserSession();
@@ -848,16 +912,16 @@ window.S = S;
  // --- THEME ENGINE ---
  let activeThemeMode = localStorage.getItem("doccalc_theme") || "system";
  function applyTheme(mode) {
-   activeThemeMode = mode;
-   localStorage.setItem("doccalc_theme", mode);
-   let effective = mode === "system" ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : mode;
-   document.documentElement.setAttribute("data-theme", effective);
-   document.querySelectorAll(".theme-btn").forEach(btn => btn.classList.toggle("active", btn.dataset.themeVal === mode));
-   const meta = document.querySelector('meta[name="theme-color"]');
-   if (meta) meta.setAttribute("content", effective === "dark" ? "#0b1523" : "#0f2744");
+ activeThemeMode = mode;
+ localStorage.setItem("doccalc_theme", mode);
+ let effective = mode === "system" ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : mode;
+ document.documentElement.setAttribute("data-theme", effective);
+ document.querySelectorAll(".theme-btn").forEach(btn => btn.classList.toggle("active", btn.dataset.themeVal === mode));
+ const meta = document.querySelector('meta[name="theme-color"]');
+ if (meta) meta.setAttribute("content", effective === "dark" ? "#0b1523" : "#0f2744");
  }
  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
-   if (activeThemeMode === "system") applyTheme("system");
+ if (activeThemeMode === "system") applyTheme("system");
  });
  applyTheme(activeThemeMode);
 
@@ -868,132 +932,132 @@ window.S = S;
 
  // --- SPLASH DISMISSAL & ANDROID BRIDGE TRIGGER ---
  function triggerSplashSequence() {
-   const logoWrap = $("splashLogoWrap");
-   const splash = $("splash");
+ const logoWrap = $("splashLogoWrap");
+ const splash = $("splash");
 
-   // Heartbeat pulse bounce as animation completes
-   setTimeout(() => {
-     if (logoWrap) logoWrap.classList.add("pulse-lockup");
-   }, 1900);
+ // Heartbeat pulse bounce as animation completes
+ setTimeout(() => {
+ if (logoWrap) logoWrap.classList.add("pulse-lockup");
+ }, 1900);
 
-   // Fade out splash & notify Android MainActivity
-   setTimeout(() => {
-     if (splash) {
-       splash.classList.add("fade-out");
-       setTimeout(() => {
-         if (splash.parentNode) splash.parentNode.removeChild(splash);
-       }, 400);
-     }
+ // Fade out splash & notify Android MainActivity
+ setTimeout(() => {
+ if (splash) {
+ splash.classList.add("fade-out");
+ setTimeout(() => {
+ if (splash.parentNode) splash.parentNode.removeChild(splash);
+ }, 400);
+ }
 
-     // Trigger Java WebAppInterface if inside Android WebView
-     if (window.AndroidBridge && typeof window.AndroidBridge.onSplashComplete === "function") {
-       window.AndroidBridge.onSplashComplete();
-     }
-   }, 2600);
+ // Trigger Java WebAppInterface if inside Android WebView
+ if (window.AndroidBridge && typeof window.AndroidBridge.onSplashComplete === "function") {
+ window.AndroidBridge.onSplashComplete();
+ }
+ }, 2600);
  }
 
  window.addEventListener("load", triggerSplashSequence);
 
  // --- VIEW CONTROLLER ---
  function showView(view) {
-   $("home").classList.toggle("hidden", view !== "home");
-   $("categoryPage").classList.toggle("hidden", view !== "category");
-   $("calculatorPage").classList.toggle("hidden", view !== "calculator");
-   window.scrollTo({ top: 0, behavior: "smooth" });
+ $("home").classList.toggle("hidden", view !== "home");
+ $("categoryPage").classList.toggle("hidden", view !== "category");
+ $("calculatorPage").classList.toggle("hidden", view !== "calculator");
+ window.scrollTo({ top: 0, behavior: "smooth" });
  }
 
  // --- HASH ROUTER FOR ANDROID HARDWARE BACK BUTTON ---
  window.addEventListener("hashchange", function () {
-   const rawHash = location.hash.replace(/^#/, "");
+ const rawHash = location.hash.replace(/^#/, "");
 
-   const modal = $("settingsModal");
-   if (modal && !modal.classList.contains("hidden")) {
-     modal.classList.add("hidden");
-   }
+ const modal = $("settingsModal");
+ if (modal && !modal.classList.contains("hidden")) {
+ modal.classList.add("hidden");
+ }
 
-   const searchInput = $("search");
-   if (searchInput && searchInput.value) {
-     searchInput.value = "";
-     $("homeDefaultContent").classList.remove("hidden");
-     $("searchResultsSection").classList.add("hidden");
-   }
+ const searchInput = $("search");
+ if (searchInput && searchInput.value) {
+ searchInput.value = "";
+ $("homeDefaultContent").classList.remove("hidden");
+ $("searchResultsSection").classList.add("hidden");
+ }
 
-   if (!rawHash) {
-     showView("home");
-     return;
-   }
+ if (!rawHash) {
+ showView("home");
+ return;
+ }
 
-   if (rawHash.startsWith("category=")) {
-     const catId = decodeURIComponent(rawHash.replace("category=", ""));
-     currentCatId = catId;
-     renderCategoryTools();
-     showView("category");
-     return;
-   }
+ if (rawHash.startsWith("category=")) {
+ const catId = decodeURIComponent(rawHash.replace("category=", ""));
+ currentCatId = catId;
+ renderCategoryTools();
+ showView("category");
+ return;
+ }
 
-   if (rawHash.startsWith("tool=")) {
-     const toolId = decodeURIComponent(rawHash.replace("tool=", ""));
-     const foundTool = (window.tools || []).find(t => t.id === toolId);
-     if (foundTool) {
-       openToolView(foundTool);
-     }
-     return;
-   }
+ if (rawHash.startsWith("tool=")) {
+ const toolId = decodeURIComponent(rawHash.replace("tool=", ""));
+ const foundTool = (window.tools || []).find(t => t.id === toolId);
+ if (foundTool) {
+ openToolView(foundTool);
+ }
+ return;
+ }
  });
 
  if (location.hash) {
-   location.hash = "";
+ location.hash = "";
  }
 
  // --- HOME & CATEGORY RENDERING ---
  function renderHome() {
-   const catContainer = $("categories");
-   if (!catContainer) return;
+ const catContainer = $("categories");
+ if (!catContainer) return;
 
-   const catMap = new Map();
-   (window.categories || []).forEach(c => {
-     if (c && c.id) catMap.set(c.id, c);
-   });
+ const catMap = new Map();
+ (window.categories || []).forEach(c => {
+ if (c && c.id) catMap.set(c.id, c);
+ });
 
-   (window.tools || []).forEach(t => {
-     if (t.cat && !catMap.has(t.cat)) {
-       const prettyName = t.cat.charAt(0).toUpperCase() + t.cat.slice(1);
-       catMap.set(t.cat, {
-         id: t.cat,
-         name: prettyName,
-         icon: "📁",
-         desc: `${prettyName} clinical tools & calculators`
-       });
-     }
+ (window.tools || []).forEach(t => {
+ if (t.cat && !catMap.has(t.cat)) {
+ const prettyName = t.cat.charAt(0).toUpperCase() + t.cat.slice(1);
+ catMap.set(t.cat, {
+ id: t.cat,
+ name: prettyName,
+ icon: "📁",
+ desc: `${prettyName} clinical tools & calculators`
+ });
+ }
 
-     if (!t.type) {
-       const isClass = /score|criteria|staging|classification|meows|apgar|bishop|iadpsg|mec|popq|figo|weber|gustilo|tscherne|salter|garden|neer|pauwels|pipkin|rockwood|mason|tile|sins|tlics|meyerding|kellgren/i.test(t.name + " " + (t.desc || ""));
-       t.type = isClass ? "class" : "calc";
-     }
-   });
+ if (!t.type) {
+ const isClass = /score|criteria|staging|classification|meows|apgar|bishop|iadpsg|mec|popq|figo|weber|gustilo|tscherne|salter|garden|neer|pauwels|pipkin|rockwood|mason|tile|sins|tlics|meyerding|kellgren/i.test(t.name + " " + (t.desc || ""));
+ t.type = isClass ? "class" : "calc";
+ }
+ });
 
-   const fullCategories = Array.from(catMap.values());
-   catContainer.innerHTML = "";
+ const fullCategories = Array.from(catMap.values());
+ catContainer.innerHTML = "";
 
-   if (fullCategories.length === 0) {
-     catContainer.innerHTML = `<p class="muted" style="grid-column: 1/-1;">Loading specialty tools...</p>`;
-   } else {
-     fullCategories.forEach(cat => {
-       const card = document.createElement("div");
-       card.className = "card";
-       card.innerHTML = `<span class="ico">${cat.icon || "📁"}</span><strong>${cat.name}</strong><small>${cat.desc || ""}</small>`;
-       card.onclick = () => {
-         location.hash = "category=" + encodeURIComponent(cat.id);
-       };
-       catContainer.appendChild(card);
-     });
-   }
+ if (fullCategories.length === 0) {
+ catContainer.innerHTML = `<p class="muted" style="grid-column: 1/-1;">Loading specialty tools...</p>`;
+ } else {
+ fullCategories.forEach(cat => {
+ const card = document.createElement("div");
+ card.className = "card";
+ card.innerHTML = `<span class="ico">${cat.icon || "📁"}</span><strong>${cat.name}</strong><small>${cat.desc || ""}</small>`;
+ card.onclick = () => {
+ location.hash = "category=" + encodeURIComponent(cat.id);
+ };
+ catContainer.appendChild(card);
+ });
+ }
 
-   const quickContainer = $("quick");
-   if (quickContainer) {
-     quickContainer.innerHTML = "";
-     (window.tools || []).slice(0, 6).forEach(t => quickContainer.appendChild(createToolItem(t)));
-   }
+ const quickContainer = $("quick");
+ if (quickContainer) {
+ quickContainer.innerHTML = "";
+ (window.tools || []).slice(0, 6).forEach(t => quickContainer.appendChild(createToolItem(t)));
+ }
  }
 
  window.renderHome = renderHome;
@@ -1001,267 +1065,270 @@ window.S = S;
  window.renderQuick = renderHome;
 
  function createToolItem(t) {
-   const div = document.createElement("div");
-   div.className = "tool";
-   const badgeLabel = t.type === "class" ? "Classification" : "Calculator";
-   const badgeClass = t.type === "class" ? "badge-class" : "badge-calc";
-   div.innerHTML = `<div class="tool-header"><strong>${t.name}</strong><span class="badge ${badgeClass}">${badgeLabel}</span></div><small>${t.desc || ""}</small>`;
-   div.onclick = () => {
-     location.hash = "tool=" + encodeURIComponent(t.id);
-   };
-   return div;
+ const div = document.createElement("div");
+ div.className = "tool";
+ const badgeLabel = t.type === "class" ? "Classification" : "Calculator";
+ const badgeClass = t.type === "class" ? "badge-class" : "badge-calc";
+ div.innerHTML = `<div class="tool-header"><strong>${t.name}</strong><span class="badge ${badgeClass}">${badgeLabel}</span></div><small>${t.desc || ""}</small>`;
+ div.onclick = () => {
+ location.hash = "tool=" + encodeURIComponent(t.id);
+ };
+ return div;
  }
 
  function renderCategoryTools() {
-   let cat = (window.categories || []).find(c => c.id === currentCatId);
-   if (!cat) {
-     cat = { name: (currentCatId || "").toUpperCase(), desc: "Clinical Calculators & Staging" };
-   }
-   $("categoryTitle").textContent = cat.name;
-   $("categoryDesc").textContent = cat.desc || "";
+ let cat = (window.categories || []).find(c => c.id === currentCatId);
+ if (!cat) {
+ cat = { name: (currentCatId || "").toUpperCase(), desc: "Clinical Calculators & Staging" };
+ }
+ $("categoryTitle").textContent = cat.name;
+ $("categoryDesc").textContent = cat.desc || "";
 
-   const list = $("toolList");
-   list.innerHTML = "";
-   const filtered = (window.tools || []).filter(t => (t.cat === currentCatId || currentCatId === "all") && (activeFilter === "all" || t.type === activeFilter));
-   if (filtered.length === 0) {
-     list.innerHTML = `<div class="muted" style="padding:20px 0;text-align:center;">No tools found in this category.</div>`;
-     return;
-   }
-   filtered.forEach(t => list.appendChild(createToolItem(t)));
+ const list = $("toolList");
+ list.innerHTML = "";
+ const filtered = (window.tools || []).filter(t => (t.cat === currentCatId || currentCatId === "all") && (activeFilter === "all" || t.type === activeFilter));
+ if (filtered.length === 0) {
+ list.innerHTML = `<div class="muted" style="padding:20px 0;text-align:center;">No tools found in this category.</div>`;
+ return;
+ }
+ filtered.forEach(t => list.appendChild(createToolItem(t)));
  }
 
  document.querySelectorAll(".tab-btn").forEach(btn => {
-   btn.onclick = () => {
-     document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-     btn.classList.add("active");
-     activeFilter = btn.dataset.filter;
-     renderCategoryTools();
-   };
+ btn.onclick = () => {
+ document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+ btn.classList.add("active");
+ activeFilter = btn.dataset.filter;
+ renderCategoryTools();
+ };
  });
 
  // --- SEARCH ENGINE ---
  const searchInput = $("search");
  searchInput.oninput = () => {
-   const q = searchInput.value.trim().toLowerCase();
-   if (!q) {
-     $("homeDefaultContent").classList.remove("hidden");
-     $("searchResultsSection").classList.add("hidden");
-     return;
-   }
-   $("homeDefaultContent").classList.add("hidden");
-   $("searchResultsSection").classList.remove("hidden");
-   const matches = (window.tools || []).filter(t => {
-     return (t.name && t.name.toLowerCase().includes(q)) ||
-       (t.desc && t.desc.toLowerCase().includes(q)) ||
-       (t.guidance && t.guidance.toLowerCase().includes(q)) ||
-       (t.keywords && t.keywords.some(k => k.toLowerCase().includes(q))) ||
-       (t.organ && t.organ.toLowerCase().includes(q));
-   });
-   $("searchResultSubheading").textContent = `Found ${matches.length} tool(s) matching "${searchInput.value}"`;
-   const searchList = $("searchToolList");
-   searchList.innerHTML = "";
-   if (matches.length === 0) {
-     searchList.innerHTML = `<p class="muted">No clinical tools matched your search query.</p>`;
-   } else {
-     matches.forEach(t => searchList.appendChild(createToolItem(t)));
-   }
+ const q = searchInput.value.trim().toLowerCase();
+ if (!q) {
+ $("homeDefaultContent").classList.remove("hidden");
+ $("searchResultsSection").classList.add("hidden");
+ return;
+ }
+ $("homeDefaultContent").classList.add("hidden");
+ $("searchResultsSection").classList.remove("hidden");
+ const matches = (window.tools || []).filter(t => {
+ return (t.name && t.name.toLowerCase().includes(q)) ||
+ (t.desc && t.desc.toLowerCase().includes(q)) ||
+ (t.guidance && t.guidance.toLowerCase().includes(q)) ||
+ (t.keywords && t.keywords.some(k => k.toLowerCase().includes(q))) ||
+ (t.organ && t.organ.toLowerCase().includes(q));
+ });
+ $("searchResultSubheading").textContent = `Found ${matches.length} tool(s) matching "${searchInput.value}"`;
+ const searchList = $("searchToolList");
+ searchList.innerHTML = "";
+ if (matches.length === 0) {
+ searchList.innerHTML = `<p class="muted">No clinical tools matched your search query.</p>`;
+ } else {
+ matches.forEach(t => searchList.appendChild(createToolItem(t)));
+ }
  };
 
  $("clearSearchBtn").onclick = () => {
-   searchInput.value = "";
-   $("homeDefaultContent").classList.remove("hidden");
-   $("searchResultsSection").classList.add("hidden");
+ searchInput.value = "";
+ $("homeDefaultContent").classList.remove("hidden");
+ $("searchResultsSection").classList.add("hidden");
  };
 
  // --- CALCULATOR & CLASSIFICATION INTERFACE ---
  function openToolView(tool) {
-   currentTool = tool;
-   $("title").textContent = tool.name;
-   $("desc").textContent = tool.desc || "";
+ currentTool = tool;
+ $("title").textContent = tool.name;
+ $("desc").textContent = tool.desc || "";
 
-   const typeBadge = $("toolTypeBadge");
-   typeBadge.textContent = tool.type === "class" ? "Classification" : "Calculator";
-   typeBadge.className = `badge ${tool.type === "class" ? "badge-class" : "badge-calc"}`;
+ const typeBadge = $("toolTypeBadge");
+ typeBadge.textContent = tool.type === "class" ? "Classification" : "Calculator";
+ typeBadge.className = `badge ${tool.type === "class" ? "badge-class" : "badge-calc"}`;
 
-   if (tool.guidance) {
-     $("guidanceBox").classList.remove("hidden");
-     $("guidanceText").innerHTML = tool.guidance.replace(/\n/g, "<br>");
-   } else {
-     $("guidanceBox").classList.add("hidden");
-   }
+ if (tool.guidance) {
+ $("guidanceBox").classList.remove("hidden");
+ $("guidanceText").innerHTML = tool.guidance.replace(/\n/g, "<br>");
+ } else {
+ $("guidanceBox").classList.add("hidden");
+ }
 
-   if (tool.contraindications) {
-     $("contraBox").classList.remove("hidden");
-     $("contraText").innerHTML = tool.contraindications.replace(/\n/g, "<br>");
-   } else {
-     $("contraBox").classList.add("hidden");
-   }
+ if (tool.contraindications) {
+ $("contraBox").classList.remove("hidden");
+ $("contraText").innerHTML = tool.contraindications.replace(/\n/g, "<br>");
+ } else {
+ $("contraBox").classList.add("hidden");
+ }
 
-   const fieldsContainer = $("fields");
-   fieldsContainer.innerHTML = "";
-   (tool.fields || []).forEach(f => {
-     const wrap = document.createElement("div");
-     if (f.type === "select" || f.fullWidth) wrap.className = "full-width";
+ const fieldsContainer = $("fields");
+ fieldsContainer.innerHTML = "";
+ (tool.fields || []).forEach(f => {
+ const wrap = document.createElement("div");
+ if (f.type === "select" || f.fullWidth) wrap.className = "full-width";
 
-     const lbl = document.createElement("label");
-     lbl.setAttribute("for", "field_" + f.id);
-     lbl.textContent = f.label;
-     wrap.appendChild(lbl);
+ const lbl = document.createElement("label");
+ lbl.setAttribute("for", "field_" + f.id);
+ lbl.textContent = f.label;
+ wrap.appendChild(lbl);
 
-     const defaultVal = f.value !== undefined ? f.value : (f.default !== undefined ? f.default : "");
+ const defaultVal = f.value !== undefined ? f.value : (f.default !== undefined ? f.default : "");
 
-     if (f.type === "select") {
-       const sel = document.createElement("select");
-       sel.id = "field_" + f.id;
-       sel.name = f.id;
-       (f.options || []).forEach(opt => {
-         const optEl = document.createElement("option");
-         if (Array.isArray(opt)) {
-           optEl.value = opt[0];
-           optEl.textContent = opt[1];
-         } else {
-           optEl.value = opt.value;
-           optEl.textContent = opt.label;
-         }
-         if (String(optEl.value) === String(defaultVal)) optEl.selected = true;
-         sel.appendChild(optEl);
-       });
-       wrap.appendChild(sel);
-     } else {
-       const inp = document.createElement("input");
-       inp.type = "number";
-       inp.id = "field_" + f.id;
-       inp.name = f.id;
-       inp.value = defaultVal;
-       if (f.min !== undefined) inp.min = f.min;
-       if (f.max !== undefined) inp.max = f.max;
-       if (f.step !== undefined) inp.step = f.step;
-       wrap.appendChild(inp);
-     }
-     fieldsContainer.appendChild(wrap);
-   });
+ if (f.type === "select") {
+ const sel = document.createElement("select");
+ sel.id = "field_" + f.id;
+ sel.name = f.id;
+ (f.options || []).forEach(opt => {
+ const optEl = document.createElement("option");
+ if (Array.isArray(opt)) {
+ optEl.value = opt[0];
+ optEl.textContent = opt[1];
+ } else {
+ optEl.value = opt.value;
+ optEl.textContent = opt.label;
+ }
+ if (String(optEl.value) === String(defaultVal)) optEl.selected = true;
+ sel.appendChild(optEl);
+ });
+ wrap.appendChild(sel);
+ } else {
+ const inp = document.createElement("input");
+ inp.type = "number";
+ inp.id = "field_" + f.id;
+ inp.name = f.id;
+ inp.value = defaultVal;
+ if (f.min !== undefined) inp.min = f.min;
+ if (f.max !== undefined) inp.max = f.max;
+ if (f.step !== undefined) inp.step = f.step;
+ wrap.appendChild(inp);
+ }
+ fieldsContainer.appendChild(wrap);
+ });
 
-   const refCard = $("referenceCard");
-   const head = $("refTableHead");
-   const body = $("refTableBody");
-   if (tool.table && tool.table.headers && tool.table.rows) {
-     refCard.classList.remove("hidden");
-     head.innerHTML = `<tr>${tool.table.headers.map(h => `<th>${h}</th>`).join("")}</tr>`;
-     body.innerHTML = tool.table.rows.map(row => {
-       const rowId = row.id ? ` id="ref-row-${row.id}"` : "";
-       const cols = row.cols || (Array.isArray(row) ? row : []);
-       return `<tr${rowId}>${cols.map(c => `<td>${c}</td>`).join("")}</tr>`;
-     }).join("");
-   } else {
-     refCard.classList.add("hidden");
-   }
+ const refCard = $("referenceCard");
+ const head = $("refTableHead");
+ const body = $("refTableBody");
+ if (tool.table && tool.table.headers && tool.table.rows) {
+ refCard.classList.remove("hidden");
+ head.innerHTML = `<tr>${tool.table.headers.map(h => `<th>${h}</th>`).join("")}</tr>`;
+ body.innerHTML = tool.table.rows.map(row => {
+ const rowId = row.id ? ` id="ref-row-${row.id}"` : "";
+ const cols = row.cols || (Array.isArray(row) ? row : []);
+ return `<tr${rowId}>${cols.map(c => `<td>${c}</td>`).join("")}</tr>`;
+ }).join("");
+ } else {
+ refCard.classList.add("hidden");
+ }
 
-   const refsSec = $("academicRefsSection");
-   const refsList = $("academicRefsList");
-   refsList.innerHTML = "";
-   if (tool.literature && Array.isArray(tool.literature)) {
-     refsSec.classList.remove("hidden");
-     tool.literature.forEach(lit => {
-       const refItem = document.createElement("div");
-       refItem.className = "ref-card-item";
-       let linksHtml = "";
-       if (lit.links && lit.links.length) {
-         linksHtml = `<div class="ref-card-links">${lit.links.map(l => `<a href="${l.url}" target="_blank" rel="noopener noreferrer" class="ref-btn-link ${l.secondary ? "secondary" : ""}">${l.text}</a>`).join("")}</div>`;
-       }
-       refItem.innerHTML = `<div style="font-weight:700;margin-bottom:4px;">${lit.icon || "📄"} ${lit.title || ""}</div><div class="ref-card-citation">${lit.citation || ""}</div>${linksHtml}`;
-       refsList.appendChild(refItem);
-     });
-   } else if (tool.references) {
-     refsSec.classList.remove("hidden");
-     const refItem = document.createElement("div");
-     refItem.className = "ref-card-item";
-     refItem.innerHTML = `<div class="ref-card-citation">${tool.references}</div>`;
-     refsList.appendChild(refItem);
-   } else {
-     refsSec.classList.add("hidden");
-   }
+ const refsSec = $("academicRefsSection");
+ const refsList = $("academicRefsList");
+ refsList.innerHTML = "";
+ if (tool.literature && Array.isArray(tool.literature)) {
+ refsSec.classList.remove("hidden");
+ tool.literature.forEach(lit => {
+ const refItem = document.createElement("div");
+ refItem.className = "ref-card-item";
+ let linksHtml = "";
+ if (lit.links && lit.links.length) {
+ linksHtml = `<div class="ref-card-links">${lit.links.map(l => `<a href="${l.url}" target="_blank" rel="noopener noreferrer" class="ref-btn-link ${l.secondary ? "secondary" : ""}">${l.text}</a>`).join("")}</div>`;
+ }
+ refItem.innerHTML = `<div style="font-weight:700;margin-bottom:4px;">${lit.icon || "📄"} ${lit.title || ""}</div><div class="ref-card-citation">${lit.citation || ""}</div>${linksHtml}`;
+ refsList.appendChild(refItem);
+ });
+ } else if (tool.references) {
+ refsSec.classList.remove("hidden");
+ const refItem = document.createElement("div");
+ refItem.className = "ref-card-item";
+ refItem.innerHTML = `<div class="ref-card-citation">${tool.references}</div>`;
+ refsList.appendChild(refItem);
+ } else {
+ refsSec.classList.add("hidden");
+ }
 
-   $("result").classList.remove("show");
-   showView("calculator");
-   calculate();
+ $("result").classList.remove("show");
+ showView("calculator");
+ calculate();
  }
 
  function calculate() {
-   if (!currentTool || typeof currentTool.calc !== "function") return;
-   const vals = {};
-   (currentTool.fields || []).forEach(f => {
-     const el = $("field_" + f.id);
-     if (el) vals[f.id] = el.value;
-   });
+ if (!currentTool || typeof currentTool.calc !== "function") return;
+ const vals = {};
+ (currentTool.fields || []).forEach(f => {
+ const el = $("field_" + f.id);
+ if (el) vals[f.id] = el.value;
+ });
 
-   try {
-     const res = currentTool.calc(vals);
-     const resBox = $("result");
+ try {
+ const res = currentTool.calc(vals);
+ const resBox = $("result");
 
-     $("value").textContent = res.value || "";
-     $("equation").innerHTML = (res.eq || "").replace(/\n/g, "<br>");
+ $("value").textContent = res.value || "";
+ $("equation").innerHTML = (res.eq || "").replace(/\n/g, "<br>");
 
-     resBox.classList.remove("severity-mild", "severity-moderate", "severity-critical");
+ resBox.classList.remove("severity-mild", "severity-moderate", "severity-critical");
 
-     const combinedText = `${res.value || ""} ${res.eq || ""}`.toLowerCase();
-     const numMatch = String(res.value || "").match(/-?\d+(\.\d+)?/);
-     const scoreNum = numMatch ? parseFloat(numMatch[0]) : null;
+ const combinedText = `${res.value || ""} ${res.eq || ""}`.toLowerCase();
+ const numMatch = String(res.value || "").match(/-?\d+(\.\d+)?/);
+ const scoreNum = numMatch ? parseFloat(numMatch[0]) : null;
 
-     let severity = "mild";
+ let severity = "mild";
 
-     if (res.severity) {
-       severity = res.severity;
-     } else if (/\b(mild|low risk|normal|good prognosis|unlikely|negative|grade 1|grade i|stage 1|stage i|class 1|class i)\b/i.test(combinedText)) {
-       severity = "mild";
-     } else if (/\b(critical|severe|high risk|poor|emergency|immediate|grade 3|grade 4|grade iii|grade iv|stage 3|stage 4|stage iii|stage iv|class 3|class 4|class iii|class iv)\b/i.test(combinedText)) {
-       severity = "critical";
-     } else if (/\b(moderate|intermediate|medium risk|grade 2|grade ii|stage 2|stage ii|class 2|class ii)\b/i.test(combinedText)) {
-       severity = "moderate";
-     } else if (scoreNum !== null) {
-       if (scoreNum >= 75) {
-         severity = "critical";
-       } else if (scoreNum >= 40) {
-         severity = "moderate";
-       } else {
-         severity = "mild";
-       }
-     }
+ if (res.severity) {
+ severity = res.severity;
+ } else if (/\b(mild|low risk|normal|good prognosis|unlikely|negative|grade 1|grade i|stage 1|stage i|class 1|class i)\b/i.test(combinedText)) {
+ severity = "mild";
+ } else if (/\b(critical|severe|high risk|poor|emergency|immediate|grade 3|grade 4|grade iii|grade iv|stage 3|stage 4|stage iii|stage iv|class 3|class 4|class iii|class iv)\b/i.test(combinedText)) {
+ severity = "critical";
+ } else if (/\b(moderate|intermediate|medium risk|grade 2|grade ii|stage 2|stage ii|class 2|class ii)\b/i.test(combinedText)) {
+ severity = "moderate";
+ } else if (scoreNum !== null) {
+ if (scoreNum >= 75) {
+ severity = "critical";
+ } else if (scoreNum >= 40) {
+ severity = "moderate";
+ } else {
+ severity = "mild";
+ }
+ }
 
-     resBox.classList.add(`severity-${severity}`);
+ resBox.classList.add(`severity-${severity}`);
 
-     if (res.matchId) {
-       document.querySelectorAll("#refTable tr").forEach(r => r.classList.remove("active-grade"));
-       const activeRow = $(`ref-row-${res.matchId}`);
-       if (activeRow) activeRow.classList.add("active-grade");
-     }
+ if (res.matchId) {
+ document.querySelectorAll("#refTable tr").forEach(r => r.classList.remove("active-grade"));
+ const activeRow = $(`ref-row-${res.matchId}`);
+ if (activeRow) activeRow.classList.add("active-grade");
+ }
 
-     resBox.classList.add("show");
-   } catch (err) {
-     console.error("Calculation error:", err);
-   }
+ resBox.classList.add("show");
+ } catch (err) {
+ console.error("Calculation error:", err);
+ }
  }
 
  $("form").onsubmit = e => {
-   e.preventDefault();
-   calculate();
+ e.preventDefault();
+ calculate();
+ if (currentTool) {
+ logToolCalculation(currentTool.name, $("value").textContent, $("equation").textContent);
+ }
  };
 
  $("reset").onclick = () => {
-   if (currentTool) openToolView(currentTool);
+ if (currentTool) openToolView(currentTool);
  };
 
  $("copy").onclick = () => {
-   const valText = $("value").textContent;
-   const eqText = $("equation").textContent;
-   const txt = `${currentTool.name}\n${valText}\n${eqText}`;
+ const valText = $("value").textContent;
+ const eqText = $("equation").textContent;
+ const txt = `${currentTool.name}\n${valText}\n${eqText}`;
 
-   navigator.clipboard.writeText(txt).then(() => {
-     const btn = $("copy");
-     btn.textContent = "Copied!";
-     setTimeout(() => btn.textContent = "Copy", 1500);
-   });
+ navigator.clipboard.writeText(txt).then(() => {
+ const btn = $("copy");
+ btn.textContent = "Copied!";
+ setTimeout(() => btn.textContent = "Copy", 1500);
+ });
 
-   logToolCalculation(currentTool.name, valText, eqText);
+ logToolCalculation(currentTool.name, valText, eqText);
  };
 
  renderHome();
@@ -1269,10 +1336,114 @@ window.S = S;
 
  let checkCount = 0;
  const pollTimer = setInterval(() => {
-   renderHome();
-   checkCount++;
-   if (checkCount >= 8) clearInterval(pollTimer);
+ renderHome();
+ checkCount++;
+ if (checkCount >= 8) clearInterval(pollTimer);
  }, 250);
+})();
+</script>
+
+<!-- ============================================================== -->
+<!-- 4. CLINICIAN 2-WAY FEEDBACK & ADMIN CHAT WIDGET (OFFLINE READY) -->
+<!-- ============================================================== -->
+<div id="feedbackChatModal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+ <div class="modal" style="max-width:440px;display:flex;flex-direction:column;height:480px;">
+ <div class="modal-header">
+ <h3>💬 Feedback & Support Chat</h3>
+ <button id="closeFeedbackChatBtn" class="modal-close" type="button">✕</button>
+ </div>
+ <div id="clinicianChatBox" style="flex:1;overflow-y:auto;padding:12px;border:1px solid var(--border-color);border-radius:10px;background:var(--bg-body);display:flex;flex-direction:column;gap:8px;margin-bottom:12px;">
+ <div class="muted" style="text-align:center;margin-top:40px;">Send feedback or questions directly to the DocStat Admin team.</div>
+ </div>
+ <form id="clinicianChatForm" style="display:flex;gap:8px;">
+ <input type="text" id="clinicianChatInput" placeholder="Type your feedback or message..." style="flex:1;">
+ <button type="submit" class="primary" style="flex:0 0 auto;padding:10px 16px;">Send</button>
+ </form>
+ </div>
+</div>
+
+<script>
+(function() {
+ const settingsBtn = document.getElementById("openSettingsBtn");
+ if (settingsBtn && settingsBtn.parentNode) {
+ const wrap = document.createElement("div");
+ wrap.style.display = "flex";
+ wrap.style.gap = "8px";
+ settingsBtn.parentNode.insertBefore(wrap, settingsBtn);
+
+ const chatBtn = document.createElement("button");
+ chatBtn.type = "button";
+ chatBtn.className = "icon-btn";
+ chatBtn.innerHTML = "💬 Feedback";
+ chatBtn.onclick = openClinicianChat;
+
+ wrap.appendChild(chatBtn);
+ wrap.appendChild(settingsBtn);
+ }
+
+ const modal = document.getElementById("feedbackChatModal");
+ document.getElementById("closeFeedbackChatBtn").onclick = () => modal.classList.add("hidden");
+ modal.onclick = e => { if (e.target === modal) modal.classList.add("hidden"); };
+
+ async function openClinicianChat() {
+ modal.classList.remove("hidden");
+ await loadClinicianMessages();
+ }
+
+ async function loadClinicianMessages() {
+ if (!navigator.onLine || !window.GOOGLE_SHEET_WEBHOOK_URL) return;
+ const name = (localStorage.getItem("doccalc_dr_name") || "Anonymous").trim();
+ const degree = (localStorage.getItem("doccalc_dr_degree") || "N/A").trim();
+ const key = (name + "|" + degree).toLowerCase();
+ const box = document.getElementById("clinicianChatBox");
+
+ try {
+ const res = await fetch(`${window.GOOGLE_SHEET_WEBHOOK_URL}?action=user_messages&key=${encodeURIComponent(key)}&t=${Date.now()}`);
+ const data = await res.json();
+ if (data.status === "success" && data.messages && data.messages.length) {
+ box.innerHTML = "";
+ data.messages.forEach(m => {
+ const div = document.createElement("div");
+ const isMe = m.sender === "clinician";
+ div.style.cssText = `max-width:80%;padding:9px 12px;border-radius:10px;font-size:13px;line-height:1.4;align-self:${isMe ? "flex-end" : "flex-start"};background:${isMe ? "#2463eb" : "var(--bg-card)"};color:${isMe ? "#fff" : "var(--text-main)"};border:1px solid var(--border-color);`;
+ div.innerHTML = `<div>${m.message}</div><div style="font-size:10px;opacity:0.75;margin-top:3px;">${isMe ? "You" : "DocStat Admin"} · ${m.timestamp}</div>`;
+ box.appendChild(div);
+ });
+ box.scrollTop = box.scrollHeight;
+ }
+ } catch (e) {
+ console.warn("Could not load chat history:", e);
+ }
+ }
+
+ document.getElementById("clinicianChatForm").onsubmit = function(e) {
+ e.preventDefault();
+ const inp = document.getElementById("clinicianChatInput");
+ const msg = inp.value.trim();
+ if (!msg) return;
+
+ const name = (localStorage.getItem("doccalc_dr_name") || "Anonymous").trim();
+ const degree = (localStorage.getItem("doccalc_dr_degree") || "N/A").trim();
+ const timestamp = new Date().toLocaleString();
+
+ const box = document.getElementById("clinicianChatBox");
+ const div = document.createElement("div");
+ div.style.cssText = "max-width:80%;padding:9px 12px;border-radius:10px;font-size:13px;line-height:1.4;align-self:flex-end;background:#2463eb;color:#fff;";
+ div.innerHTML = `<div>${msg}${!navigator.onLine ? " (Queued offline)" : ""}</div><div style="font-size:10px;opacity:0.75;margin-top:3px;">You · ${timestamp}</div>`;
+ box.appendChild(div);
+ box.scrollTop = box.scrollHeight;
+ inp.value = "";
+
+ if (window.sendDataToWebhook) {
+ window.sendDataToWebhook({
+ type: "feedback",
+ timestamp: timestamp,
+ name: name,
+ degree: degree,
+ message: msg
+ });
+ }
+ };
 })();
 </script>
 </body>

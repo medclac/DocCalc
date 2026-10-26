@@ -1,987 +1,1867 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>DocStat Admin · Analytics, Clinicians & Live Chat</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<meta name="theme-color" content="#0f2744">
+<title>DocStat</title>
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="apple-touch-icon" href="logo.png">
+
 <style>
+/* CSS VARIABLES FOR THEMES */
 :root {
-  --bg: #f1f5f9;
-  --card: #ffffff;
-  --navy: #0f2744;
-  --blue: #2563eb;
-  --text: #0f172a;
-  --muted: #64748b;
-  --border: #e2e8f0;
-  --green: #10b981;
-  --modal-overlay: rgba(0, 0, 0, 0.45);
+ --bg-body: #f3f6fa;
+ --bg-card: #ffffff;
+ --bg-header: #0f2744;
+ --header-text: #ffffff;
+ --header-sub: #c4d8ea;
+ --text-main: #172b4d;
+ --text-muted: #62748a;
+ --border-color: #e0e7f0;
+ --border-hover: #b4cbe4;
+ --input-bg: #ffffff;
+ --input-border: #cdd7e2;
+ --tab-bg: #e8eff6;
+ --btn-back-bg: #e6edf5;
+ --btn-back-text: #17324e;
+ --btn-back-hover: #dbe5f0;
+ --notice-bg: #fff4d6;
+ --notice-border: #ffe39a;
+ --notice-text: #593f00;
+ --guidance-bg: #f0f7ff;
+ --guidance-border: #cce3ff;
+ --guidance-text: #0f3f6d;
+ --contra-bg: #fdf2f2;
+ --contra-border: #f9d2d2;
+ --contra-text: #781c1c;
+ --result-bg: #eaf8f1;
+ --result-border: #b5e4cf;
+ --result-val: #075c42;
+ --result-text: #294d3a;
+ --table-head: #f8fafc;
+ --table-border: #edf2f7;
+ --table-row-text: #334155;
+ --active-grade-bg: #effbf4;
+ --active-grade-text: #0b5133;
+ --ref-card-bg: #f8fafc;
+ --ref-badge: #475569;
+ --badge-calc-bg: #e8f2ff;
+ --badge-calc-text: #1351b4;
+ --badge-calc-border: #c7dcff;
+ --badge-class-bg: #f3e8ff;
+ --badge-class-text: #6927b8;
+ --badge-class-border: #e4cbff;
+ --tag-bg: #f1f5f9;
+ --tag-text: #475569;
+ --splash-bg: #ffffff;
+ --modal-overlay: rgba(0, 0, 0, 0.45);
 }
+
+[data-theme="dark"] {
+ --bg-body: #0d1520;
+ --bg-card: #152233;
+ --bg-header: #0b1523;
+ --header-text: #e2e8f0;
+ --header-sub: #8ba2b9;
+ --text-main: #e2e8f0;
+ --text-muted: #8ba2b9;
+ --border-color: #24354a;
+ --border-hover: #3d5473;
+ --input-bg: #1a2a3e;
+ --input-border: #2a3e56;
+ --tab-bg: #1c2b3d;
+ --btn-back-bg: #1c2c40;
+ --btn-back-text: #c2d6ec;
+ --btn-back-hover: #273d57;
+ --notice-bg: #2d2613;
+ --notice-border: #4d3d14;
+ --notice-text: #ffdf85;
+ --guidance-bg: #132438;
+ --guidance-border: #1d3b5c;
+ --guidance-text: #a8d1ff;
+ --contra-bg: #2d1818;
+ --contra-border: #4e2222;
+ --contra-text: #ffadad;
+ --result-bg: #112d21;
+ --result-border: #1e523c;
+ --result-val: #6ee7b7;
+ --result-text: #a7f3d0;
+ --table-head: #18283c;
+ --table-border: #24354a;
+ --table-row-text: #cbd5e1;
+ --active-grade-bg: #133a28;
+ --active-grade-text: #a7f3d0;
+ --ref-card-bg: #18283c;
+ --ref-badge: #94a3b8;
+ --badge-calc-bg: #162a45;
+ --badge-calc-text: #7bb5ff;
+ --badge-calc-border: #22426d;
+ --badge-class-bg: #281e3d;
+ --badge-class-text: #d3abff;
+ --badge-class-border: #442a6c;
+ --tag-bg: #1e2e42;
+ --tag-text: #94a3b8;
+ --splash-bg: #ffffff;
+ --modal-overlay: rgba(0, 0, 0, 0.7);
+}
+
 * { box-sizing: border-box; }
 body {
-  margin: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background: var(--bg);
-  color: var(--text);
+ margin: 0;
+ background: var(--bg-body);
+ color: var(--text-main);
+ font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+ transition: background 0.2s ease, color 0.2s ease;
 }
+
+/* ============================================================== */
+/* ANIMATED SPLASH SCREEN (SNAKE DRAW & D REVEAL ON WHITE) */
+/* ============================================================== */
+#splash {
+ position: fixed;
+ inset: 0;
+ background: #ffffff;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ justify-content: center;
+ z-index: 9999;
+ transition: opacity 0.4s ease, visibility 0.4s;
+}
+#splash.fade-out {
+ opacity: 0;
+ visibility: hidden;
+ pointer-events: none;
+}
+.splash-content {
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ justify-content: center;
+ gap: 14px;
+}
+.splash-svg-wrap {
+ width: 180px;
+ height: 180px;
+ position: relative;
+}
+.splash-svg-wrap svg {
+ width: 100%;
+ height: 100%;
+ overflow: visible;
+}
+
+/* Snake tubing animation */
+.steth-border {
+ fill: none;
+ stroke: #1e3a8a;
+ stroke-width: 19;
+ stroke-linecap: round;
+ stroke-linejoin: round;
+ stroke-dasharray: 850;
+ stroke-dashoffset: 850;
+ animation: snakeGlide 1.6s cubic-bezier(0.45, 0, 0.15, 1) 0.15s forwards;
+}
+
+.steth-path {
+ fill: none;
+ stroke: #ffffff;
+ stroke-width: 13;
+ stroke-linecap: round;
+ stroke-linejoin: round;
+ stroke-dasharray: 850;
+ stroke-dashoffset: 850;
+ animation: snakeGlide 1.6s cubic-bezier(0.45, 0, 0.15, 1) 0.15s forwards;
+}
+
+@keyframes snakeGlide {
+ to { stroke-dashoffset: 0; }
+}
+
+/* D Letterform fade & scale */
+.letter-d {
+ transform-origin: 100px 100px;
+ opacity: 0;
+ transform: scale(0.85);
+ animation: letterReveal 0.85s cubic-bezier(0.34, 1.3, 0.64, 1) 0.6s forwards;
+}
+
+@keyframes letterReveal {
+ to {
+ opacity: 1;
+ transform: scale(1);
+ }
+}
+
+.eartip {
+ opacity: 0;
+ transform-origin: center;
+ animation: popIn 0.3s cubic-bezier(0.34, 1.5, 0.64, 1) 1.5s forwards;
+}
+
+.chestpiece {
+ opacity: 0;
+ transform-origin: 158px 165px;
+ animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 1.7s forwards;
+}
+
+@keyframes popIn {
+ from { opacity: 0; transform: scale(0); }
+ to { opacity: 1; transform: scale(1); }
+}
+
+.splash-brand {
+ font-size: 28px;
+ font-weight: 800;
+ letter-spacing: -0.5px;
+ color: #0f172a;
+ opacity: 0;
+ transform: translateY(10px);
+ animation: textSlideUp 0.5s ease-out 1.3s forwards;
+}
+.splash-brand span { color: #2563eb; }
+
+@keyframes textSlideUp {
+ to {
+ opacity: 1;
+ transform: translateY(0);
+ }
+}
+
+.pulse-lockup {
+ animation: heartbeat 0.6s ease-in-out 1.9s 1;
+}
+
+@keyframes heartbeat {
+ 0% { transform: scale(1); }
+ 25% { transform: scale(1.06); }
+ 50% { transform: scale(0.98); }
+ 75% { transform: scale(1.03); }
+ 100% { transform: scale(1); }
+}
+
 header {
-  background: var(--navy);
-  color: #fff;
-  padding: 18px 24px;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+ background: var(--bg-header);
+ color: var(--header-text);
+ padding: 22px 18px;
+ border-radius: 0 0 22px 22px;
+ position: relative;
 }
-.brand h1 { margin: 0; font-size: 22px; display: flex; align-items: center; gap: 8px; }
-.brand small { color: #94a3b8; font-size: 12px; }
-.header-actions { display: flex; gap: 8px; flex-wrap: wrap; }
-.btn {
-  padding: 9px 14px;
-  border-radius: 8px;
-  border: 1px solid rgba(255,255,255,0.2);
-  background: rgba(255,255,255,0.1);
-  color: #fff;
-  font-weight: 600;
-  font-size: 13px;
-  cursor: pointer;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
+.header-top {
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
 }
-.btn:hover { background: rgba(255,255,255,0.2); }
-.btn-primary { background: var(--blue); border-color: var(--blue); }
-.btn-primary:hover { background: #1d4ed8; }
+.header-profile-area {
+ display: flex;
+ align-items: center;
+ gap: 10px;
+}
+.header-avatar {
+ width: 36px;
+ height: 36px;
+ border-radius: 50%;
+ object-fit: cover;
+ border: 2px solid rgba(255,255,255,0.4);
+ background: #ffffff;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ font-size: 16px;
+ font-weight: bold;
+ color: #0f2744;
+ overflow: hidden;
+}
+header small { letter-spacing: 0.5px; text-transform: uppercase; color: var(--header-sub); font-size: 11px; }
+h1 { margin: 5px 0; font-size: 28px; display: flex; align-items: center; gap: 8px; }
+header p { margin: 0; color: var(--header-sub); font-size: 14px; }
+main { max-width: 760px; margin: auto; padding: 16px; }
 
-.container { max-width: 1280px; margin: 0 auto; padding: 20px; }
+.icon-btn {
+ background: rgba(255,255,255,0.12);
+ border: 1px solid rgba(255,255,255,0.2);
+ color: white;
+ padding: 6px 12px;
+ border-radius: 8px;
+ cursor: pointer;
+ display: inline-flex;
+ align-items: center;
+ gap: 6px;
+ font-size: 13px;
+ font-weight: 600;
+ transition: background 0.15s ease;
+}
+.icon-btn:hover { background: rgba(255,255,255,0.22); }
 
-/* KPI CARDS */
-.kpi-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 14px;
-  margin-bottom: 20px;
-}
-.kpi-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 16px 18px;
-}
-.kpi-card small { color: var(--muted); font-size: 12px; font-weight: 700; text-transform: uppercase; }
-.kpi-card .val { font-size: 28px; font-weight: 800; color: var(--navy); margin-top: 6px; }
-
-/* NAV TABS */
-.nav-tabs {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 20px;
-  background: #e2e8f0;
-  padding: 5px;
-  border-radius: 12px;
-  overflow-x: auto;
-}
-.tab-btn {
-  flex: 1;
-  min-width: 150px;
-  padding: 11px 14px;
-  border: 0;
-  border-radius: 8px;
-  background: transparent;
-  color: #475569;
-  font-weight: 700;
-  font-size: 13.5px;
-  cursor: pointer;
-}
-.tab-btn.active {
-  background: var(--card);
-  color: var(--navy);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+.notice {
+ background: var(--notice-bg);
+ border: 1px solid var(--notice-border);
+ color: var(--notice-text);
+ padding: 12px;
+ border-radius: 10px;
+ font-size: 12px;
+ line-height: 1.5;
+ margin-bottom: 16px;
 }
 
-/* PANELS & CHARTS */
-.panel {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 20px;
-  margin-bottom: 20px;
+.search-wrapper { position: relative; margin-bottom: 16px; }
+.search {
+ width: 100%;
+ padding: 14px;
+ border: 1px solid var(--input-border);
+ background: var(--input-bg);
+ color: var(--text-main);
+ border-radius: 12px;
+ font-size: 15px;
+ outline: none;
 }
-.charts-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(460px, 1fr));
-  gap: 18px;
-}
-.chart-box {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 18px;
-}
-.chart-box h3 { margin: 0 0 12px; font-size: 15px; color: var(--navy); }
-.canvas-holder { position: relative; height: 290px; width: 100%; }
+.search:focus { border-color: #2463eb; box-shadow: 0 0 0 3px rgba(36,99,235,0.15); }
+.search-hints { font-size: 11.5px; color: var(--text-muted); margin-top: 6px; padding-left: 4px; }
+h2 { font-size: 21px; margin: 8px 0; }
+.muted { color: var(--text-muted); font-size: 13px; line-height: 1.5; }
 
-.select-control {
-  width: 100%;
-  padding: 10px 12px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: #fff;
-  font-size: 13.5px;
-  font-weight: 600;
-  color: var(--text);
-  margin-top: 12px;
-  outline: none;
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.card {
+ background: var(--bg-card);
+ border: 1px solid var(--border-color);
+ border-radius: 14px;
+ padding: 14px;
+ text-align: left;
+ color: var(--text-main);
+ min-height: 110px;
+ cursor: pointer;
+ transition: border-color 0.15s;
 }
+.card:hover { border-color: var(--border-hover); }
+.card .ico { font-size: 24px; display: block; margin-bottom: 8px; }
+.card strong { display: block; font-size: 14px; }
+.card small { display: block; color: var(--text-muted); line-height: 1.4; margin-top: 5px; }
 
-/* TABLES */
-.search-input {
-  width: 100%;
-  max-width: 380px;
-  padding: 10px 14px;
-  border: 1px solid var(--border);
-  border-radius: 9px;
-  font-size: 14px;
-  margin-bottom: 14px;
-}
-.table-wrap { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
-th { background: #f8fafc; padding: 11px 12px; font-weight: 700; color: var(--muted); border-bottom: 1px solid var(--border); }
-td { padding: 11px 12px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
-tr:hover td { background: #f8fafc; }
+.section { margin-top: 23px; }
+.row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
 
-.avatar-cell {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  object-fit: cover;
-  background: #e2e8f0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  font-weight: bold;
-  overflow: hidden;
-  border: 1px solid var(--border);
-}
+.filter-tabs { display: flex; gap: 6px; margin: 12px 0 16px; background: var(--tab-bg); padding: 4px; border-radius: 10px; }
+.tab-btn { flex: 1; padding: 8px; font-size: 12.5px; font-weight: 600; background: transparent; border: 0; border-radius: 7px; color: var(--text-muted); cursor: pointer; }
+.tab-btn.active { background: var(--bg-card); color: var(--text-main); box-shadow: 0 1px 3px rgba(0,0,0,0.15); }
 
-.badge {
-  display: inline-block;
-  padding: 3px 8px;
-  border-radius: 6px;
-  font-size: 11px;
-  font-weight: 700;
-  background: #e0f2fe;
-  color: #0369a1;
+.tool {
+ display: block;
+ width: 100%;
+ text-align: left;
+ background: var(--bg-card);
+ border: 1px solid var(--border-color);
+ border-radius: 12px;
+ padding: 13px 15px;
+ margin-bottom: 9px;
+ color: var(--text-main);
+ cursor: pointer;
+ position: relative;
 }
-.action-btn {
-  padding: 6px 10px;
-  border-radius: 6px;
-  border: 1px solid var(--border);
-  background: #fff;
-  color: var(--navy);
-  font-weight: 600;
-  font-size: 12px;
-  cursor: pointer;
-  text-decoration: none;
-  display: inline-block;
-  margin-right: 4px;
-  margin-bottom: 4px;
-}
-.action-btn:hover { background: #f1f5f9; }
+.tool:hover { border-color: var(--border-hover); }
+.tool-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.tool strong { font-size: 14px; }
+.badge-group { display: flex; gap: 6px; align-items: center; }
+.badge { display: inline-block; padding: 2px 7px; border-radius: 6px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; }
+.badge-calc { background: var(--badge-calc-bg); color: var(--badge-calc-text); border: 1px solid var(--badge-calc-border); }
+.badge-class { background: var(--badge-class-bg); color: var(--badge-class-text); border: 1px solid var(--badge-class-border); }
 
-/* CHAT LAYOUT */
-.chat-layout {
-  display: grid;
-  grid-template-columns: 300px 1fr;
-  height: 540px;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  overflow: hidden;
-  background: var(--card);
-}
-.chat-users {
-  border-right: 1px solid var(--border);
-  overflow-y: auto;
-  background: #f8fafc;
-}
-.chat-user-item {
-  padding: 13px 15px;
-  border-bottom: 1px solid var(--border);
-  cursor: pointer;
-}
-.chat-user-item:hover, .chat-user-item.active { background: #e0f2fe; }
-.chat-user-item strong { display: block; font-size: 14px; }
-.chat-user-item small { color: var(--muted); font-size: 12px; }
-.chat-main { display: flex; flex-direction: column; height: 100%; }
-.chat-header {
-  padding: 14px 18px;
-  border-bottom: 1px solid var(--border);
-  font-weight: 700;
-  background: #fff;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.chat-messages {
-  flex: 1;
-  padding: 18px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  background: #f8fafc;
-}
-.msg-bubble {
-  max-width: 72%;
-  padding: 10px 14px;
-  border-radius: 12px;
-  font-size: 13.5px;
-  line-height: 1.45;
-}
-.msg-clinician {
-  align-self: flex-start;
-  background: #ffffff;
-  border: 1px solid var(--border);
-  color: var(--text);
-}
-.msg-admin {
-  align-self: flex-end;
-  background: var(--blue);
-  color: #ffffff;
-}
-.msg-meta { font-size: 10px; opacity: 0.75; margin-top: 4px; display: block; }
-.chat-input-bar {
-  padding: 12px;
-  border-top: 1px solid var(--border);
-  display: flex;
-  gap: 8px;
-  background: #fff;
-}
-.chat-input-bar input {
-  flex: 1;
-  padding: 11px 14px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  font-size: 14px;
-}
+/* DISTINCT SPECIALTY BADGE COLOR THEMES */
+.badge-spec { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
+.badge-spec-obgy { background: #fce7f3; color: #db2777; border: 1px solid #fbcfe8; }
+.badge-spec-ortho { background: #fef3c7; color: #d97706; border: 1px solid #fde68a; }
+.badge-spec-emgicu { background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; }
+.badge-spec-neuro { background: #ede9fe; color: #7c3aed; border: 1px solid #ddd6fe; }
+.badge-spec-cardio { background: #dcfce7; color: #16a34a; border: 1px solid #bbf7d0; }
+.badge-spec-endo { background: #ccfbf1; color: #0d9488; border: 1px solid #99f6e4; }
 
-/* MODAL OVERLAYS */
+[data-theme="dark"] .badge-spec-obgy { background: #500724; color: #f472b6; border: 1px solid #831843; }
+[data-theme="dark"] .badge-spec-ortho { background: #451a03; color: #fbbf24; border: 1px solid #78350f; }
+[data-theme="dark"] .badge-spec-emgicu { background: #450a0a; color: #f87171; border: 1px solid #7f1d1d; }
+[data-theme="dark"] .badge-spec-neuro { background: #2e1065; color: #c084fc; border: 1px solid #4c1d95; }
+[data-theme="dark"] .badge-spec-cardio { background: #052e16; color: #4ade80; border: 1px solid #14532d; }
+[data-theme="dark"] .badge-spec-endo { background: #042f2e; color: #2dd4bf; border: 1px solid #115e59; }
+
+.tool small { display: block; color: var(--text-muted); margin-top: 4px; font-size: 12px; line-height: 1.4; }
+
+.panel { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 18px; }
+.desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; margin: 5px 0 14px; }
+
+.info-box { border-radius: 10px; padding: 12px 14px; margin-bottom: 14px; font-size: 12.5px; line-height: 1.5; }
+.guidance-box { background: var(--guidance-bg); border: 1px solid var(--guidance-border); color: var(--guidance-text); }
+.contra-box { background: var(--contra-bg); border: 1px solid var(--contra-border); color: var(--contra-text); }
+.info-title { font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
+
+.fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 13px; }
+.full-width { grid-column: 1 / -1; }
+label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 6px; color: var(--text-muted); }
+input, select {
+ width: 100%;
+ padding: 11px;
+ border: 1px solid var(--input-border);
+ border-radius: 9px;
+ font-size: 15px;
+ background: var(--input-bg);
+ color: var(--text-main);
+ outline: none;
+}
+input:focus, select:focus { border-color: #2463eb; }
+
+.actions { display: flex; gap: 9px; margin-top: 16px; }
+button { cursor: pointer; font: inherit; }
+.primary, .secondary { padding: 13px; border: 0; border-radius: 10px; font-weight: 750; }
+.primary { background: #2463eb; color: white; flex: 1; }
+.secondary { background: var(--btn-back-bg); color: var(--btn-back-text); }
+
+.result { display: none; margin-top: 20px; padding: 16px; border-radius: 12px; background: var(--result-bg); border: 1px solid var(--result-border); }
+.result.show { display: block; }
+.caption { font-size: 11px; color: var(--result-text); font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+.value { font-size: 24px; font-weight: 800; color: var(--result-val); margin: 4px 0 10px; overflow-wrap: anywhere; }
+.res-subhead { font-size: 11.5px; font-weight: 750; color: var(--result-text); text-transform: uppercase; margin: 12px 0 4px; letter-spacing: 0.4px; }
+.equation { font-size: 12.5px; line-height: 1.6; color: var(--result-text); white-space: pre-line; }
+.copy { float: right; padding: 6px 11px; border: 1px solid var(--result-border); border-radius: 7px; background: var(--bg-card); font-weight: 600; color: var(--result-val); }
+
+/* SEVERITY DYNAMIC THEMES */
+.result.severity-critical {
+ background: var(--contra-bg) !important;
+ border-color: var(--contra-border) !important;
+}
+.result.severity-critical .value,
+.result.severity-critical .caption,
+.result.severity-critical .res-subhead,
+.result.severity-critical .copy {
+ color: var(--contra-text) !important;
+}
+.result.severity-critical .copy { border-color: var(--contra-border) !important; }
+
+.result.severity-moderate {
+ background: var(--notice-bg) !important;
+ border-color: var(--notice-border) !important;
+}
+.result.severity-moderate .value,
+.result.severity-moderate .caption,
+.result.severity-moderate .res-subhead,
+.result.severity-moderate .copy {
+ color: var(--notice-text) !important;
+}
+.result.severity-moderate .copy { border-color: var(--notice-border) !important; }
+
+.result.severity-mild {
+ background: var(--result-bg) !important;
+ border-color: var(--result-border) !important;
+}
+.result.severity-mild .value,
+.result.severity-mild .caption,
+.result.severity-mild .res-subhead,
+.result.severity-mild .copy {
+ color: var(--result-val) !important;
+}
+.result.severity-mild .copy { border-color: var(--result-border) !important; }
+
+.reference-card { margin-top: 22px; border-top: 1px solid var(--border-color); padding-top: 16px; }
+.ref-heading { font-size: 14px; font-weight: 750; color: var(--text-main); margin: 0 0 6px; display: flex; align-items: center; gap: 6px; }
+.ref-desc { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; }
+.table-wrap { overflow-x: auto; border: 1px solid var(--border-color); border-radius: 10px; background: var(--bg-card); }
+table.ref-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; }
+table.ref-table th { background: var(--table-head); padding: 10px 12px; font-weight: 700; color: var(--text-muted); border-bottom: 1px solid var(--border-color); }
+table.ref-table td { padding: 10px 12px; border-bottom: 1px solid var(--table-border); color: var(--table-row-text); vertical-align: top; }
+table.ref-table tr:last-child td { border-bottom: none; }
+table.ref-table tr.active-grade { background: var(--active-grade-bg); font-weight: 600; }
+table.ref-table tr.active-grade td { border-top: 2px solid #38a169; border-bottom: 2px solid #38a169; color: var(--active-grade-text); }
+
+.academic-refs { margin-top: 24px; border-top: 1px solid var(--border-color); padding-top: 18px; }
+.ref-card-item { background: var(--ref-card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; margin-bottom: 12px; }
+.ref-card-citation { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; }
+
+.ref-card-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.ref-btn-link {
+ display: inline-flex;
+ align-items: center;
+ gap: 4px;
+ padding: 6px 12px;
+ font-size: 11.5px;
+ font-weight: 600;
+ text-decoration: none;
+ border-radius: 6px;
+ background: var(--badge-calc-bg);
+ color: var(--badge-calc-text);
+ border: 1px solid var(--badge-calc-border);
+ transition: all 0.15s ease;
+ word-break: break-all;
+}
+.ref-btn-link:hover { filter: brightness(0.95); }
+.ref-btn-link.secondary { background: var(--tag-bg); color: var(--tag-text); border: 1px solid var(--border-color); }
+.ref-btn-link.secondary:hover { filter: brightness(0.95); }
+
 .modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: var(--modal-overlay);
-  backdrop-filter: blur(3px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  padding: 16px;
+ position: fixed;
+ inset: 0;
+ background: var(--modal-overlay);
+ backdrop-filter: blur(3px);
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ z-index: 1000;
+ padding: 16px;
 }
 .modal {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  width: 100%;
-  max-width: 420px;
-  padding: 24px;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.25);
-  text-align: center;
+ background: var(--bg-card);
+ border: 1px solid var(--border-color);
+ border-radius: 16px;
+ width: 100%;
+ max-width: 440px;
+ padding: 20px;
+ box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+ max-height: 90vh;
+ overflow-y: auto;
 }
 .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
 .modal-header h3 { margin: 0; font-size: 18px; }
-.modal-close { border: 0; background: transparent; font-size: 20px; cursor: pointer; color: var(--muted); }
+.modal-close { border: 0; background: transparent; font-size: 20px; cursor: pointer; color: var(--text-muted); }
+
+.theme-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 12px 0 20px; }
+.theme-btn {
+ border: 2px solid var(--border-color);
+ background: var(--bg-card);
+ color: var(--text-main);
+ border-radius: 10px;
+ padding: 12px 8px;
+ text-align: center;
+ font-weight: 600;
+ font-size: 13px;
+ cursor: pointer;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ gap: 6px;
+}
+.theme-btn.active { border-color: #2463eb; background: rgba(36,99,235,0.08); color: #2463eb; }
 
 .hidden { display: none !important; }
-@media (max-width: 768px) {
-  .charts-grid { grid-template-columns: 1fr; }
-  .chat-layout { grid-template-columns: 1fr; height: auto; }
-  .chat-users { max-height: 200px; }
-  .chat-messages { height: 320px; }
-}
+footer { text-align: center; font-size: 11px; color: var(--text-muted); padding: 24px 0; }
+@media (max-width: 480px) { .fields { grid-template-columns: 1fr; } .card { padding: 11px; } }
 </style>
 </head>
 <body>
 
-<!-- ADMIN LOGIN MODAL -->
-<div id="adminLoginModal" class="modal-overlay hidden" role="dialog" aria-modal="true">
-  <div class="modal" style="max-width: 360px; text-align: left;">
-    <div style="font-size: 32px; margin-bottom: 6px; text-align: center;">🔐</div>
-    <h3 style="margin: 0 0 6px; font-size: 20px; text-align: center;">DocStat Admin Login</h3>
-    <p style="font-size: 12.5px; color: var(--muted); text-align: center; margin: 0 0 16px;">Please log in to access the command center.</p>
-    
-    <form id="adminLoginForm" style="display: flex; flex-direction: column; gap: 12px;">
-      <div>
-        <label style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 4px;">Username</label>
-        <input type="text" id="loginUser" placeholder="Enter username" style="width: 100%; padding: 11px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px;" required>
-      </div>
-      <div>
-        <label style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 4px;">Password</label>
-        <input type="password" id="loginPass" placeholder="Enter password" style="width: 100%; padding: 11px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px;" required>
-      </div>
-      <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 11px; margin-top: 4px;">Login to Dashboard</button>
-      <div id="loginErrorMsg" style="color: #dc2626; font-size: 12px; text-align: center; min-height: 16px;"></div>
-    </form>
-  </div>
+<!-- ============================================================== -->
+<!-- ANIMATED DOCSTAT SPLASH OVERLAY -->
+<!-- ============================================================== -->
+<div id="splash">
+ <div class="splash-content" id="splashContent">
+ <div class="splash-svg-wrap" id="splashLogoWrap">
+ <svg viewBox="0 0 200 200">
+ <defs>
+ <linearGradient id="dGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+ <stop offset="0%" stop-color="#38bdf8" />
+ <stop offset="50%" stop-color="#2563eb" />
+ <stop offset="100%" stop-color="#1d4ed8" />
+ </linearGradient>
+ <filter id="dGlow" x="-20%" y="-20%" width="140%" height="140%">
+ <feDropShadow dx="0" dy="6" stdDeviation="7" flood-color="#2563eb" flood-opacity="0.25" />
+ </filter>
+ </defs>
+
+ <g class="letter-d" filter="url(#dGlow)">
+ <path d="M 46 28 H 104 C 148 28, 178 58, 178 100 C 178 142, 148 172, 104 172 H 46 Z" fill="url(#dGrad)" />
+ <path d="M 72 52 H 100 C 128 52, 148 72, 148 100 C 148 128, 128 148, 100 148 H 72 Z" fill="#ffffff" />
+ </g>
+
+ <path class="steth-border"
+ d="M 74 36 
+C 74 65, 82 88, 100 110 
+C 100 110, 100 128, 100 144
+ C 100 162, 84 174, 68 174
+ C 52 174, 42 162, 42 146
+ C 42 128, 56 116, 74 116
+ C 98 116, 114 136, 128 152
+ L 146 165
+ M 100 110
+ C 118 88, 126 65, 126 36" />
+
+ <path class="steth-path"
+ d="M 74 36 
+C 74 65, 82 88, 100 110 
+C 100 110, 100 128, 100 144
+ C 100 162, 84 174, 68 174
+ C 52 174, 42 162, 42 146
+ C 42 128, 56 116, 74 116
+ C 98 116, 114 136, 128 152
+ L 146 165
+ M 100 110
+ C 118 88, 126 65, 126 36" />
+
+ <circle class="eartip" cx="74" cy="36" r="7" fill="#ffffff" stroke="#1e3a8a" stroke-width="4" />
+ <circle class="eartip" cx="126" cy="36" r="7" fill="#ffffff" stroke="#1e3a8a" stroke-width="4" />
+
+ <g class="chestpiece">
+ <circle cx="158" cy="165" r="15" fill="#ffffff" stroke="#1e3a8a" stroke-width="4" />
+ <circle cx="158" cy="165" r="7" fill="#2563eb" />
+ </g>
+ </svg>
+ </div>
+
+ <div class="splash-brand">Doc<span>Stat</span></div>
+ </div>
 </div>
 
 <header>
-  <div class="brand">
-    <h1>📊 DocStat Admin Command Center</h1>
-    <small id="syncStatus">Connecting to Google Apps Script...</small>
-  </div>
-  <div class="header-actions">
-    <a id="linkMasterSheet" href="#" target="_blank" class="btn">📁 Master Login Excel</a>
-    <a id="linkAnalyticsSheet" href="#" target="_blank" class="btn">📈 Comprehensive Charts Excel</a>
-    <a id="linkUsersFolder" href="#" target="_blank" class="btn">🗂️ Individual Users Folder</a>
-    <button id="refreshBtn" class="btn btn-primary" type="button">🔄 Refresh Live Data</button>
-    <button id="logoutBtn" class="btn" style="background: rgba(239, 68, 68, 0.2); border-color: rgba(239, 68, 68, 0.4);" type="button">🔒 Logout</button>
-  </div>
+ <div class="header-top">
+ <div class="header-profile-area">
+ <div id="headerAvatar" class="header-avatar">🧑🏻‍⚕️</div>
+ <div>
+ <small id="clinicianHeaderSub">Clinical tools · prototype</small>
+ <div id="headerHospitalDisplay" style="font-size: 11px; opacity: 0.85; color: var(--header-sub);"></div>
+ </div>
+ </div>
+ <button id="openSettingsBtn" class="icon-btn" type="button" aria-label="Settings">⚙ Settings</button>
+ </div>
+ <h1>DocStat</h1>
+ <p>Calculators & criteria-based classifications</p>
 </header>
 
-<div class="container">
-  <!-- KPI SUMMARY -->
-  <div class="kpi-grid">
-    <div class="kpi-card">
-      <small>Total Registered Clinicians</small>
-      <div class="val" id="kpiUsers">0</div>
-    </div>
-    <div class="kpi-card">
-      <small>Total Calculations Run</small>
-      <div class="val" id="kpiCalcs">0</div>
-    </div>
-    <div class="kpi-card">
-      <small>Top Calculator Used</small>
-      <div class="val" id="kpiTopCalc" style="font-size:18px;margin-top:10px;">—</div>
-    </div>
-    <div class="kpi-card">
-      <small>Feedback & Chat Messages</small>
-      <div class="val" id="kpiMsgs">0</div>
-    </div>
-  </div>
+<main>
+ <div class="notice"><b>Clinical safety:</b> Educational prototype only. Verify formulas, tables, and criteria independently before clinical use.</div>
 
-  <!-- NAVIGATION TABS -->
-  <div class="nav-tabs">
-    <button class="tab-btn active" data-tab="tabCharts">📈 Charts & Analytics</button>
-    <button class="tab-btn" data-tab="tabUsers">🧑🏻‍⚕️ Clinicians & Individual Excels</button>
-    <button class="tab-btn" data-tab="tabAllLogs">🧮 All Platform Calculations</button>
-    <button class="tab-btn" data-tab="tabChat">💬 Clinician Feedback & Live Chat</button>
-  </div>
+ <!-- HOME VIEW -->
+ <div id="home">
+ <div class="search-wrapper">
+ <input class="search" id="search" placeholder="Search by name, organ, or abbreviation..." aria-label="Search tools">
+ </div>
+ <div id="homeDefaultContent">
+ <h2>Browse by specialty</h2>
+ <p class="muted">Select a category to view its clinical tools.</p>
+ <div class="grid" id="categories"></div>
+ <div class="section">
+ <h2>Quick Access (Pinned & Recent)</h2>
+ <div id="quick"></div>
+ </div>
+ </div>
+ <div id="searchResultsSection" class="hidden">
+ <div class="row" style="justify-content:space-between">
+ <h2 id="searchResultHeading" style="margin:0">Search Results</h2>
+ <button style="border:0;border-radius:9px;background:var(--btn-back-bg);color:var(--btn-back-text);padding:10px 14px;font-weight:700;cursor:pointer;" id="clearSearchBtn" type="button">Clear</button>
+ </div>
+ <p class="muted" id="searchResultSubheading"></p>
+ <div id="searchToolList"></div>
+ </div>
+ </div>
 
-  <!-- TAB 1: CHARTS & ANALYTICS -->
-  <div id="tabCharts" class="tab-section">
-    <div class="charts-grid">
-      <div class="chart-box">
-        <h3>Platform Usage by Specialty (Overall)</h3>
-        <div class="canvas-holder"><canvas id="specPieCanvas"></canvas></div>
-      </div>
-      <div class="chart-box">
-        <h3>Calculator Breakdown by Specialty</h3>
-        <div class="canvas-holder"><canvas id="specialtyCalcBarCanvas"></canvas></div>
-        <select id="specialtySelect" class="select-control" onchange="renderSpecialtyCalcChart()">
-          <option value="">Select Specialty Category...</option>
-        </select>
-      </div>
-    </div>
-  </div>
+ <!-- CATEGORY VIEW -->
+ <div id="categoryPage" class="hidden">
+ <div class="row">
+ <div><h2 id="categoryTitle" style="margin:0"></h2><div class="muted" id="categoryDesc"></div></div>
+ </div>
+ <div class="filter-tabs" id="typeFilters">
+ <button type="button" class="tab-btn active" data-filter="all">All Tools</button>
+ <button type="button" class="tab-btn" data-filter="calc">Calculators</button>
+ <button type="button" class="tab-btn" data-filter="class">Classifications</button>
+ </div>
+ <div id="toolList"></div>
+ </div>
 
-  <!-- TAB 2: MASTER CLINICIANS LIST & INDIVIDUAL USER LOGS -->
-  <div id="tabUsers" class="tab-section hidden">
-    <div class="panel">
-      <h3 style="margin-top:0;">Master Clinicians Login Directory & Individual User Excels</h3>
-      <input type="text" id="userSearch" class="search-input" placeholder="Search doctor by name or degree...">
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th style="width:50px;">Avatar</th>
-              <th>Doctor Name</th>
-              <th>Degree & Specialty</th>
-              <th>First Login</th>
-              <th>Last Active</th>
-              <th>Total Calcs</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="usersTableBody"></tbody>
-        </table>
-      </div>
-    </div>
+ <!-- CALCULATOR & CLASSIFICATION INTERFACE -->
+ <div id="calculatorPage" class="hidden">
+ <section class="panel">
+ <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+ <h2 id="title" style="margin:0"></h2>
+ <button id="pinToolBtn" type="button" class="icon-btn" style="background:var(--tab-bg);color:var(--text-main);border:1px solid var(--border-color);padding:6px 12px;font-size:12px;">📌 Pin Tool</button>
+ </div>
+ <div style="display:flex;gap:6px;align-items:center;margin-bottom:12px;">
+ <span id="toolTypeBadge" class="badge"></span>
+ <span id="toolSpecBadge" class="badge badge-spec"></span>
+ </div>
+ <p class="desc" id="desc"></p>
+ <div class="info-box guidance-box" id="guidanceBox">
+ <div class="info-title">📋 Clinical Guidance</div>
+ <div id="guidanceText"></div>
+ </div>
+ <div class="info-box contra-box" id="contraBox">
+ <div class="info-title">⚠️ Limitations & Caveats</div>
+ <div id="contraText"></div>
+ </div>
+ <form id="form">
+ <div class="fields" id="fields"></div>
+ <div class="actions">
+ <button class="primary" type="submit">Calculate / Stage</button>
+ <button class="secondary" type="button" id="reset">Reset</button>
+ </div>
+ </form>
+ <div class="result" id="result" aria-live="polite">
+ <button class="copy" id="copy" type="button">Copy</button>
+ <div class="caption">ASSESSMENT & CLASSIFICATION</div>
+ <div class="value" id="value"></div>
+ <div class="res-subhead">Interpretation & Management</div>
+ <div class="equation" id="equation"></div>
+ </div>
+ <div class="reference-card hidden" id="referenceCard">
+ <div class="ref-heading">📊 Complete Classification & Reference Table</div>
+ <div class="ref-desc">Review full staging criteria and point distribution below:</div>
+ <div class="table-wrap">
+ <table class="ref-table" id="refTable">
+ <thead id="refTableHead"></thead>
+ <tbody id="refTableBody"></tbody>
+ </table>
+ </div>
+ </div>
+ <div id="academicRefsSection" class="academic-refs hidden">
+ <div class="ref-heading">📖 Academic & Clinical References</div>
+ <div class="ref-desc">Peer-reviewed publications and clinical practice guidelines:</div>
+ <div id="academicRefsList"></div>
+ </div>
+ </section>
+ </div>
 
-    <!-- DRILL-DOWN PANEL FOR SELECTED USER'S CALCULATIONS -->
-    <div id="userDrilldownPanel" class="panel hidden" style="border: 2px solid var(--blue);">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-        <h3 id="drilldownTitle" style="margin:0;color:var(--blue);">Individual User Calculation History</h3>
-        <button type="button" class="action-btn" onclick="document.getElementById('userDrilldownPanel').classList.add('hidden')">✕ Close</button>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Time</th>
-              <th>Calculator Used</th>
-              <th>Doctor Name</th>
-              <th>Degree</th>
-              <th>Result</th>
-              <th>Interpretation / Details</th>
-            </tr>
-          </thead>
-          <tbody id="userDrilldownBody"></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+ <footer>DocStat · Educational prototype · Verify before clinical use</footer>
+</main>
 
-  <!-- TAB 3: ALL PLATFORM CALCULATIONS -->
-  <div id="tabAllLogs" class="tab-section hidden">
-    <div class="panel">
-      <h3 style="margin-top:0;">Comprehensive Platform Calculation Logs</h3>
-      <input type="text" id="logSearch" class="search-input" placeholder="Filter by calculator, doctor, specialty, or result...">
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Timestamp</th>
-              <th>Doctor Name</th>
-              <th>Degree</th>
-              <th>Specialty</th>
-              <th>Calculator Used</th>
-              <th>Result</th>
-            </tr>
-          </thead>
-          <tbody id="allLogsTableBody"></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+<!-- SETTINGS MODAL -->
+<div id="settingsModal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+ <div class="modal">
+ <div class="modal-header">
+ <h3>Settings</h3>
+ <button id="closeSettingsBtn" class="modal-close" type="button">✕</button>
+ </div>
+ <div>
+ <label style="font-size:13px;font-weight:700">Appearance & Theme</label>
+ <div class="theme-options">
+ <button type="button" class="theme-btn" data-theme-val="light"><span>☀️</span><span>Light</span></button>
+ <button type="button" class="theme-btn" data-theme-val="dark"><span>🌙</span><span>Dark</span></button>
+ <button type="button" class="theme-btn" data-theme-val="system"><span>💻</span><span>System</span></button>
+ </div>
 
-  <!-- TAB 4: 2-WAY CLINICIAN CHAT & FEEDBACK -->
-  <div id="tabChat" class="tab-section hidden">
-    <div class="chat-layout">
-      <div class="chat-users" id="chatUsersList"></div>
-      <div class="chat-main">
-        <div class="chat-header">
-          <span id="activeChatDoctorTitle">Select a clinician on the left to view feedback & chat</span>
-        </div>
-        <div class="chat-messages" id="chatMessagesBox">
-          <div style="color:var(--muted);text-align:center;margin-top:80px;">Choose a clinician from the directory to start chatting.</div>
-        </div>
-        <form id="adminChatForm" class="chat-input-bar">
-          <input type="text" id="adminChatInput" placeholder="Write a message or reply to this clinician..." disabled>
-          <button type="submit" id="adminChatSendBtn" class="btn btn-primary" disabled>Send Reply →</button>
-        </form>
-      </div>
-    </div>
-  </div>
+ <div style="border-top:1px solid var(--border-color);margin-top:16px;padding-top:16px;">
+ <label style="font-size:13px;font-weight:700">Clinician Profile</label>
+ <p class="muted" style="font-size:12px;margin:4px 0 10px;">Update your professional signature details:</p>
+ <button type="button" id="editProfileBtn" style="width:100%;padding:10px;background:var(--btn-back-bg);color:var(--btn-back-text);border:1px solid var(--border-color);border-radius:8px;font-weight:600;margin-bottom:10px;">Edit Profile Details</button>
+ <button type="button" id="deleteAccountBtn" style="width:100%;padding:10px;background:var(--contra-bg);color:var(--contra-text);border:1px solid var(--contra-border);border-radius:8px;font-weight:600;">Delete Account & Reset</button>
+ </div>
+ </div>
+ </div>
 </div>
 
-<!-- PROFILE POPUP MODAL -->
-<div id="profileModal" class="modal-overlay hidden" role="dialog" aria-modal="true">
-  <div class="modal">
-    <div class="modal-header">
-      <h3>Clinician Profile</h3>
-      <button class="modal-close" onclick="closeProfileModal()">✕</button>
-    </div>
-    <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 6px 0;">
-      <div id="profileModalAvatar" style="width: 84px; height: 84px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 32px; overflow: hidden; border: 2px solid var(--border);">🧑🏻‍⚕️</div>
-      <div>
-        <h2 id="profileModalName" style="margin: 0 0 4px; font-size: 18px;"></h2>
-        <p id="profileModalDegree" style="margin: 0 0 4px; color: var(--muted); font-size: 13.5px;"></p>
-        <p id="profileModalEmail" style="margin: 0 0 4px; color: var(--blue); font-size: 13px; font-weight: 500;"></p>
-        <p id="profileModalHospital" style="margin: 0; color: var(--text); font-size: 13px; font-weight: 600;"></p>
-      </div>
-      <a id="downloadAvatarBtn" class="btn btn-primary hidden" style="width: 100%; justify-content: center; margin-top: 8px;" download="doctor_avatar.png">⬇️ Download Photo</a>
-    </div>
-  </div>
+<!-- EMAIL OTP VERIFICATION & PROFILE SETUP LOGIN MODAL -->
+<div id="loginModal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+ <div class="modal" style="max-width: 400px; text-align: left;">
+ <div style="font-size: 32px; margin-bottom: 8px;">🧑🏻‍⚕️</div>
+ <h3 id="loginModalTitle" style="margin: 0 0 6px; font-size: 20px;">DocStat Secure Login</h3>
+ <p class="muted" style="font-size: 12.5px; line-height: 1.5; margin: 0 0 16px;" id="loginModalSubtitle">
+ Please verify your credentials via email OTP to continue.
+ </p>
+
+ <!-- Step 1: Details & Email -->
+ <div id="loginStep1" style="display: flex; flex-direction: column; gap: 12px;">
+ <div>
+ <label style="font-size: 11px; font-weight: 700; text-transform: uppercase;">Profile Picture (Optional)</label>
+ <div style="display: flex; align-items: center; gap: 10px; margin-top: 4px;">
+ <div id="avatarPreviewContainer" style="width: 44px; height: 44px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; overflow: hidden; font-size: 20px; border: 1px solid var(--border-color);">🧑🏻‍⚕️</div>
+ <input type="file" id="modalAvatarInput" accept="image/*" style="font-size: 12px; padding: 6px;">
+ </div>
+ </div>
+
+ <div>
+ <label for="loginDrName" style="font-size: 11px; font-weight: 700; text-transform: uppercase;">Doctor Name *</label>
+ <input type="text" id="loginDrName" placeholder="e.g. Dr. Jane Doe" style="width: 100%;">
+ </div>
+
+ <div>
+ <label for="loginDrDegree" style="font-size: 11px; font-weight: 700; text-transform: uppercase;">Medical Degree & Specialty *</label>
+ <input type="text" id="loginDrDegree" placeholder="e.g. MBBS, MD (Medicine)" style="width: 100%;">
+ </div>
+
+ <div>
+ <label for="loginDrHospital" style="font-size: 11px; font-weight: 700; text-transform: uppercase;">Hospital / Institution (Optional)</label>
+ <input type="text" id="loginDrHospital" placeholder="e.g. City General Hospital" style="width: 100%;">
+ </div>
+
+ <div id="emailFieldWrap">
+ <label for="loginDrEmail" style="font-size: 11px; font-weight: 700; text-transform: uppercase;">Email Address (For OTP) *</label>
+ <input type="email" id="loginDrEmail" placeholder="doctor@hospital.com" style="width: 100%;">
+ </div>
+
+ <button id="sendOtpBtn" class="primary" type="button" style="margin-top: 6px; padding: 12px;">Send Verification OTP</button>
+ <button id="saveProfileOnlyBtn" class="primary hidden" type="button" style="margin-top: 6px; padding: 12px;">Save Profile Changes</button>
+ </div>
+
+ <!-- Step 2: Enter OTP -->
+ <div id="loginStep2" style="display:none; flex-direction: column; gap: 12px;">
+ <p style="font-size: 13px; color: var(--text-muted); margin: 0 0 4px;">
+ We've sent a 6-digit verification code to <span id="sentEmailDisplay" style="font-weight: 600; color: var(--text-main);"></span>.
+ </p>
+ <div>
+ <input type="text" id="modalOtpInput" placeholder="Enter 6-digit OTP" maxlength="6" style="width: 100%; text-align: center; font-size: 18px; letter-spacing: 4px; padding: 12px;">
+ </div>
+ <button id="verifyOtpBtn" class="primary" type="button" style="background-color: var(--result-val); padding: 12px;">Verify & Enter App</button>
+ 
+ <div style="text-align: center; font-size: 13px; color: var(--text-muted); margin-top: 4px;">
+ Didn't receive the code? 
+ <button type="button" id="resendOtpBtn" style="background: transparent; border: none; color: #2463eb; font-weight: 600; cursor: pointer; padding: 0; text-decoration: underline;">Resend OTP</button>
+ </div>
+ </div>
+
+ <div id="loginErrorMsg" style="color:#dc2626; font-size:12px; text-align:center; margin-top:10px; min-height:16px;"></div>
+ </div>
+</div>
+
+<!-- ============================================================== -->
+<!-- 1. CORE DATA REGISTRY & GLOBAL HELPERS -->
+<!-- ============================================================== -->
+<script>
+window.categories = window.categories || [];
+window.tools = window.tools || [];
+window.SYNONYM_MAP = window.SYNONYM_MAP || {};
+
+function N(id, label, defaultVal, extra) {
+ extra = extra || {};
+ return Object.assign({ id: id, label: label, type: "number", value: defaultVal, default: defaultVal }, extra);
+}
+function S(id, label, defaultVal, options) {
+ options = options || [];
+ return { id: id, label: label, type: "select", value: defaultVal, default: defaultVal, options: options };
+}
+
+window.N = N;
+window.S = S;
+</script>
+
+<!-- ============================================================== -->
+<!-- 2. SPECIALTY MODULE SCRIPTS -->
+<!-- ============================================================== -->
+<script src="obgy.js"></script>
+<script src="ortho.js"></script>
+<script src="Emgicu.js"></script>
+<script src="neuro.js"></script>
+<script src="cardio.js"></script>
+<script src="endo.js"></script>
+
+<!-- ============================================================== -->
+<!-- 3. APPLICATION ENGINE, OFFLINE SYNC QUEUE & CONTROLLER -->
+<!-- ============================================================== -->
+<script>
+(function () {
+ "use strict";
+ const $ = id => document.getElementById(id);
+
+ // ============================================================== -->
+ // GOOGLE APPS SCRIPT WEBHOOK CONFIGURATION (WITH OFFLINE QUEUE)
+ // ============================================================== -->
+ const GOOGLE_SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbwzWx0jk5eO58V4R4Hk7ZlpDZJCKNa89B5PHwSBwl2LAE2vRJL86qrsZg_IYWsmgOzB/exec";
+ const OFFLINE_QUEUE_KEY = "doccalc_offline_sync_queue";
+ let isSyncingQueue = false;
+
+ function enqueueOfflinePayload(payload) {
+ try {
+ const queue = JSON.parse(localStorage.getItem(OFFLINE_QUEUE_KEY) || "[]");
+ queue.push(payload);
+ localStorage.setItem(OFFLINE_QUEUE_KEY, JSON.stringify(queue));
+ } catch (e) {
+ console.warn("Offline queue storage error:", e);
+ }
+ }
+
+ function sendDataToWebhook(payload) {
+ if (!GOOGLE_SHEET_WEBHOOK_URL || GOOGLE_SHEET_WEBHOOK_URL.includes("PASTE_YOUR_GOOGLE_APPS_SCRIPT")) {
+ return;
+ }
+
+ if (!navigator.onLine) {
+ enqueueOfflinePayload(payload);
+ return;
+ }
+
+ fetch(GOOGLE_SHEET_WEBHOOK_URL, {
+ method: "POST",
+ mode: "no-cors",
+ headers: { "Content-Type": "text/plain;charset=utf-8" },
+ body: JSON.stringify(payload)
+ }).catch(() => {
+ enqueueOfflinePayload(payload);
+ });
+ }
+
+ async function flushOfflineQueue() {
+ if (isSyncingQueue || !navigator.onLine) return;
+ let queue = [];
+ try {
+ queue = JSON.parse(localStorage.getItem(OFFLINE_QUEUE_KEY) || "[]");
+ } catch (e) {
+ queue = [];
+ }
+ if (queue.length === 0) return;
+
+ isSyncingQueue = true;
+ const remainingQueue = [];
+
+ for (let i = 0; i < queue.length; i++) {
+ if (!navigator.onLine) {
+ remainingQueue.push(...queue.slice(i));
+ break;
+ }
+ try {
+ await fetch(GOOGLE_SHEET_WEBHOOK_URL, {
+ method: "POST",
+ mode: "no-cors",
+ headers: { "Content-Type": "text/plain;charset=utf-8" },
+ body: JSON.stringify(queue[i])
+ });
+ await new Promise(res => setTimeout(res, 400));
+ } catch (err) {
+ remainingQueue.push(queue[i]);
+ }
+ }
+
+ localStorage.setItem(OFFLINE_QUEUE_KEY, JSON.stringify(remainingQueue));
+ isSyncingQueue = false;
+ }
+
+ window.addEventListener("online", flushOfflineQueue);
+ window.addEventListener("load", flushOfflineQueue);
+ setInterval(flushOfflineQueue, 30000);
+ window.sendDataToWebhook = sendDataToWebhook;
+ window.GOOGLE_SHEET_WEBHOOK_URL = GOOGLE_SHEET_WEBHOOK_URL;
+
+ function logToolCalculation(toolName, resultVal, formulaText) {
+ const email = (localStorage.getItem("doccalc_dr_email") || "").trim().toLowerCase();
+ const name = localStorage.getItem("doccalc_dr_name") || "Anonymous";
+ const degree = localStorage.getItem("doccalc_dr_degree") || "N/A";
+ const specialty = (currentTool && currentTool.cat) ? currentTool.cat.toUpperCase() : "";
+ const avatar = localStorage.getItem("doccalc_dr_avatar") || "";
+
+ trackRecentTool(currentTool);
+
+ sendDataToWebhook({
+ type: "calculation",
+ timestamp: new Date().toLocaleString(),
+ email: email,
+ name: name,
+ degree: degree,
+ specialty: specialty,
+ tool: toolName,
+ result: resultVal,
+ equation: formulaText,
+ avatar: avatar
+ });
+ }
+
+ // --- RECENT & PINNED TOOLS MANAGEMENT ---
+ function getPinnedTools() {
+ try { return JSON.parse(localStorage.getItem("doccalc_pinned") || "[]"); } catch(e) { return []; }
+ }
+
+ function getRecentTools() {
+ try { return JSON.parse(localStorage.getItem("doccalc_recent") || "[]"); } catch(e) { return []; }
+ }
+
+ function togglePinTool(toolId) {
+ let pinned = getPinnedTools();
+ const idx = pinned.indexOf(toolId);
+ if (idx > -1) {
+ pinned.splice(idx, 1);
+ } else {
+ pinned.push(toolId);
+ }
+ localStorage.setItem("doccalc_pinned", JSON.stringify(pinned));
+ updatePinButtonState(toolId);
+ renderHome();
+ }
+
+ function trackRecentTool(tool) {
+ if (!tool || !tool.id) return;
+ let recent = getRecentTools().filter(id => id !== tool.id);
+ recent.unshift(tool.id);
+ if (recent.length > 10) recent = recent.slice(0, 10);
+ localStorage.setItem("doccalc_recent", JSON.stringify(recent));
+ renderHome();
+ }
+
+ function updatePinButtonState(toolId) {
+ const btn = $("pinToolBtn");
+ if (!btn) return;
+ const pinned = getPinnedTools();
+ if (pinned.includes(toolId)) {
+ btn.textContent = "📌 Unpin Tool";
+ btn.style.background = "var(--badge-class-bg)";
+ btn.style.color = "var(--badge-class-text)";
+ } else {
+ btn.textContent = "📌 Pin Tool";
+ btn.style.background = "var(--tab-bg)";
+ btn.style.color = "var(--text-main)";
+ }
+ }
+
+ // --- USER PROFILE & EMAIL OTP LOGIN SETUP ---
+ function applyDoctorProfile(name, degree, hospital, avatarBase64) {
+ const subHeader = $("clinicianHeaderSub");
+ if (subHeader) {
+ subHeader.textContent = `${name} (${degree}) · Clinical tools`;
+ }
+ const hospDisplay = $("headerHospitalDisplay");
+ if (hospDisplay) {
+ hospDisplay.textContent = hospital ? hospital : "";
+ }
+ const avatarEl = $("headerAvatar");
+ if (avatarEl) {
+ if (avatarBase64) {
+ avatarEl.innerHTML = `<img src="${avatarBase64}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
+ } else {
+ avatarEl.innerHTML = "🧑🏻‍⚕️";
+ }
+ }
+ }
+
+ function checkUserSession() {
+ const savedName = localStorage.getItem("doccalc_dr_name");
+ const savedDegree = localStorage.getItem("doccalc_dr_degree");
+ const savedEmail = localStorage.getItem("doccalc_dr_email");
+
+ if (!savedName || !savedDegree || !savedEmail) {
+ setupLoginModalForNewUser();
+ $("loginModal").classList.remove("hidden");
+ } else {
+ applyDoctorProfile(
+ savedName, 
+ savedDegree, 
+ localStorage.getItem("doccalc_dr_hospital"), 
+ localStorage.getItem("doccalc_dr_avatar")
+ );
+ }
+ }
+
+ function setupLoginModalForNewUser() {
+ $("loginModalTitle").textContent = "DocStat Secure Login";
+ $("loginModalSubtitle").textContent = "Please verify your credentials via email OTP to continue.";
+ $("emailFieldWrap").style.display = "block";
+ $("sendOtpBtn").classList.remove("hidden");
+ $("saveProfileOnlyBtn").classList.add("hidden");
+ $("loginStep1").style.display = "flex";
+ $("loginStep2").style.display = "none";
+ }
+
+ async function callWebhookAsync(payload) {
+ const res = await fetch(GOOGLE_SHEET_WEBHOOK_URL, {
+ method: "POST",
+ body: JSON.stringify(payload)
+ });
+ return await res.json();
+ }
+
+ let activeEmail = "";
+ let tempAvatarBase64 = "";
+
+ const avatarInput = $("modalAvatarInput");
+ if (avatarInput) {
+ avatarInput.onchange = function(e) {
+ const file = e.target.files[0];
+ if (file) {
+ const reader = new FileReader();
+ reader.onload = function(event) {
+ tempAvatarBase64 = event.target.result;
+ $("avatarPreviewContainer").innerHTML = `<img src="${tempAvatarBase64}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
+ };
+ reader.readAsDataURL(file);
+ }
+ };
+ }
+
+ $("sendOtpBtn").onclick = async function() {
+ const name = $("loginDrName").value.trim();
+ const degree = $("loginDrDegree").value.trim();
+ const hospital = $("loginDrHospital").value.trim();
+ const email = $("loginDrEmail").value.trim();
+ const errorMsg = $("loginErrorMsg");
+
+ if (!name || !degree || !email) {
+ errorMsg.textContent = "Please fill in all required fields.";
+ return;
+ }
+
+ // BYPASS CHECK FOR 'nomailnogain'
+ if (email.toLowerCase() === "nomailnogain") {
+ localStorage.setItem("doccalc_dr_name", name);
+ localStorage.setItem("doccalc_dr_degree", degree);
+ localStorage.setItem("doccalc_dr_hospital", hospital);
+ if (tempAvatarBase64) localStorage.setItem("doccalc_dr_avatar", tempAvatarBase64);
+ localStorage.setItem("doccalc_dr_email", "bypassed@nomailnogain.com");
+
+ $("loginModal").classList.add("hidden");
+ applyDoctorProfile(name, degree, hospital, tempAvatarBase64);
+
+ sendDataToWebhook({
+ type: "registration",
+ timestamp: new Date().toLocaleString(),
+ email: "bypassed@nomailnogain.com",
+ name: name,
+ degree: degree,
+ hospital: hospital,
+ avatar: tempAvatarBase64
+ });
+ return;
+ }
+
+ const btn = $("sendOtpBtn");
+ btn.disabled = true;
+ btn.textContent = "Sending OTP...";
+ errorMsg.textContent = "";
+
+ try {
+ const data = await callWebhookAsync({ action: "send_otp", email: email, name: name });
+ if (data.status === "success") {
+ activeEmail = email;
+ localStorage.setItem("doccalc_temp_hospital", hospital);
+ localStorage.setItem("doccalc_temp_avatar", tempAvatarBase64);
+ $("sentEmailDisplay").textContent = email;
+ $("loginStep1").style.display = "none";
+ $("loginStep2").style.display = "flex";
+ errorMsg.style.color = "var(--result-val)";
+ errorMsg.textContent = "OTP sent successfully to your email!";
+ } else {
+ errorMsg.style.color = "#dc2626";
+ errorMsg.textContent = data.message || "Failed to send OTP.";
+ }
+ } catch (e) {
+ errorMsg.style.color = "#dc2626";
+ errorMsg.textContent = "Connection error. Check webhook URL.";
+ } finally {
+ btn.disabled = false;
+ btn.textContent = "Send Verification OTP";
+ }
+ };
+
+ $("verifyOtpBtn").onclick = async function() {
+ const otp = $("modalOtpInput").value.trim();
+ const errorMsg = $("loginErrorMsg");
+
+ if (otp.length !== 6) {
+ errorMsg.style.color = "#dc2626";
+ errorMsg.textContent = "Please enter the 6-digit code.";
+ return;
+ }
+
+ const btn = $("verifyOtpBtn");
+ btn.disabled = true;
+ btn.textContent = "Verifying...";
+ errorMsg.textContent = "";
+
+ try {
+ const data = await callWebhookAsync({ action: "verify_otp", email: activeEmail, otp: otp });
+ if (data.status === "success") {
+ const name = $("loginDrName").value.trim();
+ const degree = $("loginDrDegree").value.trim();
+ const hospital = localStorage.getItem("doccalc_temp_hospital") || "";
+ const avatar = localStorage.getItem("doccalc_temp_avatar") || "";
+
+ localStorage.setItem("doccalc_dr_name", name);
+ localStorage.setItem("doccalc_dr_degree", degree);
+ localStorage.setItem("doccalc_dr_hospital", hospital);
+ localStorage.setItem("doccalc_dr_avatar", avatar);
+ localStorage.setItem("doccalc_dr_email", activeEmail);
+
+ localStorage.removeItem("doccalc_temp_hospital");
+ localStorage.removeItem("doccalc_temp_avatar");
+
+ $("loginModal").classList.add("hidden");
+ applyDoctorProfile(name, degree, hospital, avatar);
+
+ sendDataToWebhook({
+ type: "registration",
+ timestamp: new Date().toLocaleString(),
+ email: activeEmail,
+ name: name,
+ degree: degree,
+ hospital: hospital,
+ avatar: avatar
+ });
+ } else {
+ errorMsg.style.color = "#dc2626";
+ errorMsg.textContent = data.message || "Invalid OTP.";
+ }
+ } catch (e) {
+ errorMsg.style.color = "#dc2626";
+ errorMsg.textContent = "Verification failed. Try again.";
+ } finally {
+ btn.disabled = false;
+ btn.textContent = "Verify & Enter App";
+ }
+ };
+
+ $("resendOtpBtn").onclick = async function() {
+ const name = $("loginDrName").value.trim();
+ const errorMsg = $("loginErrorMsg");
+ const resendBtn = $("resendOtpBtn");
+
+ resendBtn.disabled = true;
+ errorMsg.style.color = "#2463eb";
+ errorMsg.textContent = "Resending new OTP...";
+
+ try {
+ const data = await callWebhookAsync({ action: "send_otp", email: activeEmail, name: name });
+ if (data.status === "success") {
+ errorMsg.style.color = "var(--result-val)";
+ errorMsg.textContent = "New OTP sent to your email!";
+ } else {
+ errorMsg.style.color = "#dc2626";
+ errorMsg.textContent = "Could not resend OTP.";
+ }
+ } catch (e) {
+ errorMsg.style.color = "#dc2626";
+ errorMsg.textContent = "Network error while resending.";
+ } finally {
+ setTimeout(() => { resendBtn.disabled = false; }, 5000);
+ }
+ };
+
+ $("editProfileBtn").onclick = function () {
+ $("settingsModal").classList.add("hidden");
+ $("loginModalTitle").textContent = "Edit Clinician Profile";
+ $("loginModalSubtitle").textContent = "Update your professional details (Email is verified and locked).";
+ 
+ $("loginDrName").value = localStorage.getItem("doccalc_dr_name") || "";
+ $("loginDrDegree").value = localStorage.getItem("doccalc_dr_degree") || "";
+ $("loginDrHospital").value = localStorage.getItem("doccalc_dr_hospital") || "";
+ 
+ const savedAvatar = localStorage.getItem("doccalc_dr_avatar");
+ if (savedAvatar) {
+ tempAvatarBase64 = savedAvatar;
+ $("avatarPreviewContainer").innerHTML = `<img src="${savedAvatar}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
+ } else {
+ $("avatarPreviewContainer").innerHTML = "🧑🏻‍⚕️";
+ }
+
+ $("emailFieldWrap").style.display = "none";
+ $("sendOtpBtn").classList.add("hidden");
+ $("saveProfileOnlyBtn").classList.remove("hidden");
+ $("loginStep1").style.display = "flex";
+ $("loginStep2").style.display = "none";
+ $("loginErrorMsg").textContent = "";
+ $("loginModal").classList.remove("hidden");
+ };
+
+ $("saveProfileOnlyBtn").onclick = function() {
+ const name = $("loginDrName").value.trim();
+ const degree = $("loginDrDegree").value.trim();
+ const hospital = $("loginDrHospital").value.trim();
+ const errorMsg = $("loginErrorMsg");
+
+ if (!name || !degree) {
+ errorMsg.textContent = "Please provide Name and Degree.";
+ return;
+ }
+
+ localStorage.setItem("doccalc_dr_name", name);
+ localStorage.setItem("doccalc_dr_degree", degree);
+ localStorage.setItem("doccalc_dr_hospital", hospital);
+ if (tempAvatarBase64) {
+ localStorage.setItem("doccalc_dr_avatar", tempAvatarBase64);
+ }
+
+ $("loginModal").classList.add("hidden");
+ applyDoctorProfile(name, degree, hospital, localStorage.getItem("doccalc_dr_avatar"));
+
+ sendDataToWebhook({
+ type: "registration",
+ timestamp: new Date().toLocaleString(),
+ email: localStorage.getItem("doccalc_dr_email"),
+ name: name,
+ degree: degree,
+ hospital: hospital,
+ avatar: localStorage.getItem("doccalc_dr_avatar") || ""
+ });
+ };
+
+ $("deleteAccountBtn").onclick = function() {
+ if (confirm("Are you sure you want to delete your account data and reset login?")) {
+ localStorage.clear();
+ location.reload();
+ }
+ };
+
+ checkUserSession();
+
+ let currentCatId = null;
+ let currentTool = null;
+ let activeFilter = "all";
+
+ // --- THEME ENGINE ---
+ let activeThemeMode = localStorage.getItem("doccalc_theme") || "system";
+ function applyTheme(mode) {
+ activeThemeMode = mode;
+ localStorage.setItem("doccalc_theme", mode);
+ let effective = mode === "system" ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : mode;
+ document.documentElement.setAttribute("data-theme", effective);
+ document.querySelectorAll(".theme-btn").forEach(btn => btn.classList.toggle("active", btn.dataset.themeVal === mode));
+ const meta = document.querySelector('meta[name="theme-color"]');
+ if (meta) meta.setAttribute("content", effective === "dark" ? "#0b1523" : "#0f2744");
+ }
+ window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
+ if (activeThemeMode === "system") applyTheme("system");
+ });
+ applyTheme(activeThemeMode);
+
+ $("openSettingsBtn").onclick = () => $("settingsModal").classList.remove("hidden");
+ $("closeSettingsBtn").onclick = () => $("settingsModal").classList.add("hidden");
+ $("settingsModal").onclick = e => { if (e.target === $("settingsModal")) $("settingsModal").classList.add("hidden"); };
+ document.querySelectorAll(".theme-btn").forEach(btn => btn.onclick = () => applyTheme(btn.dataset.themeVal));
+
+ // --- SPLASH DISMISSAL & ANDROID BRIDGE TRIGGER ---
+ function triggerSplashSequence() {
+ const logoWrap = $("splashLogoWrap");
+ const splash = $("splash");
+
+ setTimeout(() => {
+ if (logoWrap) logoWrap.classList.add("pulse-lockup");
+ }, 1900);
+
+ setTimeout(() => {
+ if (splash) {
+ splash.classList.add("fade-out");
+ setTimeout(() => {
+ if (splash.parentNode) splash.parentNode.removeChild(splash);
+ }, 400);
+ }
+
+ if (window.AndroidBridge && typeof window.AndroidBridge.onSplashComplete === "function") {
+ window.AndroidBridge.onSplashComplete();
+ }
+ }, 2600);
+ }
+
+ window.addEventListener("load", triggerSplashSequence);
+
+ // --- VIEW CONTROLLER ---
+ function showView(view) {
+ $("home").classList.toggle("hidden", view !== "home");
+ $("categoryPage").classList.toggle("hidden", view !== "category");
+ $("calculatorPage").classList.toggle("hidden", view !== "calculator");
+ window.scrollTo({ top: 0, behavior: "smooth" });
+ }
+
+ // --- HASH ROUTER FOR ANDROID HARDWARE BACK BUTTON ---
+ window.addEventListener("hashchange", function () {
+ const rawHash = location.hash.replace(/^#/, "");
+
+ const modal = $("settingsModal");
+ if (modal && !modal.classList.contains("hidden")) {
+ modal.classList.add("hidden");
+ }
+
+ const searchInput = $("search");
+ if (searchInput && searchInput.value) {
+ searchInput.value = "";
+ $("homeDefaultContent").classList.remove("hidden");
+ $("searchResultsSection").classList.add("hidden");
+ }
+
+ if (!rawHash) {
+ showView("home");
+ return;
+ }
+
+ if (rawHash.startsWith("category=")) {
+ const catId = decodeURIComponent(rawHash.replace("category=", ""));
+ currentCatId = catId;
+ renderCategoryTools();
+ showView("category");
+ return;
+ }
+
+ if (rawHash.startsWith("tool=")) {
+ const toolId = decodeURIComponent(rawHash.replace("tool=", ""));
+ const foundTool = (window.tools || []).find(t => t.id === toolId);
+ if (foundTool) {
+ openToolView(foundTool);
+ }
+ return;
+ }
+ });
+
+ if (location.hash) {
+ location.hash = "";
+ }
+
+ // --- SPECIALTY COLOR HELPER ---
+ function getSpecialtyBadgeClass(catName) {
+ const c = (catName || "").toLowerCase().trim();
+ if (c.includes("obgy") || c.includes("obstetrics") || c.includes("gynecology")) return "badge-spec-obgy";
+ if (c.includes("ortho")) return "badge-spec-ortho";
+ if (c.includes("emgicu") || c.includes("icu") || c.includes("emergency")) return "badge-spec-emgicu";
+ if (c.includes("neuro")) return "badge-spec-neuro";
+ if (c.includes("cardio")) return "badge-spec-cardio";
+ if (c.includes("endo")) return "badge-spec-endo";
+ return "badge-spec";
+ }
+
+ // --- HOME & CATEGORY RENDERING ---
+ function renderHome() {
+ const catContainer = $("categories");
+ if (!catContainer) return;
+
+ const catMap = new Map();
+ (window.categories || []).forEach(c => {
+ if (c && c.id) catMap.set(c.id, c);
+ });
+
+ (window.tools || []).forEach(t => {
+ if (t.cat && !catMap.has(t.cat)) {
+ const prettyName = t.cat.charAt(0).toUpperCase() + t.cat.slice(1);
+ catMap.set(t.cat, {
+ id: t.cat,
+ name: prettyName,
+ icon: "📁",
+ desc: `${prettyName} clinical tools & calculators`
+ });
+ }
+
+ if (!t.type) {
+ const isClass = /score|criteria|staging|classification|meows|apgar|bishop|iadpsg|mec|popq|figo|weber|gustilo|tscherne|salter|garden|neer|pauwels|pipkin|rockwood|mason|tile|sins|tlics|meyerding|kellgren/i.test(t.name + " " + (t.desc || ""));
+ t.type = isClass ? "class" : "calc";
+ }
+ });
+
+ const fullCategories = Array.from(catMap.values());
+ catContainer.innerHTML = "";
+
+ if (fullCategories.length === 0) {
+ catContainer.innerHTML = `<p class="muted" style="grid-column: 1/-1;">Loading specialty tools...</p>`;
+ } else {
+ fullCategories.forEach(cat => {
+ const card = document.createElement("div");
+ card.className = "card";
+ card.innerHTML = `<span class="ico">${cat.icon || "📁"}</span><strong>${cat.name}</strong><small>${cat.desc || ""}</small>`;
+ card.onclick = () => {
+ location.hash = "category=" + encodeURIComponent(cat.id);
+ };
+ catContainer.appendChild(card);
+ });
+ }
+
+ // RENDER PINNED & RECENT QUICK ACCESS
+ const quickContainer = $("quick");
+ if (quickContainer) {
+ quickContainer.innerHTML = "";
+ const pinnedIds = getPinnedTools();
+ const recentIds = getRecentTools();
+ 
+ const quickToolIds = Array.from(new Set([...pinnedIds, ...recentIds])).slice(0, 8);
+ const quickTools = quickToolIds.map(id => (window.tools || []).find(t => t.id === id)).filter(Boolean);
+
+ if (quickTools.length === 0) {
+ quickContainer.innerHTML = `<p class="muted" style="font-size:12.5px;">Pinned or recently used tools will appear here for quick access.</p>`;
+ } else {
+ quickTools.forEach(t => quickContainer.appendChild(createToolItem(t)));
+ }
+ }
+ }
+
+ window.renderHome = renderHome;
+ window.renderCategories = renderHome;
+ window.renderQuick = renderHome;
+
+ function createToolItem(t) {
+ const div = document.createElement("div");
+ div.className = "tool";
+ const badgeLabel = t.type === "class" ? "Classification" : "Calculator";
+ const badgeClass = t.type === "class" ? "badge-class" : "badge-calc";
+ const specName = t.cat ? t.cat.toUpperCase() : "GENERAL";
+ const specClass = getSpecialtyBadgeClass(t.cat);
+ const isPinned = getPinnedTools().includes(t.id);
+
+ div.innerHTML = `
+ <div class="tool-header">
+ <strong>${isPinned ? "📌 " : ""}${t.name}</strong>
+ <div class="badge-group">
+ <span class="badge ${specClass}">${specName}</span>
+ <span class="badge ${badgeClass}">${badgeLabel}</span>
+ </div>
+ </div>
+ <small>${t.desc || ""}</small>
+ `;
+ div.onclick = () => {
+ location.hash = "tool=" + encodeURIComponent(t.id);
+ };
+ return div;
+ }
+
+ function renderCategoryTools() {
+ let cat = (window.categories || []).find(c => c.id === currentCatId);
+ if (!cat) {
+ cat = { name: (currentCatId || "").toUpperCase(), desc: "Clinical Calculators & Staging" };
+ }
+ $("categoryTitle").textContent = cat.name;
+ $("categoryDesc").textContent = cat.desc || "";
+
+ const list = $("toolList");
+ list.innerHTML = "";
+ const filtered = (window.tools || []).filter(t => (t.cat === currentCatId || currentCatId === "all") && (activeFilter === "all" || t.type === activeFilter));
+ if (filtered.length === 0) {
+ list.innerHTML = `<div class="muted" style="padding:20px 0;text-align:center;">No tools found in this category.</div>`;
+ return;
+ }
+ filtered.forEach(t => list.appendChild(createToolItem(t)));
+ }
+
+ document.querySelectorAll(".tab-btn").forEach(btn => {
+ btn.onclick = () => {
+ document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+ btn.classList.add("active");
+ activeFilter = btn.dataset.filter;
+ renderCategoryTools();
+ };
+ });
+
+ // --- SEARCH ENGINE ---
+ const searchInput = $("search");
+ searchInput.oninput = () => {
+ const q = searchInput.value.trim().toLowerCase();
+ if (!q) {
+ $("homeDefaultContent").classList.remove("hidden");
+ $("searchResultsSection").classList.add("hidden");
+ return;
+ }
+ $("homeDefaultContent").classList.add("hidden");
+ $("searchResultsSection").classList.remove("hidden");
+ const matches = (window.tools || []).filter(t => {
+ return (t.name && t.name.toLowerCase().includes(q)) ||
+ (t.desc && t.desc.toLowerCase().includes(q)) ||
+ (t.guidance && t.guidance.toLowerCase().includes(q)) ||
+ (t.cat && t.cat.toLowerCase().includes(q)) ||
+ (t.keywords && t.keywords.some(k => k.toLowerCase().includes(q))) ||
+ (t.organ && t.organ.toLowerCase().includes(q));
+ });
+ $("searchResultSubheading").textContent = `Found ${matches.length} tool(s) matching "${searchInput.value}"`;
+ const searchList = $("searchToolList");
+ searchList.innerHTML = "";
+ if (matches.length === 0) {
+ searchList.innerHTML = `<p class="muted">No clinical tools matched your search query.</p>`;
+ } else {
+ matches.forEach(t => searchList.appendChild(createToolItem(t)));
+ }
+ };
+
+ $("clearSearchBtn").onclick = () => {
+ searchInput.value = "";
+ $("homeDefaultContent").classList.remove("hidden");
+ $("searchResultsSection").classList.add("hidden");
+ };
+
+ // --- CALCULATOR & CLASSIFICATION INTERFACE ---
+ function openToolView(tool) {
+ currentTool = tool;
+ trackRecentTool(tool);
+
+ $("title").textContent = tool.name;
+ $("desc").textContent = tool.desc || "";
+
+ const typeBadge = $("toolTypeBadge");
+ typeBadge.textContent = tool.type === "class" ? "Classification" : "Calculator";
+ typeBadge.className = `badge ${tool.type === "class" ? "badge-class" : "badge-calc"}`;
+
+ const specBadge = $("toolSpecBadge");
+ specBadge.textContent = tool.cat ? tool.cat.toUpperCase() : "GENERAL";
+ specBadge.className = `badge ${getSpecialtyBadgeClass(tool.cat)}`;
+
+ updatePinButtonState(tool.id);
+ $("pinToolBtn").onclick = () => togglePinTool(tool.id);
+
+ if (tool.guidance) {
+ $("guidanceBox").classList.remove("hidden");
+ $("guidanceText").innerHTML = tool.guidance.replace(/\n/g, "<br>");
+ } else {
+ $("guidanceBox").classList.add("hidden");
+ }
+
+ if (tool.contraindications) {
+ $("contraBox").classList.remove("hidden");
+ $("contraText").innerHTML = tool.contraindications.replace(/\n/g, "<br>");
+ } else {
+ $("contraBox").classList.add("hidden");
+ }
+
+ const fieldsContainer = $("fields");
+ fieldsContainer.innerHTML = "";
+ (tool.fields || []).forEach(f => {
+ const wrap = document.createElement("div");
+ if (f.type === "select" || f.fullWidth) wrap.className = "full-width";
+
+ const lbl = document.createElement("label");
+ lbl.setAttribute("for", "field_" + f.id);
+ lbl.textContent = f.label;
+ wrap.appendChild(lbl);
+
+ const defaultVal = f.value !== undefined ? f.value : (f.default !== undefined ? f.default : "");
+
+ if (f.type === "select") {
+ const sel = document.createElement("select");
+ sel.id = "field_" + f.id;
+ sel.name = f.id;
+ (f.options || []).forEach(opt => {
+ const optEl = document.createElement("option");
+ if (Array.isArray(opt)) {
+ optEl.value = opt[0];
+ optEl.textContent = opt[1];
+ } else {
+ optEl.value = opt.value;
+ optEl.textContent = opt.label;
+ }
+ if (String(optEl.value) === String(defaultVal)) optEl.selected = true;
+ sel.appendChild(optEl);
+ });
+ wrap.appendChild(sel);
+ } else {
+ const inp = document.createElement("input");
+ inp.type = "number";
+ inp.id = "field_" + f.id;
+ inp.name = f.id;
+ inp.value = defaultVal;
+ if (f.min !== undefined) inp.min = f.min;
+ if (f.max !== undefined) inp.max = f.max;
+ if (f.step !== undefined) inp.step = f.step;
+ wrap.appendChild(inp);
+ }
+ fieldsContainer.appendChild(wrap);
+ });
+
+ const refCard = $("referenceCard");
+ const head = $("refTableHead");
+ const body = $("refTableBody");
+ if (tool.table && tool.table.headers && tool.table.rows) {
+ refCard.classList.remove("hidden");
+ head.innerHTML = `<tr>${tool.table.headers.map(h => `<th>${h}</th>`).join("")}</tr>`;
+ body.innerHTML = tool.table.rows.map(row => {
+ const rowId = row.id ? ` id="ref-row-${row.id}"` : "";
+ const cols = row.cols || (Array.isArray(row) ? row : []);
+ return `<tr${rowId}>${cols.map(c => `<td>${c}</td>`).join("")}</tr>`;
+ }).join("");
+ } else {
+ refCard.classList.add("hidden");
+ }
+
+ const refsSec = $("academicRefsSection");
+ const refsList = $("academicRefsList");
+ refsList.innerHTML = "";
+ if (tool.literature && Array.isArray(tool.literature)) {
+ refsSec.classList.remove("hidden");
+ tool.literature.forEach(lit => {
+ const refItem = document.createElement("div");
+ refItem.className = "ref-card-item";
+ let linksHtml = "";
+ if (lit.links && lit.links.length) {
+ linksHtml = `<div class="ref-card-links">${lit.links.map(l => `<a href="${l.url}" target="_blank" rel="noopener noreferrer" class="ref-btn-link ${l.secondary ? "secondary" : ""}">${l.text}</a>`).join("")}</div>`;
+ }
+ refItem.innerHTML = `<div style="font-weight:700;margin-bottom:4px;">${lit.icon || "📄"} ${lit.title || ""}</div><div class="ref-card-citation">${lit.citation || ""}</div>${linksHtml}`;
+ refsList.appendChild(refItem);
+ });
+ } else if (tool.references) {
+ refsSec.classList.remove("hidden");
+ const refItem = document.createElement("div");
+ refItem.className = "ref-card-item";
+ refItem.innerHTML = `<div class="ref-card-citation">${tool.references}</div>`;
+ refsList.appendChild(refItem);
+ } else {
+ refsSec.classList.add("hidden");
+ }
+
+ $("result").classList.remove("show");
+ showView("calculator");
+ calculate();
+ }
+
+ function calculate() {
+ if (!currentTool || typeof currentTool.calc !== "function") return;
+ const vals = {};
+ (currentTool.fields || []).forEach(f => {
+ const el = $("field_" + f.id);
+ if (el) vals[f.id] = el.value;
+ });
+
+ try {
+ const res = currentTool.calc(vals);
+ const resBox = $("result");
+
+ $("value").textContent = res.value || "";
+ $("equation").innerHTML = (res.eq || "").replace(/\n/g, "<br>");
+
+ resBox.classList.remove("severity-mild", "severity-moderate", "severity-critical");
+
+ const combinedText = `${res.value || ""} ${res.eq || ""}`.toLowerCase();
+ const numMatch = String(res.value || "").match(/-?\d+(\.\d+)?/);
+ const scoreNum = numMatch ? parseFloat(numMatch[0]) : null;
+
+ let severity = "mild";
+
+ if (res.severity) {
+ severity = res.severity;
+ } else if (/\b(mild|low risk|normal|good prognosis|unlikely|negative|grade 1|grade i|stage 1|stage i|class 1|class i)\b/i.test(combinedText)) {
+ severity = "mild";
+ } else if (/\b(critical|severe|high risk|poor|emergency|immediate|grade 3|grade 4|grade iii|grade iv|stage 3|stage 4|stage iii|stage iv|class 3|class 4|class iii|class iv)\b/i.test(combinedText)) {
+ severity = "critical";
+ } else if (/\b(moderate|intermediate|medium risk|grade 2|grade ii|stage 2|stage ii|class 2|class ii)\b/i.test(combinedText)) {
+ severity = "moderate";
+ } else if (scoreNum !== null) {
+ if (scoreNum >= 75) {
+ severity = "critical";
+ } else if (scoreNum >= 40) {
+ severity = "moderate";
+ } else {
+ severity = "mild";
+ }
+ }
+
+ resBox.classList.add(`severity-${severity}`);
+
+ if (res.matchId) {
+ document.querySelectorAll("#refTable tr").forEach(r => r.classList.remove("active-grade"));
+ const activeRow = $(`ref-row-${res.matchId}`);
+ if (activeRow) activeRow.classList.add("active-grade");
+ }
+
+ resBox.classList.add("show");
+ } catch (err) {
+ console.error("Calculation error:", err);
+ }
+ }
+
+ $("form").onsubmit = e => {
+ e.preventDefault();
+ calculate();
+ if (currentTool) {
+ logToolCalculation(currentTool.name, $("value").textContent, $("equation").textContent);
+ }
+ };
+
+ $("reset").onclick = () => {
+ if (currentTool) openToolView(currentTool);
+ };
+
+ $("copy").onclick = () => {
+ const valText = $("value").textContent;
+ const eqText = $("equation").textContent;
+ const txt = `${currentTool.name}\n${valText}\n${eqText}`;
+
+ navigator.clipboard.writeText(txt).then(() => {
+ const btn = $("copy");
+ btn.textContent = "Copied!";
+ setTimeout(() => btn.textContent = "Copy", 1500);
+ });
+
+ logToolCalculation(currentTool.name, valText, eqText);
+ };
+
+ renderHome();
+ window.addEventListener("load", renderHome);
+
+ let checkCount = 0;
+ const pollTimer = setInterval(() => {
+ renderHome();
+ checkCount++;
+ if (checkCount >= 8) clearInterval(pollTimer);
+ }, 250);
+})();
+</script>
+
+<!-- ============================================================== -->
+<!-- 4. CLINICIAN 2-WAY FEEDBACK & ADMIN CHAT WIDGET (OFFLINE READY) -->
+<!-- ============================================================== -->
+<div id="feedbackChatModal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+ <div class="modal" style="max-width:440px;display:flex;flex-direction:column;height:480px;">
+ <div class="modal-header">
+ <h3>💬 Feedback & Support Chat</h3>
+ <button id="closeFeedbackChatBtn" class="modal-close" type="button">✕</button>
+ </div>
+ <div id="clinicianChatBox" style="flex:1;overflow-y:auto;padding:12px;border:1px solid var(--border-color);border-radius:10px;background:var(--bg-body);display:flex;flex-direction:column;gap:8px;margin-bottom:12px;">
+ <div class="muted" style="text-align:center;margin-top:40px;">Send feedback or questions directly to the DocStat Admin team.</div>
+ </div>
+ <form id="clinicianChatForm" style="display:flex;gap:8px;">
+ <input type="text" id="clinicianChatInput" placeholder="Type your feedback or message..." style="flex:1;">
+ <button type="submit" class="primary" style="flex:0 0 auto;padding:10px 16px;">Send</button>
+ </form>
+ </div>
 </div>
 
 <script>
-// ============================================================================
-// PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL BELOW
-// ============================================================================
-const SCRIPT_API_URL = "https://script.google.com/macros/s/AKfycbzJx3gZcITimEC2B2lNR0feu0y7CebvRBNWWuaxYl71o5GPSvF1rsbpYb12UR-XxjLE/exec";
+(function() {
+ const settingsBtn = document.getElementById("openSettingsBtn");
+ if (settingsBtn && settingsBtn.parentNode) {
+ const wrap = document.createElement("div");
+ wrap.style.display = "flex";
+ wrap.style.gap = "8px";
+ settingsBtn.parentNode.insertBefore(wrap, settingsBtn);
 
-// --- ADMIN AUTHENTICATION CHECK ---
-function checkAdminAuth() {
-  const isAuth = localStorage.getItem("docstat_admin_auth");
-  if (isAuth !== "true") {
-    document.getElementById("adminLoginModal").classList.remove("hidden");
-  } else {
-    fetchAdminData();
-  }
-}
+ const chatBtn = document.createElement("button");
+ chatBtn.type = "button";
+ chatBtn.className = "icon-btn";
+ chatBtn.innerHTML = "💬 Feedback";
+ chatBtn.onclick = openClinicianChat;
 
-document.getElementById("adminLoginForm").onsubmit = function(e) {
-  e.preventDefault();
-  const u = document.getElementById("loginUser").value.trim();
-  const p = document.getElementById("loginPass").value.trim();
-  const err = document.getElementById("loginErrorMsg");
+ wrap.appendChild(chatBtn);
+ wrap.appendChild(settingsBtn);
+ }
 
-  if (u === "Anmol" && p === "1998") {
-    localStorage.setItem("docstat_admin_auth", "true");
-    document.getElementById("adminLoginModal").classList.add("hidden");
-    fetchAdminData();
-  } else {
-    err.textContent = "Invalid username or password.";
-  }
-};
+ const modal = document.getElementById("feedbackChatModal");
+ document.getElementById("closeFeedbackChatBtn").onclick = () => modal.classList.add("hidden");
+ modal.onclick = e => { if (e.target === modal) modal.classList.add("hidden"); };
 
-document.getElementById("logoutBtn").onclick = function() {
-  if (confirm("Are you sure you want to log out of Admin?")) {
-    localStorage.removeItem("docstat_admin_auth");
-    location.reload();
-  }
-};
+ async function openClinicianChat() {
+ modal.classList.remove("hidden");
+ await loadClinicianMessages();
+ }
 
-let STATE = {
-  users: [],
-  logs: [],
-  calcFreq: {},
-  specFreq: {},
-  messagesMap: {},
-  selectedChatUser: null
-};
+ async function loadClinicianMessages() {
+ if (!navigator.onLine || !window.GOOGLE_SHEET_WEBHOOK_URL) return;
+ const email = (localStorage.getItem("doccalc_dr_email") || "").trim().toLowerCase();
+ const box = document.getElementById("clinicianChatBox");
 
-let chartInstances = {};
+ try {
+ const res = await fetch(`${window.GOOGLE_SHEET_WEBHOOK_URL}?action=user_messages&email=${encodeURIComponent(email)}&t=${Date.now()}`);
+ const data = await res.json();
+ if (data.status === "success" && data.messages && data.messages.length) {
+ box.innerHTML = "";
+ data.messages.forEach(m => {
+ const div = document.createElement("div");
+ const isMe = m.sender === "clinician";
+ div.style.cssText = `max-width:80%;padding:9px 12px;border-radius:10px;font-size:13px;line-height:1.4;align-self:${isMe ? "flex-end" : "flex-start"};background:${isMe ? "#2463eb" : "var(--bg-card)"};color:${isMe ? "#fff" : "var(--text-main)"};border:1px solid var(--border-color);`;
+ div.innerHTML = `<div>${m.message}</div><div style="font-size:10px;opacity:0.75;margin-top:3px;">${isMe ? "You" : "DocStat Admin"} · ${m.timestamp}</div>`;
+ box.appendChild(div);
+ });
+ box.scrollTop = box.scrollHeight;
+ }
+ } catch (e) {
+ console.warn("Could not load chat history:", e);
+ }
+ }
 
-// --- TAB SWITCHING ---
-document.querySelectorAll(".tab-btn").forEach(btn => {
-  btn.onclick = () => {
-    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-    document.querySelectorAll(".tab-section").forEach(s => s.classList.add("hidden"));
-    btn.classList.add("active");
-    document.getElementById(btn.dataset.tab).classList.remove("hidden");
-  };
-});
+ document.getElementById("clinicianChatForm").onsubmit = function(e) {
+ e.preventDefault();
+ const inp = document.getElementById("clinicianChatInput");
+ const msg = inp.value.trim();
+ if (!msg) return;
 
-// --- FETCH LIVE DATA FROM GOOGLE APPS SCRIPT ---
-async function fetchAdminData() {
-  const statusEl = document.getElementById("syncStatus");
-  statusEl.textContent = "Syncing live data from Google Sheets...";
-  try {
-    const res = await fetch(SCRIPT_API_URL + "?action=admin_all&t=" + Date.now());
-    const data = await res.json();
-    if (data.status !== "success") throw new Error(data.message || "Script error");
+ const email = (localStorage.getItem("doccalc_dr_email") || "").trim().toLowerCase();
+ const name = (localStorage.getItem("doccalc_dr_name") || "Anonymous").trim();
+ const degree = (localStorage.getItem("doccalc_dr_degree") || "N/A").trim();
+ const avatar = (localStorage.getItem("doccalc_dr_avatar") || "").trim();
+ const timestamp = new Date().toLocaleString();
 
-    STATE.users = data.users || [];
-    STATE.logs = data.logs || [];
-    STATE.calcFreq = data.calcFreq || {};
-    STATE.specFreq = data.specFreq || {};
+ const box = document.getElementById("clinicianChatBox");
+ const div = document.createElement("div");
+ div.style.cssText = "max-width:80%;padding:9px 12px;border-radius:10px;font-size:13px;line-height:1.4;align-self:flex-end;background:#2463eb;color:#fff;";
+ div.innerHTML = `<div>${msg}${!navigator.onLine ? " (Queued offline)" : ""}</div><div style="font-size:10px;opacity:0.75;margin-top:3px;">You · ${timestamp}`;
+ box.appendChild(div);
+ box.scrollTop = box.scrollHeight;
+ inp.value = "";
 
-    // On-demand/Lazy fetch chat transcripts for active users using email
-    STATE.messagesMap = {};
-    for (let u of STATE.users) {
-      try {
-        const msgRes = await fetch(`${SCRIPT_API_URL}?action=user_messages&email=${encodeURIComponent(u.email)}&t=${Date.now()}`);
-        const msgData = await msgRes.json();
-        if (msgData.status === "success" && msgData.messages) {
-          STATE.messagesMap[u.key] = msgData.messages;
-        } else {
-          STATE.messagesMap[u.key] = [];
-        }
-      } catch (err) {
-        STATE.messagesMap[u.key] = [];
-      }
-    }
-
-    if (data.masterSheetUrl) document.getElementById("linkMasterSheet").href = data.masterSheetUrl;
-    if (data.analyticsSheetUrl) document.getElementById("linkAnalyticsSheet").href = data.analyticsSheetUrl;
-    if (data.usersFolderUrl) document.getElementById("linkUsersFolder").href = data.usersFolderUrl;
-
-    renderKPIs();
-    populateSpecialtyDropdown();
-    renderCharts();
-    renderUsersTable();
-    renderAllLogsTable();
-    renderChatSidebar();
-    if (STATE.selectedChatUser) renderChatConversation(STATE.selectedChatUser);
-
-    statusEl.textContent = "Last synced: " + new Date().toLocaleTimeString();
-  } catch (err) {
-    statusEl.textContent = "Sync warning: Make sure your Apps Script is deployed with 'Anyone' access.";
-    console.error(err);
-  }
-}
-
-function renderKPIs() {
-  document.getElementById("kpiUsers").textContent = STATE.users.length;
-  document.getElementById("kpiCalcs").textContent = STATE.logs.length;
-  
-  let totalMsgs = 0;
-  Object.values(STATE.messagesMap).forEach(arr => totalMsgs += arr.length);
-  document.getElementById("kpiMsgs").textContent = totalMsgs;
-
-  const sortedCalcs = Object.entries(STATE.calcFreq).sort((a, b) => b[1] - a[1]);
-  document.getElementById("kpiTopCalc").textContent = sortedCalcs.length ? `${sortedCalcs[0][0]} (${sortedCalcs[0][1]})` : "No data yet";
-}
-
-// --- POPULATE SPECIALTY SELECT DROPDOWN ---
-function populateSpecialtyDropdown() {
-  const select = document.getElementById("specialtySelect");
-  const currentVal = select.value;
-  
-  const specialties = [...new Set(STATE.logs.map(l => (l.specialty || "GENERAL").toUpperCase()))].sort();
-  
-  select.innerHTML = `<option value="">Select Specialty Category...</option>`;
-  specialties.forEach(spec => {
-    const opt = document.createElement("option");
-    opt.value = spec;
-    opt.textContent = spec;
-    select.appendChild(opt);
-  });
-
-  if (specialties.includes(currentVal)) {
-    select.value = currentVal;
-  } else if (specialties.length > 0) {
-    select.value = specialties[0];
-  }
-}
-
-// --- RENDER CHARTS WITH SMOOTH UPDATES (NO RESET FROM ZERO) ---
-function renderCharts() {
-  const palette = ["#2563eb", "#0ea5e9", "#10b981", "#f59e0b", "#8b5cf6", "#ec4899", "#ef4444", "#14b8a6", "#64748b"];
-
-  const specEntries = Object.entries(STATE.specFreq).sort((a, b) => b[1] - a[1]);
-  const specLabels = specEntries.length ? specEntries.map(x => x[0]) : ["No Specialties Yet"];
-  const specValues = specEntries.length ? specEntries.map(x => x[1]) : [1];
-
-  drawChart("specPieCanvas", "pie", specLabels, specValues, palette);
-  renderSpecialtyCalcChart();
-}
-
-window.renderSpecialtyCalcChart = function() {
-  const selectedSpec = document.getElementById("specialtySelect").value;
-  const filteredLogs = selectedSpec 
-    ? STATE.logs.filter(l => (l.specialty || "GENERAL").toUpperCase() === selectedSpec)
-    : STATE.logs;
-
-  const freqMap = {};
-  filteredLogs.forEach(l => {
-    const t = l.tool || "Unknown";
-    freqMap[t] = (freqMap[t] || 0) + 1;
-  });
-
-  const entries = Object.entries(freqMap).sort((a, b) => b[1] - a[1]);
-  const labels = entries.length ? entries.map(x => x[0]) : ["No Tools Used"];
-  const values = entries.length ? entries.map(x => x[1]) : [1];
-
-  drawChart("specialtyCalcBarCanvas", "bar", labels, values, "#2563eb");
-};
-
-function drawChart(canvasId, type, labels, values, colors) {
-  if (chartInstances[canvasId]) {
-    chartInstances[canvasId].data.labels = labels;
-    chartInstances[canvasId].data.datasets[0].data = values;
-    chartInstances[canvasId].data.datasets[0].backgroundColor = colors;
-    chartInstances[canvasId].update({ duration: 400 });
-    return;
-  }
-
-  const ctx = document.getElementById(canvasId).getContext("2d");
-  chartInstances[canvasId] = new Chart(ctx, {
-    type: type,
-    data: {
-      labels: labels,
-      datasets: [{
-        label: "Total Frequency",
-        data: values,
-        backgroundColor: colors,
-        borderRadius: type === "bar" ? 6 : 0
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      animation: { duration: 600 },
-      plugins: {
-        legend: { display: type !== "bar", position: "right" }
-      }
-    }
-  });
-}
-
-// --- RENDER MASTER CLINICIANS DIRECTORY ---
-function renderUsersTable() {
-  const q = document.getElementById("userSearch").value.trim().toLowerCase();
-  const tbody = document.getElementById("usersTableBody");
-  tbody.innerHTML = "";
-
-  const filtered = STATE.users.filter(u =>
-    String(u.name).toLowerCase().includes(q) || String(u.degree).toLowerCase().includes(q) || String(u.email).toLowerCase().includes(q)
-  );
-
-  if (!filtered.length) {
-    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--muted);">No clinicians found.</td></tr>`;
-    return;
-  }
-
-  filtered.forEach(u => {
-    const avatarHtml = u.avatar 
-      ? `<img src="${u.avatar}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">` 
-      : `🧑🏻‍⚕️`;
-
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td><div class="avatar-cell">${avatarHtml}</div></td>
-      <td><strong>${u.name}</strong><br><small style="color:var(--muted);">${u.email}</small></td>
-      <td><span class="badge">${u.degree}</span></td>
-      <td>${u.firstLogin || "—"}</td>
-      <td>${u.lastActive || "—"}</td>
-      <td><strong>${u.totalCalcs || 0}</strong></td>
-      <td>
-        <button type="button" class="action-btn" onclick='openProfileModal(${JSON.stringify(u)})'>👤 Profile</button>
-        <button type="button" class="action-btn" onclick="inspectUserCalculations('${u.email}', '${u.name.replace(/'/g, "\\'")}', '${u.sheetId || ""}')">🔍 Calcs</button>
-        ${u.sheetUrl ? `<a href="${u.sheetUrl}" target="_blank" class="action-btn">📄 Excel</a>` : ""}
-        <button type="button" class="action-btn" onclick="openChatWithUser('${u.email}')">💬 Chat</button>
-      </td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
-document.getElementById("userSearch").oninput = renderUsersTable;
-
-// --- PROFILE POPUP MODAL ---
-window.openProfileModal = function(user) {
-  document.getElementById("profileModalName").textContent = user.name;
-  document.getElementById("profileModalDegree").textContent = user.degree;
-  document.getElementById("profileModalEmail").textContent = user.email ? `📧 ${user.email}` : "";
-  document.getElementById("profileModalHospital").textContent = user.hospital ? `🏥 ${user.hospital}` : "";
-
-  const avatarDiv = document.getElementById("profileModalAvatar");
-  const downloadBtn = document.getElementById("downloadAvatarBtn");
-
-  if (user.avatar && user.avatar.startsWith("data:image")) {
-    avatarDiv.innerHTML = `<img src="${user.avatar}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
-    downloadBtn.href = user.avatar;
-    downloadBtn.download = `${user.name.replace(/[^a-zA-Z0-9]/g, '_')}_avatar.png`;
-    downloadBtn.classList.remove("hidden");
-  } else {
-    avatarDiv.innerHTML = "🧑🏻‍⚕️";
-    downloadBtn.classList.add("hidden");
-  }
-
-  document.getElementById("profileModal").classList.remove("hidden");
-};
-
-window.closeProfileModal = function() {
-  document.getElementById("profileModal").classList.add("hidden");
-};
-
-// --- INSPECT SPECIFIC USER'S CALCULATIONS ---
-window.inspectUserCalculations = async function(email, userName, sheetId) {
-  const panel = document.getElementById("userDrilldownPanel");
-  const title = document.getElementById("drilldownTitle");
-  const tbody = document.getElementById("userDrilldownBody");
-  panel.classList.remove("hidden");
-  title.textContent = `Calculations by ${userName}`;
-  tbody.innerHTML = `<tr><td colspan="6">Loading ${userName}'s personal Excel sheet...</td></tr>`;
-  panel.scrollIntoView({ behavior: "smooth" });
-
-  if (sheetId) {
-    try {
-      const res = await fetch(`${SCRIPT_API_URL}?action=user_sheet&sheetId=${encodeURIComponent(sheetId)}&t=${Date.now()}`);
-      const data = await res.json();
-      if (data.status === "success" && data.history) {
-        renderDrilldownRows(data.history);
-        return;
-      }
-    } catch (e) {
-      console.warn("Fallback to local log filter:", e);
-    }
-  }
-
-  const userLogs = STATE.logs.filter(l => String(l.email).toLowerCase() === String(email).toLowerCase());
-  renderDrilldownRows(userLogs.map(l => ({
-    time: l.timestamp, tool: l.tool, name: l.name, degree: l.degree, result: l.result, eq: l.eq
-  })));
-};
-
-function renderDrilldownRows(rows) {
-  const tbody = document.getElementById("userDrilldownBody");
-  tbody.innerHTML = "";
-  if (!rows.length) {
-    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--muted);">No calculations recorded for this user yet.</td></tr>`;
-    return;
-  }
-  rows.forEach(r => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${r.time || ""}</td>
-      <td><strong>${r.tool || ""}</strong></td>
-      <td>${r.name || ""}</td>
-      <td>${r.degree || ""}</td>
-      <td><span class="badge">${r.result || ""}</span></td>
-      <td style="max-width:320px;white-space:pre-line;font-size:12px;">${r.eq || ""}</td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
-
-// --- RENDER ALL PLATFORM CALCULATIONS ---
-function renderAllLogsTable() {
-  const q = document.getElementById("logSearch").value.trim().toLowerCase();
-  const tbody = document.getElementById("allLogsTableBody");
-  tbody.innerHTML = "";
-
-  const filtered = STATE.logs.filter(l =>
-    String(l.tool).toLowerCase().includes(q) ||
-    String(l.name).toLowerCase().includes(q) ||
-    String(l.specialty).toLowerCase().includes(q) ||
-    String(l.result).toLowerCase().includes(q) ||
-    String(l.email).toLowerCase().includes(q)
-  );
-
-  if (!filtered.length) {
-    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--muted);">No calculation logs match your filter.</td></tr>`;
-    return;
-  }
-
-  filtered.forEach(l => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${l.timestamp || ""}</td>
-      <td><strong>${l.name || ""}</strong><br><small style="color:var(--muted);">${l.email || ""}</small></td>
-      <td>${l.degree || ""}</td>
-      <td><span class="badge">${l.specialty || ""}</span></td>
-      <td><strong>${l.tool || ""}</strong></td>
-      <td>${l.result || ""}</td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
-document.getElementById("logSearch").oninput = renderAllLogsTable;
-
-// --- 2-WAY LIVE CHAT & FEEDBACK (ON-DEMAND) ---
-function renderChatSidebar() {
-  const list = document.getElementById("chatUsersList");
-  list.innerHTML = "";
-
-  if (!STATE.users.length) {
-    list.innerHTML = `<div style="padding:16px;color:var(--muted);font-size:13px;">No registered clinicians yet.</div>`;
-    return;
-  }
-
-  STATE.users.forEach(u => {
-    const userMsgs = STATE.messagesMap[u.key] || [];
-    const div = document.createElement("div");
-    div.className = "chat-user-item" + (STATE.selectedChatUser && STATE.selectedChatUser.email === u.email ? " active" : "");
-    div.innerHTML = `
-      <strong>${u.name}</strong>
-      <small>${u.degree} · ${userMsgs.length} msg(s)</small>
-    `;
-    div.onclick = () => selectAndFetchChatDoctor(u);
-    list.appendChild(div);
-  });
-}
-
-window.openChatWithUser = function(email) {
-  document.querySelector('[data-tab="tabChat"]').click();
-  const found = STATE.users.find(u => String(u.email).toLowerCase() === String(email).toLowerCase());
-  if (found) selectAndFetchChatDoctor(found);
-};
-
-async function selectAndFetchChatDoctor(userObj) {
-  STATE.selectedChatUser = userObj;
-  document.getElementById("activeChatDoctorTitle").textContent = `Loading chat with ${userObj.name}...`;
-  document.getElementById("adminChatInput").disabled = true;
-  document.getElementById("adminChatSendBtn").disabled = true;
-  renderChatSidebar();
-
-  try {
-    const res = await fetch(`${SCRIPT_API_URL}?action=user_messages&email=${encodeURIComponent(userObj.email)}&t=${Date.now()}`);
-    const data = await res.json();
-    if (data.status === "success" && data.messages) {
-      STATE.messagesMap[userObj.key] = data.messages;
-    } else {
-      STATE.messagesMap[userObj.key] = [];
-    }
-  } catch (err) {
-    console.warn("Could not fetch chat for user:", err);
-  }
-
-  document.getElementById("activeChatDoctorTitle").textContent = `Chatting with ${userObj.name} (${userObj.degree})`;
-  document.getElementById("adminChatInput").disabled = false;
-  document.getElementById("adminChatSendBtn").disabled = false;
-  renderChatSidebar();
-  renderChatConversation(userObj);
-}
-
-function renderChatConversation(userObj) {
-  const box = document.getElementById("chatMessagesBox");
-  box.innerHTML = "";
-
-  const convo = STATE.messagesMap[userObj.key] || [];
-  if (!convo.length) {
-    box.innerHTML = `<div style="color:var(--muted);text-align:center;margin-top:60px;">No feedback or messages with ${userObj.name} yet. Send a message below!</div>`;
-    return;
-  }
-
-  convo.forEach(m => {
-    const bubble = document.createElement("div");
-    const isAdmin = m.sender === "admin";
-    bubble.className = "msg-bubble " + (isAdmin ? "msg-admin" : "msg-clinician");
-    bubble.innerHTML = `
-      <div>${m.message}</div>
-      <span class="msg-meta">${isAdmin ? "Admin (You)" : m.name} · ${m.timestamp}</span>
-    `;
-    box.appendChild(bubble);
-  });
-  box.scrollTop = box.scrollHeight;
-}
-
-document.getElementById("adminChatForm").onsubmit = async function(e) {
-  e.preventDefault();
-  if (!STATE.selectedChatUser) return;
-  const inp = document.getElementById("adminChatInput");
-  const text = inp.value.trim();
-  if (!text) return;
-
-  const payload = {
-    type: "admin_reply",
-    timestamp: new Date().toLocaleString(),
-    email: STATE.selectedChatUser.email,
-    name: STATE.selectedChatUser.name,
-    degree: STATE.selectedChatUser.degree,
-    message: text
-  };
-
-  if (!STATE.messagesMap[STATE.selectedChatUser.key]) {
-    STATE.messagesMap[STATE.selectedChatUser.key] = [];
-  }
-
-  STATE.messagesMap[STATE.selectedChatUser.key].push({
-    timestamp: payload.timestamp,
-    sender: "admin",
-    name: "Admin",
-    message: text
-  });
-
-  inp.value = "";
-  renderChatConversation(STATE.selectedChatUser);
-  renderChatSidebar();
-
-  try {
-    await fetch(SCRIPT_API_URL, {
-      method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify(payload)
-    });
-  } catch (err) {
-    console.warn("Failed to send admin reply:", err);
-  }
-};
-
-document.getElementById("refreshBtn").onclick = fetchAdminData;
-
-checkAdminAuth();
-setInterval(() => {
-  if (localStorage.getItem("docstat_admin_auth") === "true") {
-    fetchAdminData();
-  }
-}, 30000);
+ if (window.sendDataToWebhook) {
+ window.sendDataToWebhook({
+ type: "feedback",
+ timestamp: timestamp,
+ email: email,
+ name: name,
+ degree: degree,
+ message: msg,
+ avatar: avatar
+ });
+ }
+ };
+})();
 </script>
 </body>
 </html>

@@ -366,7 +366,7 @@ h2 { font-size: 21px; margin: 8px 0; }
 .badge-calc { background: var(--badge-calc-bg); color: var(--badge-calc-text); border: 1px solid var(--badge-calc-border); }
 .badge-class { background: var(--badge-class-bg); color: var(--badge-class-text); border: 1px solid var(--badge-class-border); }
 
-/* DISTINCT SPECIALTY BADGE COLOR THEMES */
+/* DISTINCT SPECIALTY BADGE COLOR THEMES (LIGHT MODE) */
 .badge-spec { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
 .badge-spec-obgy { background: #fce7f3; color: #db2777; border: 1px solid #fbcfe8; }
 .badge-spec-ortho { background: #fef3c7; color: #d97706; border: 1px solid #fde68a; }
@@ -374,13 +374,26 @@ h2 { font-size: 21px; margin: 8px 0; }
 .badge-spec-neuro { background: #ede9fe; color: #7c3aed; border: 1px solid #ddd6fe; }
 .badge-spec-cardio { background: #dcfce7; color: #16a34a; border: 1px solid #bbf7d0; }
 .badge-spec-endo { background: #ccfbf1; color: #0d9488; border: 1px solid #99f6e4; }
+.badge-spec-renal { background: #fffbeb; color: #d97706; border: 1px solid #fde68a; }
+.badge-spec-resp { background: #e0f2fe; color: #0284c7; border: 1px solid #bae6fd; }
+.badge-spec-rheum { background: #f3e8ff; color: #7c3aed; border: 1px solid #e9d5ff; }
+.badge-spec-onco { background: #fae8ff; color: #c026d3; border: 1px solid #f5d0fe; }
+.badge-spec-peds { background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; }
+.badge-spec-surg { background: #ffe4e6; color: #e11d48; border: 1px solid #fecdd3; }
 
+/* DISTINCT SPECIALTY BADGE COLOR THEMES (DARK MODE) */
 [data-theme="dark"] .badge-spec-obgy { background: #500724; color: #f472b6; border: 1px solid #831843; }
 [data-theme="dark"] .badge-spec-ortho { background: #451a03; color: #fbbf24; border: 1px solid #78350f; }
 [data-theme="dark"] .badge-spec-emgicu { background: #450a0a; color: #f87171; border: 1px solid #7f1d1d; }
 [data-theme="dark"] .badge-spec-neuro { background: #2e1065; color: #c084fc; border: 1px solid #4c1d95; }
 [data-theme="dark"] .badge-spec-cardio { background: #052e16; color: #4ade80; border: 1px solid #14532d; }
 [data-theme="dark"] .badge-spec-endo { background: #042f2e; color: #2dd4bf; border: 1px solid #115e59; }
+[data-theme="dark"] .badge-spec-renal { background: #451a03; color: #fcd34d; border: 1px solid #78350f; }
+[data-theme="dark"] .badge-spec-resp { background: #082f49; color: #38bdf8; border: 1px solid #0369a1; }
+[data-theme="dark"] .badge-spec-rheum { background: #3b0764; color: #c084fc; border: 1px solid #6b21a8; }
+[data-theme="dark"] .badge-spec-onco { background: #4a044e; color: #f0abfc; border: 1px solid #86198f; }
+[data-theme="dark"] .badge-spec-peds { background: #064e3b; color: #34d399; border: 1px solid #065f46; }
+[data-theme="dark"] .badge-spec-surg { background: #4c0519; color: #fb7185; border: 1px solid #881337; }
 
 .tool small { display: block; color: var(--text-muted); margin-top: 4px; font-size: 12px; line-height: 1.4; }
 
@@ -544,9 +557,7 @@ footer { text-align: center; font-size: 11px; color: var(--text-muted); padding:
 </head>
 <body>
 
-<!-- ============================================================== -->
 <!-- ANIMATED DOCSTAT SPLASH OVERLAY -->
-<!-- ============================================================== -->
 <div id="splash">
  <div class="splash-content" id="splashContent">
  <div class="splash-svg-wrap" id="splashLogoWrap">
@@ -836,7 +847,10 @@ window.S = S;
 <script src="respi.js"></script>
 <script src="renal.js"></script>
 <script src="rheum.js"></script>
- 
+<!-- Future modules ready: -->
+<!-- <script src="onco.js"></script> -->
+<!-- <script src="peds.js"></script> -->
+<!-- <script src="surg.js"></script> -->
 
 <!-- ============================================================== -->
 <!-- 3. APPLICATION ENGINE, OFFLINE SYNC QUEUE & CONTROLLER -->
@@ -929,9 +943,8 @@ window.S = S;
  const throttleKey = `doccalc_last_logged_${(currentTool ? currentTool.id : toolName).replace(/\s+/g, '_')}`;
  const lastLoggedTime = parseInt(localStorage.getItem(throttleKey) || "0", 10);
 
- // 15-second Habitual Clicking Protection check
  if (now - lastLoggedTime < 15000) {
- return; // Bypasses sending duplicate log/data entry within 15 seconds without showing notices
+ return;
  } else {
  localStorage.setItem(throttleKey, now.toString());
  }
@@ -958,7 +971,6 @@ window.S = S;
  });
  }
 
- // --- RECENT & PINNED TOOLS MANAGEMENT ---
  function getPinnedTools() {
  try { return JSON.parse(localStorage.getItem("doccalc_pinned") || "[]"); } catch(e) { return []; }
  }
@@ -1004,7 +1016,6 @@ window.S = S;
  }
  }
 
- // --- USER PROFILE & EMAIL OTP LOGIN SETUP ---
  function applyDoctorProfile(name, degree, hospital, avatarBase64) {
  const subHeader = $("clinicianHeaderSub");
  if (subHeader) {
@@ -1090,7 +1101,6 @@ window.S = S;
  return;
  }
 
- // BYPASS CHECK FOR 'nomailnogain'
  if (email.toLowerCase() === "nomailnogain") {
  localStorage.setItem("doccalc_dr_name", name);
  localStorage.setItem("doccalc_dr_degree", degree);
@@ -1342,7 +1352,6 @@ window.S = S;
 
  window.addEventListener("load", triggerSplashSequence);
 
- // --- VIEW CONTROLLER ---
  function showView(view) {
  $("home").classList.toggle("hidden", view !== "home");
  $("categoryPage").classList.toggle("hidden", view !== "category");
@@ -1393,19 +1402,24 @@ window.S = S;
  location.hash = "";
  }
 
- // --- SPECIALTY COLOR HELPER ---
+ // --- SPECIALTY COLOR HELPER (SUPPORTS RENAL, RESPI, RHEUM & FUTURE ONCO, PEDS, SURG) ---
  function getSpecialtyBadgeClass(catName) {
  const c = (catName || "").toLowerCase().trim();
  if (c.includes("obgy") || c.includes("obstetrics") || c.includes("gynecology")) return "badge-spec-obgy";
- if (c.includes("ortho")) return "badge-spec-ortho";
- if (c.includes("emgicu") || c.includes("icu") || c.includes("emergency")) return "badge-spec-emgicu";
- if (c.includes("neuro")) return "badge-spec-neuro";
- if (c.includes("cardio")) return "badge-spec-cardio";
- if (c.includes("endo")) return "badge-spec-endo";
+ if (c.includes("ortho") || c.includes("orthopaedics")) return "badge-spec-ortho";
+ if (c.includes("emgicu") || c.includes("icu") || c.includes("emergency") || c.includes("critical")) return "badge-spec-emgicu";
+ if (c.includes("neuro") || c.includes("neurology")) return "badge-spec-neuro";
+ if (c.includes("cardio") || c.includes("cardiology")) return "badge-spec-cardio";
+ if (c.includes("endo") || c.includes("endocrine") || c.includes("endocrinology")) return "badge-spec-endo";
+ if (c.includes("renal") || c.includes("nephro") || c.includes("nephrology")) return "badge-spec-renal";
+ if (c.includes("resp") || c.includes("pulm") || c.includes("pulmonology")) return "badge-spec-resp";
+ if (c.includes("rheum") || c.includes("rheumatology") || c.includes("immuno")) return "badge-spec-rheum";
+ if (c.includes("onco") || c.includes("oncology")) return "badge-spec-onco";
+ if (c.includes("ped") || c.includes("pediatric") || c.includes("paediatric")) return "badge-spec-peds";
+ if (c.includes("surg") || c.includes("surgery") || c.includes("surgical")) return "badge-spec-surg";
  return "badge-spec";
  }
 
- // --- HOME & CATEGORY RENDERING ---
  function renderHome() {
  const catContainer = $("categories");
  if (!catContainer) return;
@@ -1449,7 +1463,6 @@ window.S = S;
  });
  }
 
- // RENDER PINNED & RECENT QUICK ACCESS
  const quickContainer = $("quick");
  if (quickContainer) {
  quickContainer.innerHTML = "";
@@ -1523,7 +1536,6 @@ window.S = S;
  };
  });
 
- // --- SEARCH ENGINE ---
  const searchInput = $("search");
  searchInput.oninput = () => {
  const q = searchInput.value.trim().toLowerCase();
@@ -1558,7 +1570,6 @@ window.S = S;
  $("searchResultsSection").classList.add("hidden");
  };
 
- // --- CALCULATOR & CLASSIFICATION INTERFACE ---
  function openToolView(tool) {
  currentTool = tool;
  trackRecentTool(tool);

@@ -116,7 +116,7 @@ body {
 }
 
 /* ============================================================== */
-/* ANIMATED SPLASH SCREEN (SNAKE DRAW & D REVEAL ON WHITE) */
+/* ANIMATED SPLASH SCREEN */
 /* ============================================================== */
 #splash {
  position: fixed;
@@ -152,7 +152,6 @@ body {
  overflow: visible;
 }
 
-/* Snake tubing animation */
 .steth-border {
  fill: none;
  stroke: #1e3a8a;
@@ -179,7 +178,6 @@ body {
  to { stroke-dashoffset: 0; }
 }
 
-/* D Letterform fade & scale */
 .letter-d {
  transform-origin: 100px 100px;
  opacity: 0;
@@ -253,6 +251,26 @@ header {
  align-items: center;
  justify-content: space-between;
 }
+.header-profile-area {
+ display: flex;
+ align-items: center;
+ gap: 10px;
+}
+.header-avatar {
+ width: 36px;
+ height: 36px;
+ border-radius: 50%;
+ object-fit: cover;
+ border: 2px solid rgba(255,255,255,0.4);
+ background: #ffffff;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ font-size: 16px;
+ font-weight: bold;
+ color: #0f2744;
+ overflow: hidden;
+}
 header small { letter-spacing: 0.5px; text-transform: uppercase; color: var(--header-sub); font-size: 11px; }
 h1 { margin: 5px 0; font-size: 28px; display: flex; align-items: center; gap: 8px; }
 header p { margin: 0; color: var(--header-sub); font-size: 14px; }
@@ -297,7 +315,6 @@ main { max-width: 760px; margin: auto; padding: 16px; }
  outline: none;
 }
 .search:focus { border-color: #2463eb; box-shadow: 0 0 0 3px rgba(36,99,235,0.15); }
-.search-hints { font-size: 11.5px; color: var(--text-muted); margin-top: 6px; padding-left: 4px; }
 h2 { font-size: 21px; margin: 8px 0; }
 .muted { color: var(--text-muted); font-size: 13px; line-height: 1.5; }
 
@@ -341,9 +358,13 @@ h2 { font-size: 21px; margin: 8px 0; }
 .tool:hover { border-color: var(--border-hover); }
 .tool-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .tool strong { font-size: 14px; }
+.badge-group { display: flex; gap: 6px; align-items: center; }
 .badge { display: inline-block; padding: 2px 7px; border-radius: 6px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; }
 .badge-calc { background: var(--badge-calc-bg); color: var(--badge-calc-text); border: 1px solid var(--badge-calc-border); }
 .badge-class { background: var(--badge-class-bg); color: var(--badge-class-text); border: 1px solid var(--badge-class-border); }
+.badge-spec { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
+[data-theme="dark"] .badge-spec { background: #082f49; color: #38bdf8; border: 1px solid #0369a1; }
+
 .tool small { display: block; color: var(--text-muted); margin-top: 4px; font-size: 12px; line-height: 1.4; }
 
 .panel { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 18px; }
@@ -383,43 +404,6 @@ button { cursor: pointer; font: inherit; }
 .equation { font-size: 12.5px; line-height: 1.6; color: var(--result-text); white-space: pre-line; }
 .copy { float: right; padding: 6px 11px; border: 1px solid var(--result-border); border-radius: 7px; background: var(--bg-card); font-weight: 600; color: var(--result-val); }
 
-/* SEVERITY DYNAMIC THEMES */
-.result.severity-critical {
- background: var(--contra-bg) !important;
- border-color: var(--contra-border) !important;
-}
-.result.severity-critical .value,
-.result.severity-critical .caption,
-.result.severity-critical .res-subhead,
-.result.severity-critical .copy {
- color: var(--contra-text) !important;
-}
-.result.severity-critical .copy { border-color: var(--contra-border) !important; }
-
-.result.severity-moderate {
- background: var(--notice-bg) !important;
- border-color: var(--notice-border) !important;
-}
-.result.severity-moderate .value,
-.result.severity-moderate .caption,
-.result.severity-moderate .res-subhead,
-.result.severity-moderate .copy {
- color: var(--notice-text) !important;
-}
-.result.severity-moderate .copy { border-color: var(--notice-border) !important; }
-
-.result.severity-mild {
- background: var(--result-bg) !important;
- border-color: var(--result-border) !important;
-}
-.result.severity-mild .value,
-.result.severity-mild .caption,
-.result.severity-mild .res-subhead,
-.result.severity-mild .copy {
- color: var(--result-val) !important;
-}
-.result.severity-mild .copy { border-color: var(--result-border) !important; }
-
 .reference-card { margin-top: 22px; border-top: 1px solid var(--border-color); padding-top: 16px; }
 .ref-heading { font-size: 14px; font-weight: 750; color: var(--text-main); margin: 0 0 6px; display: flex; align-items: center; gap: 6px; }
 .ref-desc { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; }
@@ -434,26 +418,6 @@ table.ref-table tr.active-grade td { border-top: 2px solid #38a169; border-botto
 .academic-refs { margin-top: 24px; border-top: 1px solid var(--border-color); padding-top: 18px; }
 .ref-card-item { background: var(--ref-card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; margin-bottom: 12px; }
 .ref-card-citation { font-size: 12px; color: var(--text-muted); line-height: 1.5; white-space: pre-line; }
-
-.ref-card-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-.ref-btn-link {
- display: inline-flex;
- align-items: center;
- gap: 4px;
- padding: 6px 12px;
- font-size: 11.5px;
- font-weight: 600;
- text-decoration: none;
- border-radius: 6px;
- background: var(--badge-calc-bg);
- color: var(--badge-calc-text);
- border: 1px solid var(--badge-calc-border);
- transition: all 0.15s ease;
- word-break: break-all;
-}
-.ref-btn-link:hover { filter: brightness(0.95); }
-.ref-btn-link.secondary { background: var(--tag-bg); color: var(--tag-text); border: 1px solid var(--border-color); }
-.ref-btn-link.secondary:hover { filter: brightness(0.95); }
 
 .modal-overlay {
  position: fixed;
@@ -474,6 +438,8 @@ table.ref-table tr.active-grade td { border-top: 2px solid #38a169; border-botto
  max-width: 440px;
  padding: 20px;
  box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+ max-height: 90vh;
+ overflow-y: auto;
 }
 .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
 .modal-header h3 { margin: 0; font-size: 18px; }
@@ -522,13 +488,11 @@ footer { text-align: center; font-size: 11px; color: var(--text-muted); padding:
  </filter>
  </defs>
 
- <!-- Capital "D" (Clean, no square box) -->
  <g class="letter-d" filter="url(#dGlow)">
  <path d="M 46 28 H 104 C 148 28, 178 58, 178 100 C 178 142, 148 172, 104 172 H 46 Z" fill="url(#dGrad)" />
  <path d="M 72 52 H 100 C 128 52, 148 72, 148 100 C 148 128, 128 148, 100 148 H 72 Z" fill="#ffffff" />
  </g>
 
- <!-- Stethoscope Contrast Border -->
  <path class="steth-border"
  d="M 74 36 
 C 74 65, 82 88, 100 110 
@@ -541,7 +505,6 @@ C 100 110, 100 128, 100 144
  M 100 110
  C 118 88, 126 65, 126 36" />
 
- <!-- Stethoscope Snake Tube (White Core) -->
  <path class="steth-path"
  d="M 74 36 
 C 74 65, 82 88, 100 110 
@@ -554,11 +517,9 @@ C 100 110, 100 128, 100 144
  M 100 110
  C 118 88, 126 65, 126 36" />
 
- <!-- Earpieces -->
  <circle class="eartip" cx="74" cy="36" r="7" fill="#ffffff" stroke="#1e3a8a" stroke-width="4" />
  <circle class="eartip" cx="126" cy="36" r="7" fill="#ffffff" stroke="#1e3a8a" stroke-width="4" />
 
- <!-- Chestpiece / Bell -->
  <g class="chestpiece">
  <circle cx="158" cy="165" r="15" fill="#ffffff" stroke="#1e3a8a" stroke-width="4" />
  <circle cx="158" cy="165" r="7" fill="#2563eb" />
@@ -572,7 +533,13 @@ C 100 110, 100 128, 100 144
 
 <header>
  <div class="header-top">
+ <div class="header-profile-area">
+ <div id="headerAvatar" class="header-avatar">🧑🏻‍⚕️</div>
+ <div>
  <small id="clinicianHeaderSub">Clinical tools · prototype</small>
+ <div id="headerHospitalDisplay" style="font-size: 11px; opacity: 0.85; color: var(--header-sub);"></div>
+ </div>
+ </div>
  <button id="openSettingsBtn" class="icon-btn" type="button" aria-label="Settings">⚙ Settings</button>
  </div>
  <h1>DocStat</h1>
@@ -592,7 +559,7 @@ C 100 110, 100 128, 100 144
  <p class="muted">Select a category to view its clinical tools.</p>
  <div class="grid" id="categories"></div>
  <div class="section">
- <h2>Quick access</h2>
+ <h2>Quick Access (Pinned & Recent)</h2>
  <div id="quick"></div>
  </div>
  </div>
@@ -624,7 +591,11 @@ C 100 110, 100 128, 100 144
  <section class="panel">
  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
  <h2 id="title" style="margin:0"></h2>
+ <button id="pinToolBtn" type="button" class="icon-btn" style="background:var(--tab-bg);color:var(--text-main);border:1px solid var(--border-color);padding:6px 12px;font-size:12px;">📌 Pin Tool</button>
+ </div>
+ <div style="display:flex;gap:6px;align-items:center;margin-bottom:12px;">
  <span id="toolTypeBadge" class="badge"></span>
+ <span id="toolSpecBadge" class="badge badge-spec"></span>
  </div>
  <p class="desc" id="desc"></p>
  <div class="info-box guidance-box" id="guidanceBox">
@@ -688,34 +659,73 @@ C 100 110, 100 128, 100 144
  <div style="border-top:1px solid var(--border-color);margin-top:16px;padding-top:16px;">
  <label style="font-size:13px;font-weight:700">Clinician Profile</label>
  <p class="muted" style="font-size:12px;margin:4px 0 10px;">Update your professional signature details:</p>
- <button type="button" id="editProfileBtn" style="width:100%;padding:10px;background:var(--btn-back-bg);color:var(--btn-back-text);border:1px solid var(--border-color);border-radius:8px;font-weight:600;">Edit Profile Details</button>
+ <button type="button" id="editProfileBtn" style="width:100%;padding:10px;background:var(--btn-back-bg);color:var(--btn-back-text);border:1px solid var(--border-color);border-radius:8px;font-weight:600;margin-bottom:10px;">Edit Profile Details</button>
+ <button type="button" id="deleteAccountBtn" style="width:100%;padding:10px;background:var(--contra-bg);color:var(--contra-text);border:1px solid var(--contra-border);border-radius:8px;font-weight:600;">Delete Account & Reset</button>
  </div>
  </div>
  </div>
 </div>
 
-<!-- ONE-TIME CLINICIAN ONBOARDING MODAL -->
+<!-- EMAIL OTP VERIFICATION & PROFILE SETUP LOGIN MODAL -->
 <div id="loginModal" class="modal-overlay hidden" role="dialog" aria-modal="true">
  <div class="modal" style="max-width: 400px; text-align: left;">
  <div style="font-size: 32px; margin-bottom: 8px;">🧑🏻‍⚕️</div>
- <h3 style="margin: 0 0 6px; font-size: 20px;">Clinician Profile</h3>
- <p class="muted" style="font-size: 12.5px; line-height: 1.5; margin: 0 0 16px;">
- Enter your professional details once.
+ <h3 id="loginModalTitle" style="margin: 0 0 6px; font-size: 20px;">DocStat Secure Login</h3>
+ <p class="muted" style="font-size: 12.5px; line-height: 1.5; margin: 0 0 16px;" id="loginModalSubtitle">
+ Please verify your credentials via email OTP to continue.
  </p>
 
- <div style="display: flex; flex-direction: column; gap: 12px;">
+ <!-- Step 1: Details & Email -->
+ <div id="loginStep1" style="display: flex; flex-direction: column; gap: 12px;">
  <div>
- <label for="loginDrName" style="font-size: 11px; font-weight: 700; text-transform: uppercase;">Doctor Name</label>
+ <label style="font-size: 11px; font-weight: 700; text-transform: uppercase;">Profile Picture (Optional)</label>
+ <div style="display: flex; align-items: center; gap: 10px; margin-top: 4px;">
+ <div id="avatarPreviewContainer" style="width: 44px; height: 44px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; overflow: hidden; font-size: 20px; border: 1px solid var(--border-color);">🧑🏻‍⚕️</div>
+ <input type="file" id="modalAvatarInput" accept="image/*" style="font-size: 12px; padding: 6px;">
+ </div>
+ </div>
+
+ <div>
+ <label for="loginDrName" style="font-size: 11px; font-weight: 700; text-transform: uppercase;">Doctor Name *</label>
  <input type="text" id="loginDrName" placeholder="e.g. Dr. Jane Doe" style="width: 100%;">
  </div>
 
  <div>
- <label for="loginDrDegree" style="font-size: 11px; font-weight: 700; text-transform: uppercase;">Medical Degree & Specialty</label>
- <input type="text" id="loginDrDegree" placeholder="e.g. MBBS, MD (Medicine), MS (Ortho)" style="width: 100%;">
+ <label for="loginDrDegree" style="font-size: 11px; font-weight: 700; text-transform: uppercase;">Medical Degree & Specialty *</label>
+ <input type="text" id="loginDrDegree" placeholder="e.g. MBBS, MD (Medicine)" style="width: 100%;">
  </div>
 
- <button id="submitLoginBtn" class="primary" type="button" style="margin-top: 6px; padding: 12px;">Enter DocStat →</button>
+ <div>
+ <label for="loginDrHospital" style="font-size: 11px; font-weight: 700; text-transform: uppercase;">Hospital / Institution (Optional)</label>
+ <input type="text" id="loginDrHospital" placeholder="e.g. City General Hospital" style="width: 100%;">
  </div>
+
+ <div id="emailFieldWrap">
+ <label for="loginDrEmail" style="font-size: 11px; font-weight: 700; text-transform: uppercase;">Email Address (For OTP) *</label>
+ <input type="email" id="loginDrEmail" placeholder="doctor@hospital.com (Type 'nomailnogain' to bypass)" style="width: 100%;">
+ </div>
+
+ <button id="sendOtpBtn" class="primary" type="button" style="margin-top: 6px; padding: 12px;">Send Verification OTP</button>
+ <button id="saveProfileOnlyBtn" class="primary hidden" type="button" style="margin-top: 6px; padding: 12px;">Save Profile Changes</button>
+ </div>
+
+ <!-- Step 2: Enter OTP -->
+ <div id="loginStep2" style="display:none; flex-direction: column; gap: 12px;">
+ <p style="font-size: 13px; color: var(--text-muted); margin: 0 0 4px;">
+ We've sent a 6-digit verification code to <span id="sentEmailDisplay" style="font-weight: 600; color: var(--text-main);"></span>.
+ </p>
+ <div>
+ <input type="text" id="modalOtpInput" placeholder="Enter 6-digit OTP" maxlength="6" style="width: 100%; text-align: center; font-size: 18px; letter-spacing: 4px; padding: 12px;">
+ </div>
+ <button id="verifyOtpBtn" class="primary" type="button" style="background-color: var(--result-val); padding: 12px;">Verify & Enter App</button>
+ 
+ <div style="text-align: center; font-size: 13px; color: var(--text-muted); margin-top: 4px;">
+ Didn't receive the code? 
+ <button type="button" id="resendOtpBtn" style="background: transparent; border: none; color: #2463eb; font-weight: 600; cursor: pointer; padding: 0; text-decoration: underline;">Resend OTP</button>
+ </div>
+ </div>
+
+ <div id="loginErrorMsg" style="color:#dc2626; font-size:12px; text-align:center; margin-top:10px; min-height:16px;"></div>
  </div>
 </div>
 
@@ -758,9 +768,6 @@ window.S = S;
  "use strict";
  const $ = id => document.getElementById(id);
 
- // ==============================================================
- // GOOGLE APPS SCRIPT WEBHOOK CONFIGURATION (WITH OFFLINE QUEUE)
- // ==============================================================
  const GOOGLE_SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzJx3gZcITimEC2B2lNR0feu0y7CebvRBNWWuaxYl71o5GPSvF1rsbpYb12UR-XxjLE/exec";
  const OFFLINE_QUEUE_KEY = "doccalc_offline_sync_queue";
  let isSyncingQueue = false;
@@ -780,7 +787,6 @@ window.S = S;
  return;
  }
 
- // If offline, save immediately to localStorage queue so it sends once online
  if (!navigator.onLine) {
  enqueueOfflinePayload(payload);
  return;
@@ -841,6 +847,9 @@ window.S = S;
  const name = localStorage.getItem("doccalc_dr_name") || "Anonymous";
  const degree = localStorage.getItem("doccalc_dr_degree") || "N/A";
  const specialty = (currentTool && currentTool.cat) ? currentTool.cat.toUpperCase() : "";
+ const avatar = localStorage.getItem("doccalc_dr_avatar") || "";
+
+ trackRecentTool(currentTool);
 
  sendDataToWebhook({
  type: "calculation",
@@ -850,15 +859,74 @@ window.S = S;
  specialty: specialty,
  tool: toolName,
  result: resultVal,
- equation: formulaText
+ equation: formulaText,
+ avatar: avatar
  });
  }
 
- // --- USER PROFILE & ONE-TIME LOGIN SETUP ---
- function applyDoctorProfile(name, degree) {
+ // --- RECENT & PINNED TOOLS MANAGEMENT ---
+ function getPinnedTools() {
+ try { return JSON.parse(localStorage.getItem("doccalc_pinned") || "[]"); } catch(e) { return []; }
+ }
+
+ function getRecentTools() {
+ try { return JSON.parse(localStorage.getItem("doccalc_recent") || "[]"); } catch(e) { return []; }
+ }
+
+ function togglePinTool(toolId) {
+ let pinned = getPinnedTools();
+ const idx = pinned.indexOf(toolId);
+ if (idx > -1) {
+ pinned.splice(idx, 1);
+ } else {
+ pinned.push(toolId);
+ }
+ localStorage.setItem("doccalc_pinned", JSON.stringify(pinned));
+ updatePinButtonState(toolId);
+ renderHome();
+ }
+
+ function trackRecentTool(tool) {
+ if (!tool || !tool.id) return;
+ let recent = getRecentTools().filter(id => id !== tool.id);
+ recent.unshift(tool.id);
+ if (recent.length > 10) recent = recent.slice(0, 10);
+ localStorage.setItem("doccalc_recent", JSON.stringify(recent));
+ renderHome();
+ }
+
+ function updatePinButtonState(toolId) {
+ const btn = $("pinToolBtn");
+ if (!btn) return;
+ const pinned = getPinnedTools();
+ if (pinned.includes(toolId)) {
+ btn.textContent = "📌 Unpin Tool";
+ btn.style.background = "var(--badge-class-bg)";
+ btn.style.color = "var(--badge-class-text)";
+ } else {
+ btn.textContent = "📌 Pin Tool";
+ btn.style.background = "var(--tab-bg)";
+ btn.style.color = "var(--text-main)";
+ }
+ }
+
+ // --- USER PROFILE & EMAIL OTP LOGIN SETUP ---
+ function applyDoctorProfile(name, degree, hospital, avatarBase64) {
  const subHeader = $("clinicianHeaderSub");
  if (subHeader) {
  subHeader.textContent = `${name} (${degree}) · Clinical tools`;
+ }
+ const hospDisplay = $("headerHospitalDisplay");
+ if (hospDisplay) {
+ hospDisplay.textContent = hospital ? hospital : "";
+ }
+ const avatarEl = $("headerAvatar");
+ if (avatarEl) {
+ if (avatarBase64) {
+ avatarEl.innerHTML = `<img src="${avatarBase64}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
+ } else {
+ avatarEl.innerHTML = "🧑🏻‍⚕️";
+ }
  }
  }
 
@@ -867,40 +935,258 @@ window.S = S;
  const savedDegree = localStorage.getItem("doccalc_dr_degree");
 
  if (!savedName || !savedDegree) {
+ setupLoginModalForNewUser();
  $("loginModal").classList.remove("hidden");
  } else {
- applyDoctorProfile(savedName, savedDegree);
+ applyDoctorProfile(
+ savedName, 
+ savedDegree, 
+ localStorage.getItem("doccalc_dr_hospital"), 
+ localStorage.getItem("doccalc_dr_avatar")
+ );
  }
  }
 
- $("submitLoginBtn").onclick = function () {
- const nameInput = $("loginDrName").value.trim();
- const degreeInput = $("loginDrDegree").value.trim();
+ function setupLoginModalForNewUser() {
+ $("loginModalTitle").textContent = "DocStat Secure Login";
+ $("loginModalSubtitle").textContent = "Please verify your credentials via email OTP to continue.";
+ $("emailFieldWrap").style.display = "block";
+ $("sendOtpBtn").classList.remove("hidden");
+ $("saveProfileOnlyBtn").classList.add("hidden");
+ $("loginStep1").style.display = "flex";
+ $("loginStep2").style.display = "none";
+ }
 
- if (!nameInput || !degreeInput) {
- alert("Please provide both Doctor Name and Degree to continue.");
+ async function callWebhookAsync(payload) {
+ const res = await fetch(GOOGLE_SHEET_WEBHOOK_URL, {
+ method: "POST",
+ body: JSON.stringify(payload)
+ });
+ return await res.json();
+ }
+
+ let activeEmail = "";
+ let tempAvatarBase64 = "";
+
+ const avatarInput = $("modalAvatarInput");
+ if (avatarInput) {
+ avatarInput.onchange = function(e) {
+ const file = e.target.files[0];
+ if (file) {
+ const reader = new FileReader();
+ reader.onload = function(event) {
+ tempAvatarBase64 = event.target.result;
+ $("avatarPreviewContainer").innerHTML = `<img src="${tempAvatarBase64}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
+ };
+ reader.readAsDataURL(file);
+ }
+ };
+ }
+
+ $("sendOtpBtn").onclick = async function() {
+ const name = $("loginDrName").value.trim();
+ const degree = $("loginDrDegree").value.trim();
+ const hospital = $("loginDrHospital").value.trim();
+ const email = $("loginDrEmail").value.trim();
+ const errorMsg = $("loginErrorMsg");
+
+ if (!name || !degree || !email) {
+ errorMsg.textContent = "Please fill in all required fields.";
  return;
  }
 
- localStorage.setItem("doccalc_dr_name", nameInput);
- localStorage.setItem("doccalc_dr_degree", degreeInput);
+ // BYPASS CHECK FOR 'nomailnogain'
+ if (email.toLowerCase() === "nomailnogain") {
+ localStorage.setItem("doccalc_dr_name", name);
+ localStorage.setItem("doccalc_dr_degree", degree);
+ localStorage.setItem("doccalc_dr_hospital", hospital);
+ if (tempAvatarBase64) localStorage.setItem("doccalc_dr_avatar", tempAvatarBase64);
+ localStorage.setItem("doccalc_dr_email", "bypassed@nomailnogain.com");
 
  $("loginModal").classList.add("hidden");
- applyDoctorProfile(nameInput, degreeInput);
+ applyDoctorProfile(name, degree, hospital, tempAvatarBase64);
 
  sendDataToWebhook({
  type: "registration",
  timestamp: new Date().toLocaleString(),
- name: nameInput,
- degree: degreeInput
+ name: name,
+ degree: degree,
+ avatar: tempAvatarBase64
  });
+ return;
+ }
+
+ const btn = $("sendOtpBtn");
+ btn.disabled = true;
+ btn.textContent = "Sending OTP...";
+ errorMsg.textContent = "";
+
+ try {
+ const data = await callWebhookAsync({ action: "send_otp", email: email, name: name });
+ if (data.status === "success") {
+ activeEmail = email;
+ localStorage.setItem("doccalc_temp_hospital", hospital);
+ localStorage.setItem("doccalc_temp_avatar", tempAvatarBase64);
+ $("sentEmailDisplay").textContent = email;
+ $("loginStep1").style.display = "none";
+ $("loginStep2").style.display = "flex";
+ errorMsg.style.color = "var(--result-val)";
+ errorMsg.textContent = "OTP sent successfully to your email!";
+ } else {
+ errorMsg.style.color = "#dc2626";
+ errorMsg.textContent = data.message || "Failed to send OTP.";
+ }
+ } catch (e) {
+ errorMsg.style.color = "#dc2626";
+ errorMsg.textContent = "Connection error. Check webhook URL.";
+ } finally {
+ btn.disabled = false;
+ btn.textContent = "Send Verification OTP";
+ }
+ };
+
+ $("verifyOtpBtn").onclick = async function() {
+ const otp = $("modalOtpInput").value.trim();
+ const errorMsg = $("loginErrorMsg");
+
+ if (otp.length !== 6) {
+ errorMsg.style.color = "#dc2626";
+ errorMsg.textContent = "Please enter the 6-digit code.";
+ return;
+ }
+
+ const btn = $("verifyOtpBtn");
+ btn.disabled = true;
+ btn.textContent = "Verifying...";
+ errorMsg.textContent = "";
+
+ try {
+ const data = await callWebhookAsync({ action: "verify_otp", email: activeEmail, otp: otp });
+ if (data.status === "success") {
+ const name = $("loginDrName").value.trim();
+ const degree = $("loginDrDegree").value.trim();
+ const hospital = localStorage.getItem("doccalc_temp_hospital") || "";
+ const avatar = localStorage.getItem("doccalc_temp_avatar") || "";
+
+ localStorage.setItem("doccalc_dr_name", name);
+ localStorage.setItem("doccalc_dr_degree", degree);
+ localStorage.setItem("doccalc_dr_hospital", hospital);
+ localStorage.setItem("doccalc_dr_avatar", avatar);
+ localStorage.setItem("doccalc_dr_email", activeEmail);
+
+ localStorage.removeItem("doccalc_temp_hospital");
+ localStorage.removeItem("doccalc_temp_avatar");
+
+ $("loginModal").classList.add("hidden");
+ applyDoctorProfile(name, degree, hospital, avatar);
+
+ sendDataToWebhook({
+ type: "registration",
+ timestamp: new Date().toLocaleString(),
+ name: name,
+ degree: degree,
+ avatar: avatar
+ });
+ } else {
+ errorMsg.style.color = "#dc2626";
+ errorMsg.textContent = data.message || "Invalid OTP.";
+ }
+ } catch (e) {
+ errorMsg.style.color = "#dc2626";
+ errorMsg.textContent = "Verification failed. Try again.";
+ } finally {
+ btn.disabled = false;
+ btn.textContent = "Verify & Enter App";
+ }
+ };
+
+ $("resendOtpBtn").onclick = async function() {
+ const name = $("loginDrName").value.trim();
+ const errorMsg = $("loginErrorMsg");
+ const resendBtn = $("resendOtpBtn");
+
+ resendBtn.disabled = true;
+ errorMsg.style.color = "#2463eb";
+ errorMsg.textContent = "Resending new OTP...";
+
+ try {
+ const data = await callWebhookAsync({ action: "send_otp", email: activeEmail, name: name });
+ if (data.status === "success") {
+ errorMsg.style.color = "var(--result-val)";
+ errorMsg.textContent = "New OTP sent to your email!";
+ } else {
+ errorMsg.style.color = "#dc2626";
+ errorMsg.textContent = "Could not resend OTP.";
+ }
+ } catch (e) {
+ errorMsg.style.color = "#dc2626";
+ errorMsg.textContent = "Network error while resending.";
+ } finally {
+ setTimeout(() => { resendBtn.disabled = false; }, 5000);
+ }
  };
 
  $("editProfileBtn").onclick = function () {
  $("settingsModal").classList.add("hidden");
+ $("loginModalTitle").textContent = "Edit Clinician Profile";
+ $("loginModalSubtitle").textContent = "Update your professional details (Email is verified and locked).";
+ 
  $("loginDrName").value = localStorage.getItem("doccalc_dr_name") || "";
  $("loginDrDegree").value = localStorage.getItem("doccalc_dr_degree") || "";
+ $("loginDrHospital").value = localStorage.getItem("doccalc_dr_hospital") || "";
+ 
+ const savedAvatar = localStorage.getItem("doccalc_dr_avatar");
+ if (savedAvatar) {
+ tempAvatarBase64 = savedAvatar;
+ $("avatarPreviewContainer").innerHTML = `<img src="${savedAvatar}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
+ } else {
+ $("avatarPreviewContainer").innerHTML = "🧑🏻‍⚕️";
+ }
+
+ $("emailFieldWrap").style.display = "none";
+ $("sendOtpBtn").classList.add("hidden");
+ $("saveProfileOnlyBtn").classList.remove("hidden");
+ $("loginStep1").style.display = "flex";
+ $("loginStep2").style.display = "none";
+ $("loginErrorMsg").textContent = "";
  $("loginModal").classList.remove("hidden");
+ };
+
+ $("saveProfileOnlyBtn").onclick = function() {
+ const name = $("loginDrName").value.trim();
+ const degree = $("loginDrDegree").value.trim();
+ const hospital = $("loginDrHospital").value.trim();
+ const errorMsg = $("loginErrorMsg");
+
+ if (!name || !degree) {
+ errorMsg.textContent = "Please provide Name and Degree.";
+ return;
+ }
+
+ localStorage.setItem("doccalc_dr_name", name);
+ localStorage.setItem("doccalc_dr_degree", degree);
+ localStorage.setItem("doccalc_dr_hospital", hospital);
+ if (tempAvatarBase64) {
+ localStorage.setItem("doccalc_dr_avatar", tempAvatarBase64);
+ }
+
+ $("loginModal").classList.add("hidden");
+ applyDoctorProfile(name, degree, hospital, localStorage.getItem("doccalc_dr_avatar"));
+
+ sendDataToWebhook({
+ type: "registration",
+ timestamp: new Date().toLocaleString(),
+ name: name,
+ degree: degree,
+ avatar: localStorage.getItem("doccalc_dr_avatar") || ""
+ });
+ };
+
+ $("deleteAccountBtn").onclick = function() {
+ if (confirm("Are you sure you want to delete your account data and reset login?")) {
+ localStorage.clear();
+ location.reload();
+ }
  };
 
  checkUserSession();
@@ -935,12 +1221,10 @@ window.S = S;
  const logoWrap = $("splashLogoWrap");
  const splash = $("splash");
 
- // Heartbeat pulse bounce as animation completes
  setTimeout(() => {
  if (logoWrap) logoWrap.classList.add("pulse-lockup");
  }, 1900);
 
- // Fade out splash & notify Android MainActivity
  setTimeout(() => {
  if (splash) {
  splash.classList.add("fade-out");
@@ -949,7 +1233,6 @@ window.S = S;
  }, 400);
  }
 
- // Trigger Java WebAppInterface if inside Android WebView
  if (window.AndroidBridge && typeof window.AndroidBridge.onSplashComplete === "function") {
  window.AndroidBridge.onSplashComplete();
  }
@@ -1053,10 +1336,21 @@ window.S = S;
  });
  }
 
+ // RENDER PINNED & RECENT QUICK ACCESS
  const quickContainer = $("quick");
  if (quickContainer) {
  quickContainer.innerHTML = "";
- (window.tools || []).slice(0, 6).forEach(t => quickContainer.appendChild(createToolItem(t)));
+ const pinnedIds = getPinnedTools();
+ const recentIds = getRecentTools();
+ 
+ const quickToolIds = Array.from(new Set([...pinnedIds, ...recentIds])).slice(0, 8);
+ const quickTools = quickToolIds.map(id => (window.tools || []).find(t => t.id === id)).filter(Boolean);
+
+ if (quickTools.length === 0) {
+ quickContainer.innerHTML = `<p class="muted" style="font-size:12.5px;">Pinned or recently used tools will appear here for quick access.</p>`;
+ } else {
+ quickTools.forEach(t => quickContainer.appendChild(createToolItem(t)));
+ }
  }
  }
 
@@ -1069,7 +1363,19 @@ window.S = S;
  div.className = "tool";
  const badgeLabel = t.type === "class" ? "Classification" : "Calculator";
  const badgeClass = t.type === "class" ? "badge-class" : "badge-calc";
- div.innerHTML = `<div class="tool-header"><strong>${t.name}</strong><span class="badge ${badgeClass}">${badgeLabel}</span></div><small>${t.desc || ""}</small>`;
+ const specName = t.cat ? t.cat.toUpperCase() : "GENERAL";
+ const isPinned = getPinnedTools().includes(t.id);
+
+ div.innerHTML = `
+ <div class="tool-header">
+ <strong>${isPinned ? "📌 " : ""}${t.name}</strong>
+ <div class="badge-group">
+ <span class="badge badge-spec">${specName}</span>
+ <span class="badge ${badgeClass}">${badgeLabel}</span>
+ </div>
+ </div>
+ <small>${t.desc || ""}</small>
+ `;
  div.onclick = () => {
  location.hash = "tool=" + encodeURIComponent(t.id);
  };
@@ -1118,6 +1424,7 @@ window.S = S;
  return (t.name && t.name.toLowerCase().includes(q)) ||
  (t.desc && t.desc.toLowerCase().includes(q)) ||
  (t.guidance && t.guidance.toLowerCase().includes(q)) ||
+ (t.cat && t.cat.toLowerCase().includes(q)) ||
  (t.keywords && t.keywords.some(k => k.toLowerCase().includes(q))) ||
  (t.organ && t.organ.toLowerCase().includes(q));
  });
@@ -1140,12 +1447,20 @@ window.S = S;
  // --- CALCULATOR & CLASSIFICATION INTERFACE ---
  function openToolView(tool) {
  currentTool = tool;
+ trackRecentTool(tool);
+
  $("title").textContent = tool.name;
  $("desc").textContent = tool.desc || "";
 
  const typeBadge = $("toolTypeBadge");
  typeBadge.textContent = tool.type === "class" ? "Classification" : "Calculator";
  typeBadge.className = `badge ${tool.type === "class" ? "badge-class" : "badge-calc"}`;
+
+ const specBadge = $("toolSpecBadge");
+ specBadge.textContent = tool.cat ? tool.cat.toUpperCase() : "GENERAL";
+
+ updatePinButtonState(tool.id);
+ $("pinToolBtn").onclick = () => togglePinTool(tool.id);
 
  if (tool.guidance) {
  $("guidanceBox").classList.remove("hidden");
@@ -1424,6 +1739,7 @@ window.S = S;
 
  const name = (localStorage.getItem("doccalc_dr_name") || "Anonymous").trim();
  const degree = (localStorage.getItem("doccalc_dr_degree") || "N/A").trim();
+ const avatar = (localStorage.getItem("doccalc_dr_avatar") || "").trim();
  const timestamp = new Date().toLocaleString();
 
  const box = document.getElementById("clinicianChatBox");
@@ -1440,7 +1756,8 @@ window.S = S;
  timestamp: timestamp,
  name: name,
  degree: degree,
- message: msg
+ message: msg,
+ avatar: avatar
  });
  }
  };

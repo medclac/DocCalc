@@ -1,0 +1,40 @@
+name: Generate Keystore
+
+on:
+  workflow_dispatch:
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: 17
+
+      - name: Generate Keystore
+        run: |
+          keytool -genkeypair -v \
+            -storetype PKCS12 \
+            -keystore release.jks \
+            -alias doccalc \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -storepass "doccalc123" \
+            -keypass "doccalc123" \
+            -dname "CN=DocCalc, OU=Medical, O=DocCalc, L=City, ST=State, C=IN"
+
+      - name: Print Base64 to Copy
+        run: |
+          echo "==================== COPY BELOW THIS LINE ===================="
+          base64 -w 0 release.jks
+          echo ""
+          echo "==================== COPY ABOVE THIS LINE ===================="
+
+      - name: Upload Keystore Artifact (Safe Backup)
+        uses: actions/upload-artifact@v4
+        with:
+          name: doccalc-keystore-backup
+          path: release.jks

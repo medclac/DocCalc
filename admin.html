@@ -373,13 +373,10 @@ tr:hover td { background: #f8fafc; }
   <!-- TAB 1: CHARTS & ANALYTICS -->
   <div id="tabCharts" class="tab-section">
     <div class="charts-grid">
-      <!-- OVERALL SPECIALTIES CHART -->
       <div class="chart-box">
         <h3>Platform Usage by Specialty (Overall)</h3>
         <div class="canvas-holder"><canvas id="specPieCanvas"></canvas></div>
       </div>
-
-      <!-- SELECTABLE INDIVIDUAL SPECIALTY CALCULATORS CHART -->
       <div class="chart-box">
         <h3>Calculator Breakdown by Specialty</h3>
         <div class="canvas-holder"><canvas id="specialtyCalcBarCanvas"></canvas></div>
@@ -504,7 +501,7 @@ tr:hover td { background: #f8fafc; }
 // ============================================================================
 // PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL BELOW
 // ============================================================================
-const SCRIPT_API_URL = "https://script.google.com/macros/s/AKfycbwzWx0jk5eO58V4R4Hk7ZlpDZJCKNa89B5PHwSBwl2LAE2vRJL86qrsZg_IYWsmgOzB/exec";
+const SCRIPT_API_URL = "https://script.google.com/macros/s/AKfycbzJx3gZcITimEC2B2lNR0feu0y7CebvRBNWWuaxYl71o5GPSvF1rsbpYb12UR-XxjLE/exec";
 
 // --- ADMIN AUTHENTICATION CHECK ---
 function checkAdminAuth() {
@@ -573,10 +570,11 @@ async function fetchAdminData() {
     STATE.calcFreq = data.calcFreq || {};
     STATE.specFreq = data.specFreq || {};
 
+    // On-demand/Lazy fetch chat transcripts for active users using email
     STATE.messagesMap = {};
     for (let u of STATE.users) {
       try {
-        const msgRes = await fetch(`${SCRIPT_API_URL}?action=user_messages&name=${encodeURIComponent(u.name)}&degree=${encodeURIComponent(u.degree)}&t=${Date.now()}`);
+        const msgRes = await fetch(`${SCRIPT_API_URL}?action=user_messages&email=${encodeURIComponent(u.email)}&t=${Date.now()}`);
         const msgData = await msgRes.json();
         if (msgData.status === "success" && msgData.messages) {
           STATE.messagesMap[u.key] = msgData.messages;
@@ -624,7 +622,6 @@ function populateSpecialtyDropdown() {
   const select = document.getElementById("specialtySelect");
   const currentVal = select.value;
   
-  // Extract unique specialties from logs
   const specialties = [...new Set(STATE.logs.map(l => (l.specialty || "GENERAL").toUpperCase()))].sort();
   
   select.innerHTML = `<option value="">Select Specialty Category...</option>`;
@@ -642,7 +639,7 @@ function populateSpecialtyDropdown() {
   }
 }
 
-// --- RENDER CHARTS ---
+// --- RENDER CHARTS WITH SMOOTH UPDATES (NO RESET FROM ZERO) ---
 function renderCharts() {
   const palette = ["#2563eb", "#0ea5e9", "#10b981", "#f59e0b", "#8b5cf6", "#ec4899", "#ef4444", "#14b8a6", "#64748b"];
 
@@ -654,14 +651,12 @@ function renderCharts() {
   renderSpecialtyCalcChart();
 }
 
-// Render individual calculators breakdown for the selected specialty category
 window.renderSpecialtyCalcChart = function() {
   const selectedSpec = document.getElementById("specialtySelect").value;
   const filteredLogs = selectedSpec 
     ? STATE.logs.filter(l => (l.specialty || "GENERAL").toUpperCase() === selectedSpec)
     : STATE.logs;
 
-  // Tally calculators inside this specialty
   const freqMap = {};
   filteredLogs.forEach(l => {
     const t = l.tool || "Unknown";
@@ -676,7 +671,14 @@ window.renderSpecialtyCalcChart = function() {
 };
 
 function drawChart(canvasId, type, labels, values, colors) {
-  if (chartInstances[canvasId]) chartInstances[canvasId].destroy();
+  if (chartInstances[canvasId]) {
+    chartInstances[canvasId].data.labels = labels;
+    chartInstances[canvasId].data.datasets[0].data = values;
+    chartInstances[canvasId].data.datasets[0].backgroundColor = colors;
+    chartInstances[canvasId].update({ duration: 400 });
+    return;
+  }
+
   const ctx = document.getElementById(canvasId).getContext("2d");
   chartInstances[canvasId] = new Chart(ctx, {
     type: type,
@@ -692,6 +694,7 @@ function drawChart(canvasId, type, labels, values, colors) {
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      animation: { duration: 600 },
       plugins: {
         legend: { display: type !== "bar", position: "right" }
       }
@@ -706,7 +709,7 @@ function renderUsersTable() {
   tbody.innerHTML = "";
 
   const filtered = STATE.users.filter(u =>
-    String(u.name).toLowerCase().includes(q) || String(u.degree).toLowerCase().includes(q)
+    String(u.name).toLowerCase().includes(q) || String(u.degree).toLowerCase().includes(q) || String(u.email).toLowerCase().includes(q)
   );
 
   if (!filtered.length) {
@@ -722,16 +725,16 @@ function renderUsersTable() {
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td><div class="avatar-cell">${avatarHtml}</div></td>
-      <td><strong>${u.name}</strong></td>
+      <td><strong>${u.name}</strong><br><small style="color:var(--muted);">${u.email}</small></td>
       <td><span class="badge">${u.degree}</span></td>
       <td>${u.firstLogin || "—"}</td>
       <td>${u.lastActive || "—"}</td>
       <td><strong>${u.totalCalcs || 0}</strong></td>
       <td>
         <button type="button" class="action-btn" onclick='openProfileModal(${JSON.stringify(u)})'>👤 Profile</button>
-        <button type="button" class="action-btn" onclick="inspectUserCalculations('${u.key}', '${u.name.replace(/'/g, "\\'")}', '${u.sheetId || ""}')">🔍 Calcs</button>
+        <button type="button" class="action-btn" onclick="inspectUserCalculations('${u.email}', '${u.name.replace(/'/g, "\\'")}', '${u.sheetId || ""}')">🔍 Calcs</button>
         ${u.sheetUrl ? `<a href="${u.sheetUrl}" target="_blank" class="action-btn">📄 Excel</a>` : ""}
-        <button type="button" class="action-btn" onclick="openChatWithUser('${u.key}')">💬 Chat</button>
+        <button type="button" class="action-btn" onclick="openChatWithUser('${u.email}')">💬 Chat</button>
       </td>
     `;
     tbody.appendChild(tr);
@@ -767,7 +770,7 @@ window.closeProfileModal = function() {
 };
 
 // --- INSPECT SPECIFIC USER'S CALCULATIONS ---
-window.inspectUserCalculations = async function(userKey, userName, sheetId) {
+window.inspectUserCalculations = async function(email, userName, sheetId) {
   const panel = document.getElementById("userDrilldownPanel");
   const title = document.getElementById("drilldownTitle");
   const tbody = document.getElementById("userDrilldownBody");
@@ -789,7 +792,7 @@ window.inspectUserCalculations = async function(userKey, userName, sheetId) {
     }
   }
 
-  const userLogs = STATE.logs.filter(l => (String(l.name) + "|" + String(l.degree)).toLowerCase() === String(userKey).toLowerCase());
+  const userLogs = STATE.logs.filter(l => String(l.email).toLowerCase() === String(email).toLowerCase());
   renderDrilldownRows(userLogs.map(l => ({
     time: l.timestamp, tool: l.tool, name: l.name, degree: l.degree, result: l.result, eq: l.eq
   })));
@@ -826,7 +829,8 @@ function renderAllLogsTable() {
     String(l.tool).toLowerCase().includes(q) ||
     String(l.name).toLowerCase().includes(q) ||
     String(l.specialty).toLowerCase().includes(q) ||
-    String(l.result).toLowerCase().includes(q)
+    String(l.result).toLowerCase().includes(q) ||
+    String(l.email).toLowerCase().includes(q)
   );
 
   if (!filtered.length) {
@@ -838,7 +842,7 @@ function renderAllLogsTable() {
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td>${l.timestamp || ""}</td>
-      <td><strong>${l.name || ""}</strong></td>
+      <td><strong>${l.name || ""}</strong><br><small style="color:var(--muted);">${l.email || ""}</small></td>
       <td>${l.degree || ""}</td>
       <td><span class="badge">${l.specialty || ""}</span></td>
       <td><strong>${l.tool || ""}</strong></td>
@@ -849,7 +853,7 @@ function renderAllLogsTable() {
 }
 document.getElementById("logSearch").oninput = renderAllLogsTable;
 
-// --- 2-WAY LIVE CHAT & FEEDBACK ---
+// --- 2-WAY LIVE CHAT & FEEDBACK (ON-DEMAND) ---
 function renderChatSidebar() {
   const list = document.getElementById("chatUsersList");
   list.innerHTML = "";
@@ -862,24 +866,41 @@ function renderChatSidebar() {
   STATE.users.forEach(u => {
     const userMsgs = STATE.messagesMap[u.key] || [];
     const div = document.createElement("div");
-    div.className = "chat-user-item" + (STATE.selectedChatUser && STATE.selectedChatUser.key === u.key ? " active" : "");
+    div.className = "chat-user-item" + (STATE.selectedChatUser && STATE.selectedChatUser.email === u.email ? " active" : "");
     div.innerHTML = `
       <strong>${u.name}</strong>
       <small>${u.degree} · ${userMsgs.length} msg(s)</small>
     `;
-    div.onclick = () => selectChatDoctor(u);
+    div.onclick = () => selectAndFetchChatDoctor(u);
     list.appendChild(div);
   });
 }
 
-window.openChatWithUser = function(userKey) {
+window.openChatWithUser = function(email) {
   document.querySelector('[data-tab="tabChat"]').click();
-  const found = STATE.users.find(u => String(u.key).toLowerCase() === String(userKey).toLowerCase());
-  if (found) selectChatDoctor(found);
+  const found = STATE.users.find(u => String(u.email).toLowerCase() === String(email).toLowerCase());
+  if (found) selectAndFetchChatDoctor(found);
 };
 
-function selectChatDoctor(userObj) {
+async function selectAndFetchChatDoctor(userObj) {
   STATE.selectedChatUser = userObj;
+  document.getElementById("activeChatDoctorTitle").textContent = `Loading chat with ${userObj.name}...`;
+  document.getElementById("adminChatInput").disabled = true;
+  document.getElementById("adminChatSendBtn").disabled = true;
+  renderChatSidebar();
+
+  try {
+    const res = await fetch(`${SCRIPT_API_URL}?action=user_messages&email=${encodeURIComponent(userObj.email)}&t=${Date.now()}`);
+    const data = await res.json();
+    if (data.status === "success" && data.messages) {
+      STATE.messagesMap[userObj.key] = data.messages;
+    } else {
+      STATE.messagesMap[userObj.key] = [];
+    }
+  } catch (err) {
+    console.warn("Could not fetch chat for user:", err);
+  }
+
   document.getElementById("activeChatDoctorTitle").textContent = `Chatting with ${userObj.name} (${userObj.degree})`;
   document.getElementById("adminChatInput").disabled = false;
   document.getElementById("adminChatSendBtn").disabled = false;
@@ -920,6 +941,7 @@ document.getElementById("adminChatForm").onsubmit = async function(e) {
   const payload = {
     type: "admin_reply",
     timestamp: new Date().toLocaleString(),
+    email: STATE.selectedChatUser.email,
     name: STATE.selectedChatUser.name,
     degree: STATE.selectedChatUser.degree,
     message: text
@@ -938,24 +960,28 @@ document.getElementById("adminChatForm").onsubmit = async function(e) {
 
   inp.value = "";
   renderChatConversation(STATE.selectedChatUser);
+  renderChatSidebar();
 
-  fetch(SCRIPT_API_URL, {
-    method: "POST",
-    mode: "no-cors",
-    headers: { "Content-Type": "text/plain;charset=utf-8" },
-    body: JSON.stringify(payload)
-  });
+  try {
+    await fetch(SCRIPT_API_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
+    });
+  } catch (err) {
+    console.warn("Failed to send admin reply:", err);
+  }
 };
 
 document.getElementById("refreshBtn").onclick = fetchAdminData;
 
-// Initialize Admin Auth Check on Load
 checkAdminAuth();
 setInterval(() => {
   if (localStorage.getItem("docstat_admin_auth") === "true") {
     fetchAdminData();
   }
-}, 20000);
+}, 30000);
 </script>
 </body>
 </html>

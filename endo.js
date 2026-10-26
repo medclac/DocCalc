@@ -1,6 +1,7 @@
 /**
  * MedCalc Module: Endocrinology & Metabolism (ENDO)
  * Fully compatible with the MedCalc HTML application structure and obgy.js architecture.
+ * Enhanced version with deep clinical interpretations, physiological significance, diagnostic pearls, and guidance matrix.
  */
 (function () {
  "use strict";
@@ -27,6 +28,204 @@
  region: "endocrine / systemic / metabolic"
  };
 
+ var endoGuidance = {
+ // A. Diabetes Mellitus
+ eAgCalc: [
+ "Translates HbA1c to estimated average glucose (eAG) using the ADAG formula: eAG (mg/dL) = 28.7 × HbA1c − 46.7.",
+ "Pathophysiology & Physiological Significance: Glycated hemoglobin reflects cumulative plasma glucose exposure over the 120-day erythrocyte lifespan. Bridges laboratory glycation markers with daily glucometer self-monitoring trends to evaluate chronic glucotoxicity."
+ ],
+ homaIr: [
+ "HOMA-IR = (Fasting Glucose [mg/dL] × Fasting Insulin [µIU/mL]) ÷ 405. Values >2.0–2.5 denote significant peripheral insulin resistance.",
+ "Pathophysiology & Physiological Significance: Models hepatic and peripheral tissue resistance to insulin-mediated glucose uptake. Elevated values reflect impaired post-receptor signaling pathways and compensatory beta-cell hypersecretion."
+ ],
+ homaBeta: [
+ "HOMA-β = (360 × Fasting Insulin [µIU/mL]) ÷ (Fasting Glucose [mg/dL] − 63). Quantifies basal pancreatic beta-cell secretory reserve.",
+ "Pathophysiology & Physiological Significance: Estimates basal insulin release relative to glucose stimulatory thresholds. Tracks the destruction or functional exhaustion of pancreatic islet beta cells over time."
+ ],
+ quickiIndex: [
+ "QUICKI = 1 ÷ [log(Fasting Glucose mg/dL) + log(Fasting Insulin µIU/mL)]. Values <0.33 indicate impaired insulin sensitivity.",
+ "Pathophysiology & Physiological Significance: Logarithmic transformation normalizes skewed insulin and glucose distributions, providing enhanced statistical correlation with gold-standard clamp measures of tissue sensitivity."
+ ],
+ tygIndex: [
+ "TyG Index = ln[(Fasting Triglycerides mg/dL × Fasting Glucose mg/dL) ÷ 2]. Values ≥8.5–8.8 identify insulin resistance.",
+ "Pathophysiology & Physiological Significance: Integrates glucotoxicity and lipotoxicity. Elevated triglycerides reflect hepatic insulin resistance (failure of insulin to suppress VLDL secretion), mirroring peripheral resistance."
+ ],
+ dmCriteriaRef: [
+ "ADA Diagnostic Criteria: Fasting Plasma Glucose ≥126 mg/dL, 2-h OGTT ≥200 mg/dL, HbA1c ≥6.5%, or random glucose ≥200 mg/dL with hyperglycemic symptoms.",
+ "Pathophysiology & Physiological Significance: Defines glycemic thresholds above which microvascular damage (retinopathy, nephropathy) increases exponentially due to advanced glycation end-products."
+ ],
+ tddInsulinHelper: [
+ "Estimates total daily insulin dose (TDD): 0.4–0.5 units/kg/day in T1D and 0.5–1.0+ units/kg/day in insulin-resistant T2D.",
+ "Pathophysiology & Physiological Significance: Prevents ketoacidosis in absolute insulin deficiency (T1D) and glucotoxicity in T2D while avoiding iatrogenic hypoglycemia."
+ ],
+ basalBolusCalc: [
+ "Splits TDD into basal (40–50%) and prandial bolus (50–60% divided equally across 3 meals).",
+ "Pathophysiology & Physiological Significance: Mimics normal biphasic pancreatic secretion, suppressing hepatic gluconeogenesis overnight and between meals while covering acute postprandial glucose spikes."
+ ],
+ corrInsulinCalc: [
+ "Correction Factor (ISF) = 1800 ÷ TDD (rapid analogs). Correction dose = (Current Glucose − Target Glucose) ÷ ISF.",
+ "Pathophysiology & Physiological Significance: Quantifies how much a single unit of rapid-acting insulin lowers blood glucose, enabling safe correction of acute hyperglycemic spikes without stacking."
+ ],
+ icrCalc: [
+ "Insulin-to-Carbohydrate Ratio (ICR) = 500 ÷ TDD (rule of 500). Meal bolus = Grams of carbohydrates ÷ ICR.",
+ "Pathophysiology & Physiological Significance: Matches prandial insulin delivery to intestinal carbohydrate absorption rates, preventing postprandial glycemic excursions."
+ ],
+ hypoClassification: [
+ "Level 1: <70 mg/dL; Level 2: <54 mg/dL (clinically significant); Level 3: Severe cognitive impairment requiring third-party assistance.",
+ "Pathophysiology & Physiological Significance: Prevents fatal neuroglycopenia, cardiac arrhythmias, and cerebral ischemia caused by central nervous system glucose deprivation."
+ ],
+ dmRemissionRef: [
+ "Diabetes remission is defined as HbA1c <6.5% sustained for ≥3 months off all glucose-lowering pharmacotherapy.",
+ "Pathophysiology & Physiological Significance: Demonstrates successful reversal of beta-cell glucotoxicity and restoration of near-normal insulin sensitivity following bariatric surgery or weight loss."
+ ],
+
+ // B. Thyroid Disorders
+ tshGuide: [
+ "Interprets discordant TSH and Free T4 patterns: Primary hypothyroidism, hyperthyroidism, subclinical disease, central dysfunction, or thyroid hormone resistance.",
+ "Pathophysiology & Physiological Significance: Unlocks the primary vs central axis feedback dynamics governing basal metabolic rate and oxygen consumption."
+ ],
+ bwpsScore: [
+ "Burch–Wartofsky Point Scale evaluates thyroid storm based on fever, CNS, GI, cardiovascular dysfunction, and precipitant. Score ≥45 denotes thyroid storm.",
+ "Pathophysiology & Physiological Significance: Captures multi-organ adrenergic hypersensitivity, hypermetabolic state, and systemic decompensation triggered by overwhelming thyroid hormone excess."
+ ],
+ jtaThyroidStorm: [
+ "Japanese Thyroid Association criteria combine thyrotoxicosis with specific combinations of CNS, fever, tachycardia, CHF, and GI manifestations.",
+ "Pathophysiology & Physiological Significance: Validates acute thyrotoxic crisis using objective multi-system organ dysfunction metrics."
+ ],
+ popoveniucScore: [
+ "Popoveniuc diagnostic score for myxedema coma based on temperature, CNS dysfunction, GI features, cardiovascular signs, and precipitating factors.",
+ "Pathophysiology & Physiological Significance: Quantifies profound systemic hypometabolism, hypothermia, and encephalopathy, directing emergency supportive and hormone replacement therapies."
+ ],
+ tiradsRef: [
+ "ACR TI-RADS risk stratification assigns points for composition, echogenicity, shape, margin, and echogenic foci to determine FNA biopsy thresholds.",
+ "Pathophysiology & Physiological Significance: Balances malignancy detection against unnecessary invasive biopsies by categorizing nodular sonographic architectural patterns."
+ ],
+ thyroidVolCalc: [
+ "Calculates thyroid volume using ellipsoid formula: Length × Width × Depth × 0.52 for each lobe. Normal volume <18 mL (women) and <25 mL (men).",
+ "Pathophysiology & Physiological Significance: Quantifies glandular hypertrophy resulting from iodine deficiency, autoimmune stimulation (Graves), or multinodular goiter."
+ ],
+ lt4DoseHelper: [
+ "Full replacement levothyroxine dose is ~1.6 mcg/kg/day ideal body weight. Start lower (25–50 mcg/day) in elderly or cardiac patients.",
+ "Pathophysiology & Physiological Significance: Restores circulating thyroxine pools to normalize basal metabolic rate, thermogenesis, and lipid metabolism."
+ ],
+
+ // C. Adrenal Disorders
+ arrCalc: [
+ "Aldosterone-to-Renin Ratio (ARR) = PAC (ng/dL) ÷ PRA (ng/mL/h). Ratio ≥20–30 with PAC ≥10–15 ng/dL screens positive for primary aldosteronism.",
+ "Pathophysiology & Physiological Significance: Unmasks autonomous mineralocorticoid excess that drives sodium retention, potassium wasting, and resistant hypertension independent of angiotensin II."
+ ],
+ cortisolUnitConv: [
+ "Converts serum cortisol between µg/dL and nmol/L (1 µg/dL = 27.59 nmol/L).",
+ "Pathophysiology & Physiological Significance: Harmonizes glucocorticoid laboratory data across international clinical assays."
+ ],
+ acthStimInterp: [
+ "Short Synacthen (250 mcg cosyntropin) test: peak serum cortisol ≥18–20 µg/dL rules out primary adrenal insufficiency.",
+ "Pathophysiology & Physiological Significance: Tests the maximal secretory reserve of the zona fasciculata in the adrenal cortex, confirming or excluding Addison disease."
+ ],
+ dstInterpRef: [
+ "Overnight 1 mg dexamethasone suppression test: morning post-dexamethasone cortisol ≤1.8 µg/dL excludes autonomous hypercortisolism.",
+ "Pathophysiology & Physiological Significance: Assesses negative feedback inhibition of the HPA axis; failure to suppress indicates autonomous cortisol hypersecretion."
+ ],
+
+ // D. Pituitary and Hypothalamus
+ waterDeprivRef: [
+ "Interprets water deprivation testing: differentiates central DI, nephrogenic DI, and primary polydipsia based on urine osmolality before and after desmopressin.",
+ "Pathophysiology & Physiological Significance: Differentiates central neurohypophyseal failure from renal tubular unresponsiveness and primary behavioral water loading."
+ ],
+ prolactinConv: [
+ "Converts prolactin between ng/mL and mIU/L (1 ng/mL ≈ 21.2 mIU/L). Levels >250 ng/mL strongly indicate prolactinoma.",
+ "Pathophysiology & Physiological Significance: Evaluates lactotroph axis regulation and identifies autonomous pituitary tumor secretion vs dopamine antagonist drug effects."
+ ],
+
+ // E. Calcium, Phosphate and Bone Metabolism
+ corrCalcium: [
+ "Corrected Calcium = Total Calcium (mg/dL) + 0.8 × (4.0 − Serum Albumin [g/dL]).",
+ "Pathophysiology & Physiological Significance: Accounts for protein-bound calcium fractions, revealing true physiological calcium status when serum albumin fluctuates."
+ ],
+ feCaCalc: [
+ "FECa = [(Urine Ca × Serum Cr) ÷ (Serum Ca × Urine Cr)]. FECa <1% suggests FHH; >2% favors Primary Hyperparathyroidism.",
+ "Pathophysiology & Physiological Significance: Evaluates renal tubular handling of calcium relative to glomerular filtration."
+ ],
+ tscoreClass: [
+ "WHO T-score criteria: Normal (≥−1.0), Osteopenia (−1.0 to −2.5), Osteoporosis (≤−2.5), Severe Osteoporosis (≤−2.5 plus fragility fracture).",
+ "Pathophysiology & Physiological Significance: Quantifies skeletal structural integrity and fracture vulnerability."
+ ],
+ vitDConv: [
+ "Converts 25-hydroxyvitamin D: 1 ng/mL = 2.5 nmol/L. Sufficiency defined as ≥20–30 ng/mL.",
+ "Pathophysiology & Physiological Significance: Ensures adequate hormonal substrate for intestinal calcium and phosphate absorption and mineralization of bone osteoid."
+ ],
+ fraxPlanned: [
+ "Planned — FRAX WHO fracture risk assessment tool integration.",
+ "Pathophysiology & Physiological Significance: Estimates 10-year fracture probability by combining clinical risk factors with bone density."
+ ],
+
+ // F. Obesity and Metabolic Syndrome
+ whrCalc: [
+ "Waist-to-Hip Ratio = Waist (cm) ÷ Hip (cm). Substantial risk: >0.90 in men, >0.85 in women.",
+ "Pathophysiology & Physiological Significance: Differentiates android (visceral) from gynoid (subcutaneous) fat distribution, identifying high visceral adipose tissue depots that secrete pro-inflammatory adipokines and drive insulin resistance."
+ ],
+ whtrCalc: [
+ "Waist-to-Height Ratio = Waist (cm) ÷ Height (cm). Ratio ≥0.50 indicates increased cardiometabolic risk.",
+ "Pathophysiology & Physiological Significance: Provides a universal height-adjusted threshold for central adiposity and cardiometabolic risk across diverse ethnic populations."
+ ],
+ ibwAbwCalc: [
+ "Devine formula for Ideal Body Weight (IBW). Adjusted Body Weight (ABW) = IBW + 0.4 × (Actual Weight − IBW).",
+ "Pathophysiology & Physiological Significance: Corrects for altered pharmacokinetic volume of distribution of hydrophilic drugs in adipose tissue."
+ ],
+ weightLossPct: [
+ "Weight Loss % = [(Initial Weight − Current Weight) ÷ Initial Weight] × 100%. Loss of ≥5–10% yields proven cardiometabolic improvements.",
+ "Pathophysiology & Physiological Significance: Quantifies therapeutic success in reversing ectopic fat deposition, hepatic steatosis, and metabolic syndrome."
+ ],
+
+ // G. Diabetes Emergencies
+ dkaHhsClassifier: [
+ "Classifies DKA vs HHS based on glucose, arterial pH, bicarbonate, ketones, and effective serum osmolality.",
+ "Pathophysiology & Physiological Significance: Differentiates absolute insulin deficiency ketotic acidemia from relative insulin deficiency hyperosmolar dehydration to guide emergency resuscitation."
+ ],
+ effOsmolality: [
+ "Effective Serum Osmolality = 2×Na + (Glucose ÷ 18). Excludes urea. Diagnostic criterion for HHS is >320 mOsm/kg.",
+ "Pathophysiology & Physiological Significance: Measures effective tonicity driving osmotic water shifts out of intracellular neuronal compartments."
+ ],
+
+ // H. Reproductive Endocrinology
+ rotterdamPcos: [
+ "Rotterdam 2003 criteria: Diagnosis requires ≥2 of: 1) Oligo/anovulation, 2) Hyperandrogenism, 3) Polycystic ovaries on ultrasound or high AMH.",
+ "Pathophysiology & Physiological Significance: Captures multi-faceted endocrine, ovarian, and metabolic manifestations driven by hypothalamic-pituitary-ovarian dysregulation and hyperinsulinemia."
+ ],
+ faiCalc: [
+ "Free Androgen Index (FAI) = (Total Testosterone [nmol/L] ÷ SHBG [nmol/L]) × 100. FAI >4.5–5% suggests hyperandrogenemia.",
+ "Pathophysiology & Physiological Significance: Accounts for hepatic SHBG suppression by hyperinsulinemia, revealing true bioavailable testosterone levels."
+ ],
+ lhFshRatio: [
+ "LH/FSH ratio elevated (>2.0–3.0) in polycystic ovary syndrome due to pulsatile GnRH abnormalities.",
+ "Pathophysiology & Physiological Significance: Reflects hypothalamic GnRH pulse frequency alterations that preferentially stimulate pituitary LH secretion over FSH."
+ ],
+ ferrimanGallwey: [
+ "Modified Ferriman–Gallwey (mFG) scores terminal hair growth across 9 body regions (0–4 each). Score ≥4–8 indicates hirsutism.",
+ "Pathophysiology & Physiological Significance: Quantifies end-organ cutaneous 5-alpha-reductase sensitivity and pilosebaceous unit response to circulating androgens."
+ ],
+
+ // I. Lipid and Metabolic Risk
+ lipidRatios: [
+ "Calculates Non-HDL-C, Total/HDL ratio, Triglyceride/HDL ratio, and Remnant Cholesterol.",
+ "Pathophysiology & Physiological Significance: Captures all atherogenic apolipoprotein B-containing particles and remnant lipoproteins driving atherogenesis beyond isolated LDL-C."
+ ],
+ metsynCriteria: [
+ "NCEP ATP III criteria for Metabolic Syndrome: requires ≥3 of: Elevated waist, Triglycerides ≥150, Low HDL, High BP ≥130/85, Impaired fasting glucose ≥100.",
+ "Pathophysiology & Physiological Significance: Identifies systemic insulin resistance clustering that exponentially accelerates cardiovascular disease and type 2 diabetes risk."
+ ],
+
+ // J. Endocrine Tumors and Specialized Assessment
+ pheoScreenRef: [
+ "Screening for pheochromocytoma/paraganglioma: Plasma free or 24-hr urinary fractionated metanephrines. Elevations >3–4× ULN support diagnosis.",
+ "Pathophysiology & Physiological Significance: Detects autonomous intratumoral O-methylated catecholamine metabolite production by chromaffin tissue."
+ ],
+ menChecklist: [
+ "MEN1 (3 Ps: Parathyroid, Pituitary, Pancreatic NETs); MEN2A (MTC, Pheochromocytoma, Parathyroid); MEN2B (MTC, Pheochromocytoma, mucosal neuromas).",
+ "Pathophysiology & Physiological Significance: Unmasks hereditary oncogenic mutations affecting neuroendocrine cell lineages."
+ ]
+ };
+
  var endoTools = [
  // ==========================================
  // A. DIABETES MELLITUS
@@ -35,6 +234,7 @@
  id: "eAgCalc",
  cat: "endo",
  type: "calc",
+ subcat: "Diabetes Mellitus",
  name: "HbA1c to Estimated Average Glucose (eAG)",
  desc: "Translates laboratory HbA1c to mean glucose in mg/dL and mmol/L (ADAG study).",
  organ: "Pancreas / Systemic",
@@ -85,6 +285,7 @@
  id: "homaIr",
  cat: "endo",
  type: "calc",
+ subcat: "Diabetes Mellitus",
  name: "HOMA-IR (Insulin Resistance)",
  desc: "Homeostatic Model Assessment of peripheral insulin resistance.",
  organ: "Pancreas / Liver / Muscle",
@@ -136,6 +337,7 @@
  id: "homaBeta",
  cat: "endo",
  type: "calc",
+ subcat: "Diabetes Mellitus",
  name: "HOMA-β (Beta-Cell Function)",
  desc: "Homeostatic Model Assessment of pancreatic beta-cell secretory capacity.",
  organ: "Pancreas",
@@ -183,6 +385,7 @@
  id: "quickiIndex",
  cat: "endo",
  type: "calc",
+ subcat: "Diabetes Mellitus",
  name: "QUICKI Insulin Sensitivity Index",
  desc: "Quantitative insulin sensitivity check index derived from logarithmic transformation.",
  organ: "Systemic / Pancreas",
@@ -225,6 +428,7 @@
  id: "tygIndex",
  cat: "endo",
  type: "calc",
+ subcat: "Diabetes Mellitus",
  name: "TyG Index (Triglyceride–Glucose)",
  desc: "Cost-effective surrogate marker of insulin resistance calculated from fasting lipids and glucose.",
  organ: "Liver / Pancreas / Adipose",
@@ -267,6 +471,7 @@
  id: "dmCriteriaRef",
  cat: "endo",
  type: "class",
+ subcat: "Diabetes Mellitus",
  name: "Diabetes Diagnostic Criteria Reference",
  desc: "ADA standards of care criteria for diabetes and prediabetes.",
  organ: "Pancreas / Systemic",
@@ -322,6 +527,7 @@
  id: "tddInsulinHelper",
  cat: "endo",
  type: "calc",
+ subcat: "Diabetes Mellitus",
  name: "Estimated Total Daily Insulin (TDD) Helper",
  desc: "Initial total daily insulin requirement based on weight and diabetes phenotype.",
  organ: "Pancreas / Systemic",
@@ -376,6 +582,7 @@
  id: "basalBolusCalc",
  cat: "endo",
  type: "calc",
+ subcat: "Diabetes Mellitus",
  name: "Basal–Bolus Insulin Calculator",
  desc: "Splits known Total Daily Dose (TDD) into basal and mealtime doses.",
  organ: "Pancreas / Systemic",
@@ -407,6 +614,7 @@
  id: "corrInsulinCalc",
  cat: "endo",
  type: "calc",
+ subcat: "Diabetes Mellitus",
  name: "Correction Insulin & Sensitivity Factor",
  desc: "Calculates Insulin Sensitivity Factor (ISF) and high-glucose correction dose.",
  organ: "Pancreas",
@@ -441,6 +649,7 @@
  id: "icrCalc",
  cat: "endo",
  type: "calc",
+ subcat: "Diabetes Mellitus",
  name: "Insulin-to-Carbohydrate Ratio (ICR)",
  desc: "Rule of 500 for mealtime carbohydrate bolus calculation.",
  organ: "Pancreas",
@@ -465,6 +674,7 @@
  id: "hypoClassification",
  cat: "endo",
  type: "class",
+ subcat: "Diabetes Mellitus",
  name: "Hypoglycemia Classification",
  desc: "ADA/EASD international consensus severity classification for hypoglycemia.",
  organ: "Systemic / Brain",
@@ -525,6 +735,7 @@
  id: "dmRemissionRef",
  cat: "endo",
  type: "class",
+ subcat: "Diabetes Mellitus",
  name: "Diabetes Remission Criteria Reference",
  desc: "International consensus criteria for remission of Type 2 Diabetes.",
  organ: "Pancreas / Systemic",
@@ -567,6 +778,7 @@
  id: "tshGuide",
  cat: "endo",
  type: "class",
+ subcat: "Thyroid Disorders",
  name: "TSH / FT4 Diagnostic Pattern Matrix",
  desc: "Algorithmic interpretation of thyroid function tests (TFTs).",
  organ: "Thyroid / Pituitary",
@@ -627,6 +839,7 @@
  id: "bwpsScore",
  cat: "endo",
  type: "class",
+ subcat: "Thyroid Disorders",
  name: "Thyroid Storm — Burch–Wartofsky Point Scale",
  desc: "Bedside scoring tool for evaluating the likelihood of acute, life-threatening thyroid storm.",
  organ: "Thyroid / Heart / Systemic",
@@ -719,6 +932,7 @@
  id: "jtaThyroidStorm",
  cat: "endo",
  type: "class",
+ subcat: "Thyroid Disorders",
  name: "Japanese Thyroid Association (JTA) Storm Criteria",
  desc: "Diagnostic criteria classifying Thyroid Storm into TS1 (definite) and TS2 (suspected).",
  organ: "Thyroid / Systemic",
@@ -770,6 +984,7 @@ var res = "";
  id: "popoveniucScore",
  cat: "endo",
  type: "class",
+ subcat: "Thyroid Disorders",
  name: "Myxedema Coma — Popoveniuc Score",
  desc: "Quantitative diagnostic scoring tool for life-threatening severe hypothyroidism.",
  organ: "Thyroid / Brain / Systemic",
@@ -824,6 +1039,7 @@ var res = "";
  id: "tiradsRef",
  cat: "endo",
  type: "class",
+ subcat: "Thyroid Disorders",
  name: "Thyroid Nodule ACR TI-RADS Reference",
  desc: "Ultrasound risk stratification and FNA fine-needle biopsy size thresholds.",
  organ: "Thyroid",
@@ -876,6 +1092,7 @@ var res = "";
  id: "thyroidVolCalc",
  cat: "endo",
  type: "calc",
+ subcat: "Thyroid Disorders",
  name: "Thyroid Volume Calculator",
  desc: "Calculates total thyroid volume using 3D ultrasound ellipsoid dimensions.",
  organ: "Thyroid",
@@ -907,6 +1124,7 @@ var res = "";
  id: "lt4DoseHelper",
  cat: "endo",
  type: "calc",
+ subcat: "Thyroid Disorders",
  name: "Levothyroxine Replacement Dose Helper",
  desc: "Initial oral daily dose estimation for primary hypothyroidism.",
  organ: "Thyroid / Systemic",
@@ -932,7 +1150,7 @@ var res = "";
  var dose = Math.round((+v.weight * 1.6) / 12.5) * 12.5;
  return {
  value: dose + " mcg orally once daily (rounded to commercial dose)",
- eq: "Full Replacement = 1.6 mcg/kg/day. Take on empty stomach 30–60 mins before breakfast.\n\nPathophysiology & Physiological Significance: Restores circulating thyroxine pools to normalize basal metabolic rate, thermogenesis, and lipid metabolism."
+ eq: "Full Replacement = 1.6 mcg/kg/day. Take on empty stomach with water 30–60 mins before breakfast.\n\nPathophysiology & Physiological Significance: Restores circulating thyroxine pools to normalize basal metabolic rate, thermogenesis, and lipid metabolism."
  };
  }
  },
@@ -944,6 +1162,7 @@ var res = "";
  id: "arrCalc",
  cat: "endo",
  type: "calc",
+ subcat: "Adrenal Disorders",
  name: "Aldosterone-to-Renin Ratio (ARR)",
  desc: "First-line screening ratio for Primary Aldosteronism in hypertension.",
  organ: "Adrenal Cortex / Kidney",
@@ -988,6 +1207,7 @@ var res = "";
  id: "cortisolUnitConv",
  cat: "endo",
  type: "calc",
+ subcat: "Adrenal Disorders",
  name: "Cortisol Unit Conversion",
  desc: "Converts serum cortisol between mass (µg/dL) and SI molar units (nmol/L).",
  organ: "Adrenal / Systemic",
@@ -1016,6 +1236,7 @@ var res = "";
  id: "acthStimInterp",
  cat: "endo",
  type: "class",
+ subcat: "Adrenal Disorders",
  name: "ACTH Stimulation Test Interpretation",
  desc: "Short Synacthen (250 mcg cosyntropin) stimulation test interpreter.",
  organ: "Adrenal Cortex",
@@ -1040,7 +1261,7 @@ var res = "";
  var passes = p >= 18.0;
  return {
  value: p + " µg/dL — " + (passes ? "Normal Cortisol Response (≥18.0 µg/dL)" : "Subnormal Response (<18.0 µg/dL — Adrenal Insufficiency)"),
- eq: "Diagnostic Criterion: Peak post-stimulation cortisol threshold = 18.0 µg/dL.\n\nPathophysiology & Physiological Significance: Tests the maximal secretory reserve of the zona fasciculata in the adrenal cortex, confirming or excluding Addison disease."
+ eq: "Diagnostic Criterion: Peak post-stimulation cortisol threshold = 18.0 µg/dL (500 nmol/L).\n\nPathophysiology & Physiological Significance: Tests the maximal secretory reserve of the zona fasciculata in the adrenal cortex, confirming or excluding Addison disease."
  };
  }
  },
@@ -1048,6 +1269,7 @@ var res = "";
  id: "dstInterpRef",
  cat: "endo",
  type: "class",
+ subcat: "Adrenal Disorders",
  name: "1 mg Overnight Dexamethasone Suppression Test (DST)",
  desc: "Screening test interpretation for hypercortisolism / Cushing syndrome.",
  organ: "Adrenal / Pituitary",
@@ -1084,6 +1306,7 @@ var res = "";
  id: "waterDeprivRef",
  cat: "endo",
  type: "class",
+ subcat: "Pituitary and Hypothalamus",
  name: "Water Deprivation Test Interpretation",
  desc: "Differential diagnosis protocol for polyuria-polydipsia syndromes (Central vs Nephrogenic DI vs Primary Polydipsia).",
  organ: "Pituitary / Kidney",
@@ -1138,6 +1361,7 @@ var res = "";
  id: "prolactinConv",
  cat: "endo",
  type: "calc",
+ subcat: "Pituitary and Hypothalamus",
  name: "Prolactin Unit Conversion & Assessment",
  desc: "Converts prolactin between ng/mL and mIU/L and evaluates severity.",
  organ: "Pituitary",
@@ -1184,6 +1408,7 @@ var res = "";
  id: "corrCalcium",
  cat: "endo",
  type: "calc",
+ subcat: "Calcium, Phosphate and Bone Metabolism",
  name: "Albumin-Corrected Calcium",
  desc: "Adjusts total serum calcium for hypoalbuminemia or hyperalbuminemia.",
  organ: "Parathyroid / Bone / Kidney",
@@ -1208,6 +1433,7 @@ var res = "";
  id: "feCaCalc",
  cat: "endo",
  type: "calc",
+ subcat: "Calcium, Phosphate and Bone Metabolism",
  name: "Fractional Excretion of Calcium (FECa)",
  desc: "Differentiates Primary Hyperparathyroidism (PHPT) from Familial Hypocalciuric Hypercalcemia (FHH).",
  organ: "Parathyroid / Kidney",
@@ -1258,6 +1484,7 @@ var res = "";
  id: "tscoreClass",
  cat: "endo",
  type: "class",
+ subcat: "Calcium, Phosphate and Bone Metabolism",
  name: "Osteoporosis WHO T-Score Diagnostic Criteria",
  desc: "Bone mineral density DXA diagnostic classification.",
  organ: "Bone / Skeleton",
@@ -1312,6 +1539,7 @@ var res = "";
  id: "vitDConv",
  cat: "endo",
  type: "calc",
+ subcat: "Calcium, Phosphate and Bone Metabolism",
  name: "Vitamin D Unit Conversion & Status",
  desc: "Converts 25-hydroxyvitamin D [25(OH)D] between ng/mL and nmol/L.",
  organ: "Bone / Systemic",
@@ -1345,6 +1573,7 @@ var res = "";
  id: "fraxPlanned",
  cat: "endo",
  type: "calc",
+ subcat: "Calcium, Phosphate and Bone Metabolism",
  name: "FRAX Fracture Risk Assessment Model",
  desc: "WHO 10-year probability tool for major osteoporotic and hip fractures.",
  organ: "Bone / Skeleton",
@@ -1367,6 +1596,7 @@ var res = "";
  id: "whrCalc",
  cat: "endo",
  type: "calc",
+ subcat: "Obesity and Metabolic Syndrome",
  name: "Waist-to-Hip Ratio (WHR)",
  desc: "Evaluates central visceral adiposity and cardiovascular risk.",
  organ: "Adipose Tissue / Systemic",
@@ -1405,6 +1635,7 @@ var res = "";
  id: "whtrCalc",
  cat: "endo",
  type: "calc",
+ subcat: "Obesity and Metabolic Syndrome",
  name: "Waist-to-Height Ratio (WHtR)",
  desc: "Height-adjusted central obesity screening metric ('Keep waist under half your height').",
  organ: "Adipose / Systemic",
@@ -1429,6 +1660,7 @@ var res = "";
  id: "ibwAbwCalc",
  cat: "endo",
  type: "calc",
+ subcat: "Obesity and Metabolic Syndrome",
  name: "Ideal & Adjusted Body Weight (Devine)",
  desc: "Calculates Ideal Body Weight (IBW) and Adjusted Body Weight (ABW) for clinical drug dosing in obesity.",
  organ: "Systemic",
@@ -1460,6 +1692,7 @@ var res = "";
  id: "weightLossPct",
  cat: "endo",
  type: "calc",
+ subcat: "Obesity and Metabolic Syndrome",
  name: "Weight Loss Percentage Calculator",
  desc: "Monitors total percentage body weight reduction during obesity treatment.",
  organ: "Adipose / Systemic",
@@ -1490,6 +1723,7 @@ var res = "";
  id: "dkaHhsClassifier",
  cat: "endo",
  type: "class",
+ subcat: "Diabetes Emergencies",
  name: "DKA & HHS Diagnostic Criteria & Staging",
  desc: "Differentiates Diabetic Ketoacidosis (DKA) severity levels from Hyperosmolar Hyperglycemic State (HHS).",
  organ: "Pancreas / Kidney / Brain",
@@ -1566,6 +1800,7 @@ var res = "";
  id: "effOsmolality",
  cat: "endo",
  type: "calc",
+ subcat: "Diabetes Emergencies",
  name: "Effective & Total Serum Osmolality",
  desc: "Calculates hypertonicity (excluding urea) driving cellular dehydration in DKA/HHS.",
  organ: "Systemic / Kidney",
@@ -1597,6 +1832,7 @@ var res = "";
  id: "rotterdamPcos",
  cat: "endo",
  type: "class",
+ subcat: "Reproductive Endocrinology",
  name: "Rotterdam Criteria for PCOS",
  desc: "International diagnostic consensus criteria for Polycystic Ovary Syndrome.",
  organ: "Ovary / Pituitary / Adipose",
@@ -1664,6 +1900,7 @@ var res = "";
  id: "faiCalc",
  cat: "endo",
  type: "calc",
+ subcat: "Reproductive Endocrinology",
  name: "Free Androgen Index (FAI)",
  desc: "Calculates surrogate index of biologically active circulating testosterone relative to SHBG.",
  organ: "Ovary / Adrenal / Liver",
@@ -1688,6 +1925,7 @@ var res = "";
  id: "lhFshRatio",
  cat: "endo",
  type: "calc",
+ subcat: "Reproductive Endocrinology",
  name: "LH / FSH Ratio Calculator",
  desc: "Calculates ratio of luteinizing hormone to follicle-stimulating hormone.",
  organ: "Pituitary / Ovary",
@@ -1712,6 +1950,7 @@ var res = "";
  id: "ferrimanGallwey",
  cat: "endo",
  type: "class",
+ subcat: "Reproductive Endocrinology",
  name: "Modified Ferriman–Gallwey (mFG) Hirsutism Score",
  desc: "Clinical visual evaluation of androgen-dependent terminal hair growth across 9 anatomical sites.",
  organ: "Skin / Hair Follicles",
@@ -1745,6 +1984,7 @@ var res = "";
  var isHirsute = s >= cut;
  return {
  value: s + " / 36 Points — " + (isHirsute ? "Hirsutism Present (Score ≥" + cut + ")" : "Normal Terminal Hair Distribution (<" + cut + ")"),
+ matchId: match,
  eq: "mFG System: Evaluates androgen-sensitive dermal pilosebaceous units.\n\nPathophysiology & Physiological Significance: Quantifies end-organ cutaneous 5-alpha-reductase sensitivity and pilosebaceous unit response to circulating androgens."
  };
  }
@@ -1757,6 +1997,7 @@ var res = "";
  id: "lipidRatios",
  cat: "endo",
  type: "calc",
+ subcat: "Lipid and Metabolic Risk",
  name: "Atherogenic Lipid Fractions & Ratios",
  desc: "Calculates Non-HDL Cholesterol, TG/HDL ratio, Total/HDL ratio, and Remnant Cholesterol.",
  organ: "Vascular System / Liver",
@@ -1785,6 +2026,7 @@ var res = "";
  id: "metsynCriteria",
  cat: "endo",
  type: "class",
+ subcat: "Lipid and Metabolic Risk",
  name: "Metabolic Syndrome Diagnostic Criteria (NCEP ATP III)",
  desc: "Clinical diagnosis of Metabolic Syndrome based on presence of ≥3 of 5 cardiometabolic traits.",
  organ: "Systemic / Vascular",
@@ -1850,13 +2092,14 @@ var res = "";
  id: "pheoScreenRef",
  cat: "endo",
  type: "class",
+ subcat: "Endocrine Tumors and Specialized Assessment",
  name: "Pheochromocytoma Biochemical Screening",
  desc: "Interprets plasma free or 24-hr urinary fractionated metanephrines.",
  organ: "Adrenal Medulla / Sympathetic Ganglia",
  region: "Retroperitoneal",
  subject: "Adrenal Tumors",
  keywords: ["pheochromocytoma", "paraganglioma", "metanephrines", "catecholamines", "adrenal incidentaloma"],
- guidance: "1. Plasma free metanephrines (drawn supine after 30 mins rest) or 24-hr urinary metanephrines.\n2. Elevations >3–4× upper limit of normal (ULN) are highly diagnostic.",
+ guidance: "1. Plasma free metanephrines or 24-hr urinary metanephrines.\n2. Elevations >3–4× upper limit of normal (ULN) are highly diagnostic.",
  literature: [
  {
  type: "Endocrine Society Guideline",
@@ -1890,6 +2133,7 @@ var res = "";
  id: "menChecklist",
  cat: "endo",
  type: "class",
+ subcat: "Endocrine Tumors and Specialized Assessment",
  name: "Multiple Endocrine Neoplasia (MEN) Checklist",
  desc: "Clinical and genetic diagnostic features of MEN1, MEN2A, and MEN2B syndromes.",
  organ: "Parathyroid / Pituitary / Pancreas / Thyroid / Adrenal",

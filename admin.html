@@ -1,0 +1,737 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DocStat Admin · Analytics, Clinicians & Live Chat</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+:root {
+  --bg: #f1f5f9;
+  --card: #ffffff;
+  --navy: #0f2744;
+  --blue: #2563eb;
+  --text: #0f172a;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  --green: #10b981;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+header {
+  background: var(--navy);
+  color: #fff;
+  padding: 18px 24px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.brand h1 { margin: 0; font-size: 22px; display: flex; align-items: center; gap: 8px; }
+.brand small { color: #94a3b8; font-size: 12px; }
+.header-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn {
+  padding: 9px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn:hover { background: rgba(255,255,255,0.2); }
+.btn-primary { background: var(--blue); border-color: var(--blue); }
+.btn-primary:hover { background: #1d4ed8; }
+
+.container { max-width: 1280px; margin: 0 auto; padding: 20px; }
+
+/* KPI CARDS */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.kpi-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px 18px;
+}
+.kpi-card small { color: var(--muted); font-size: 12px; font-weight: 700; text-transform: uppercase; }
+.kpi-card .val { font-size: 28px; font-weight: 800; color: var(--navy); margin-top: 6px; }
+
+/* NAV TABS */
+.nav-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  background: #e2e8f0;
+  padding: 5px;
+  border-radius: 12px;
+  overflow-x: auto;
+}
+.tab-btn {
+  flex: 1;
+  min-width: 150px;
+  padding: 11px 14px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #475569;
+  font-weight: 700;
+  font-size: 13.5px;
+  cursor: pointer;
+}
+.tab-btn.active {
+  background: var(--card);
+  color: var(--navy);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* PANELS & CHARTS */
+.panel {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(460px, 1fr));
+  gap: 18px;
+}
+.chart-box {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px;
+}
+.chart-box h3 { margin: 0 0 12px; font-size: 15px; color: var(--navy); }
+.canvas-holder { position: relative; height: 290px; width: 100%; }
+
+/* TABLES */
+.search-input {
+  width: 100%;
+  max-width: 380px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  font-size: 14px;
+  margin-bottom: 14px;
+}
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
+th { background: #f8fafc; padding: 11px 12px; font-weight: 700; color: var(--muted); border-bottom: 1px solid var(--border); }
+td { padding: 11px 12px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+tr:hover td { background: #f8fafc; }
+.badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  background: #e0f2fe;
+  color: #0369a1;
+}
+.action-btn {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--navy);
+  font-weight: 600;
+  font-size: 12px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  margin-right: 4px;
+}
+.action-btn:hover { background: #f1f5f9; }
+
+/* CHAT LAYOUT */
+.chat-layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  height: 540px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--card);
+}
+.chat-users {
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  background: #f8fafc;
+}
+.chat-user-item {
+  padding: 13px 15px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+}
+.chat-user-item:hover, .chat-user-item.active { background: #e0f2fe; }
+.chat-user-item strong { display: block; font-size: 14px; }
+.chat-user-item small { color: var(--muted); font-size: 12px; }
+.chat-main { display: flex; flex-direction: column; height: 100%; }
+.chat-header {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  font-weight: 700;
+  background: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.chat-messages {
+  flex: 1;
+  padding: 18px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #f8fafc;
+}
+.msg-bubble {
+  max-width: 72%;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 13.5px;
+  line-height: 1.45;
+}
+.msg-clinician {
+  align-self: flex-start;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+.msg-admin {
+  align-self: flex-end;
+  background: var(--blue);
+  color: #ffffff;
+}
+.msg-meta { font-size: 10px; opacity: 0.75; margin-top: 4px; display: block; }
+.chat-input-bar {
+  padding: 12px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 8px;
+  background: #fff;
+}
+.chat-input-bar input {
+  flex: 1;
+  padding: 11px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.hidden { display: none !important; }
+@media (max-width: 768px) {
+  .charts-grid { grid-template-columns: 1fr; }
+  .chat-layout { grid-template-columns: 1fr; height: auto; }
+  .chat-users { max-height: 200px; }
+  .chat-messages { height: 320px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <h1>📊 DocStat Admin Command Center</h1>
+    <small id="syncStatus">Connecting to Google Apps Script...</small>
+  </div>
+  <div class="header-actions">
+    <a id="linkMasterSheet" href="#" target="_blank" class="btn">📁 Master Login Excel</a>
+    <a id="linkAnalyticsSheet" href="#" target="_blank" class="btn">📈 Comprehensive Charts Excel</a>
+    <a id="linkUsersFolder" href="#" target="_blank" class="btn">🗂️ Individual Users Folder</a>
+    <button id="refreshBtn" class="btn btn-primary" type="button">🔄 Refresh Live Data</button>
+  </div>
+</header>
+
+<div class="container">
+  <!-- KPI SUMMARY -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <small>Total Registered Clinicians</small>
+      <div class="val" id="kpiUsers">0</div>
+    </div>
+    <div class="kpi-card">
+      <small>Total Calculations Run</small>
+      <div class="val" id="kpiCalcs">0</div>
+    </div>
+    <div class="kpi-card">
+      <small>Top Calculator Used</small>
+      <div class="val" id="kpiTopCalc" style="font-size:18px;margin-top:10px;">—</div>
+    </div>
+    <div class="kpi-card">
+      <small>Feedback & Chat Messages</small>
+      <div class="val" id="kpiMsgs">0</div>
+    </div>
+  </div>
+
+  <!-- NAVIGATION TABS -->
+  <div class="nav-tabs">
+    <button class="tab-btn active" data-tab="tabCharts">📈 Pie Charts & Graphs</button>
+    <button class="tab-btn" data-tab="tabUsers">🧑🏻‍⚕️ Clinicians & Individual Excels</button>
+    <button class="tab-btn" data-tab="tabAllLogs">🧮 All Platform Calculations</button>
+    <button class="tab-btn" data-tab="tabChat">💬 Clinician Feedback & Live Chat</button>
+  </div>
+
+  <!-- TAB 1: PIE CHARTS & GRAPHS -->
+  <div id="tabCharts" class="tab-section">
+    <div class="charts-grid">
+      <div class="chart-box">
+        <h3>Calculator Basis · Usage Frequency (Pie Chart)</h3>
+        <div class="canvas-holder"><canvas id="calcPieCanvas"></canvas></div>
+      </div>
+      <div class="chart-box">
+        <h3>Calculator Basis · Usage Frequency (Bar Graph)</h3>
+        <div class="canvas-holder"><canvas id="calcBarCanvas"></canvas></div>
+      </div>
+      <div class="chart-box">
+        <h3>Specialty Basis · Total Usage (Pie Chart)</h3>
+        <div class="canvas-holder"><canvas id="specPieCanvas"></canvas></div>
+      </div>
+      <div class="chart-box">
+        <h3>Specialty Basis · Total Usage (Bar Graph)</h3>
+        <div class="canvas-holder"><canvas id="specBarCanvas"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: MASTER CLINICIANS LIST & INDIVIDUAL USER LOGS -->
+  <div id="tabUsers" class="tab-section hidden">
+    <div class="panel">
+      <h3 style="margin-top:0;">Master Clinicians Login Directory & Individual User Excels</h3>
+      <input type="text" id="userSearch" class="search-input" placeholder="Search doctor by name or degree...">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Doctor Name</th>
+              <th>Degree & Specialty</th>
+              <th>First Login</th>
+              <th>Last Active</th>
+              <th>Total Calcs</th>
+              <th>Actions (View Calculations / Excel / Chat)</th>
+            </tr>
+          </thead>
+          <tbody id="usersTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- DRILL-DOWN PANEL FOR SELECTED USER'S CALCULATIONS -->
+    <div id="userDrilldownPanel" class="panel hidden" style="border: 2px solid var(--blue);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <h3 id="drilldownTitle" style="margin:0;color:var(--blue);">Individual User Calculation History</h3>
+        <button type="button" class="action-btn" onclick="document.getElementById('userDrilldownPanel').classList.add('hidden')">✕ Close</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Calculator Used</th>
+              <th>Doctor Name</th>
+              <th>Degree</th>
+              <th>Result</th>
+              <th>Interpretation / Details</th>
+            </tr>
+          </thead>
+          <tbody id="userDrilldownBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: ALL PLATFORM CALCULATIONS -->
+  <div id="tabAllLogs" class="tab-section hidden">
+    <div class="panel">
+      <h3 style="margin-top:0;">Comprehensive Platform Calculation Logs</h3>
+      <input type="text" id="logSearch" class="search-input" placeholder="Filter by calculator, doctor, specialty, or result...">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>Doctor Name</th>
+              <th>Degree</th>
+              <th>Specialty</th>
+              <th>Calculator Used</th>
+              <th>Result</th>
+            </tr>
+          </thead>
+          <tbody id="allLogsTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 4: 2-WAY CLINICIAN CHAT & FEEDBACK -->
+  <div id="tabChat" class="tab-section hidden">
+    <div class="chat-layout">
+      <div class="chat-users" id="chatUsersList"></div>
+      <div class="chat-main">
+        <div class="chat-header">
+          <span id="activeChatDoctorTitle">Select a clinician on the left to view feedback & chat</span>
+        </div>
+        <div class="chat-messages" id="chatMessagesBox">
+          <div style="color:var(--muted);text-align:center;margin-top:80px;">Choose a clinician from the directory to start chatting.</div>
+        </div>
+        <form id="adminChatForm" class="chat-input-bar">
+          <input type="text" id="adminChatInput" placeholder="Write a message or reply to this clinician..." disabled>
+          <button type="submit" id="adminChatSendBtn" class="btn btn-primary" disabled>Send Reply →</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================================
+// PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL BELOW
+// ============================================================================
+const SCRIPT_API_URL = "https://script.google.com/macros/s/AKfycbxcZa59waGsMv1I56VmdBSqD3nqj2nRvepWo8p2j3KWCr7XaIlFB3tgmixq5RuEEWnL/exec";
+
+let STATE = {
+  users: [],
+  logs: [],
+  calcFreq: {},
+  specFreq: {},
+  messages: [],
+  selectedChatUser: null
+};
+
+let chartInstances = {};
+
+// --- TAB SWITCHING ---
+document.querySelectorAll(".tab-btn").forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".tab-section").forEach(s => s.classList.add("hidden"));
+    btn.classList.add("active");
+    document.getElementById(btn.dataset.tab).classList.remove("hidden");
+  };
+});
+
+// --- FETCH LIVE DATA FROM GOOGLE APPS SCRIPT ---
+async function fetchAdminData() {
+  const statusEl = document.getElementById("syncStatus");
+  statusEl.textContent = "Syncing live data from Google Sheets...";
+  try {
+    const res = await fetch(SCRIPT_API_URL + "?action=admin_all&t=" + Date.now());
+    const data = await res.json();
+    if (data.status !== "success") throw new Error(data.message || "Script error");
+
+    STATE.users = data.users || [];
+    STATE.logs = data.logs || [];
+    STATE.calcFreq = data.calcFreq || {};
+    STATE.specFreq = data.specFreq || {};
+    STATE.messages = data.messages || [];
+
+    if (data.masterSheetUrl) document.getElementById("linkMasterSheet").href = data.masterSheetUrl;
+    if (data.analyticsSheetUrl) document.getElementById("linkAnalyticsSheet").href = data.analyticsSheetUrl;
+    if (data.usersFolderUrl) document.getElementById("linkUsersFolder").href = data.usersFolderUrl;
+
+    renderKPIs();
+    renderCharts();
+    renderUsersTable();
+    renderAllLogsTable();
+    renderChatSidebar();
+    if (STATE.selectedChatUser) renderChatConversation(STATE.selectedChatUser);
+
+    statusEl.textContent = "Last synced: " + new Date().toLocaleTimeString();
+  } catch (err) {
+    statusEl.textContent = "Sync warning: Make sure your Apps Script is deployed with 'Anyone' access.";
+    console.error(err);
+  }
+}
+
+function renderKPIs() {
+  document.getElementById("kpiUsers").textContent = STATE.users.length;
+  document.getElementById("kpiCalcs").textContent = STATE.logs.length;
+  document.getElementById("kpiMsgs").textContent = STATE.messages.length;
+
+  const sortedCalcs = Object.entries(STATE.calcFreq).sort((a, b) => b[1] - a[1]);
+  document.getElementById("kpiTopCalc").textContent = sortedCalcs.length ? `${sortedCalcs[0][0]} (${sortedCalcs[0][1]})` : "No data yet";
+}
+
+// --- RENDER PIE CHARTS & BAR GRAPHS ---
+function renderCharts() {
+  const palette = ["#2563eb", "#0ea5e9", "#10b981", "#f59e0b", "#8b5cf6", "#ec4899", "#ef4444", "#14b8a6", "#64748b"];
+
+  const calcEntries = Object.entries(STATE.calcFreq).sort((a, b) => b[1] - a[1]);
+  const calcLabels = calcEntries.length ? calcEntries.map(x => x[0]) : ["No Calculations Yet"];
+  const calcValues = calcEntries.length ? calcEntries.map(x => x[1]) : [1];
+
+  const specEntries = Object.entries(STATE.specFreq).sort((a, b) => b[1] - a[1]);
+  const specLabels = specEntries.length ? specEntries.map(x => x[0]) : ["No Specialties Yet"];
+  const specValues = specEntries.length ? specEntries.map(x => x[1]) : [1];
+
+  drawChart("calcPieCanvas", "doughnut", calcLabels, calcValues, palette);
+  drawChart("calcBarCanvas", "bar", calcLabels, calcValues, "#2563eb");
+  drawChart("specPieCanvas", "pie", specLabels, specValues, palette);
+  drawChart("specBarCanvas", "bar", specLabels, specValues, "#0ea5e9");
+}
+
+function drawChart(canvasId, type, labels, values, colors) {
+  if (chartInstances[canvasId]) chartInstances[canvasId].destroy();
+  const ctx = document.getElementById(canvasId).getContext("2d");
+  chartInstances[canvasId] = new Chart(ctx, {
+    type: type,
+    data: {
+      labels: labels,
+      datasets: [{
+        label: "Total Frequency",
+        data: values,
+        backgroundColor: colors,
+        borderRadius: type === "bar" ? 6 : 0
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: type !== "bar", position: "right" }
+      }
+    }
+  });
+}
+
+// --- RENDER MASTER CLINICIANS DIRECTORY ---
+function renderUsersTable() {
+  const q = document.getElementById("userSearch").value.trim().toLowerCase();
+  const tbody = document.getElementById("usersTableBody");
+  tbody.innerHTML = "";
+
+  const filtered = STATE.users.filter(u =>
+    String(u.name).toLowerCase().includes(q) || String(u.degree).toLowerCase().includes(q)
+  );
+
+  if (!filtered.length) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--muted);">No clinicians found.</td></tr>`;
+    return;
+  }
+
+  filtered.forEach(u => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td><strong>${u.name}</strong></td>
+      <td><span class="badge">${u.degree}</span></td>
+      <td>${u.firstLogin || "—"}</td>
+      <td>${u.lastActive || "—"}</td>
+      <td><strong>${u.totalCalcs || 0}</strong></td>
+      <td>
+        <button type="button" class="action-btn" onclick="inspectUserCalculations('${u.key}', '${u.name.replace(/'/g, "\\'")}', '${u.sheetId || ""}')">🔍 What They Calculated</button>
+        ${u.sheetUrl ? `<a href="${u.sheetUrl}" target="_blank" class="action-btn">📄 Open User Excel</a>` : ""}
+        <button type="button" class="action-btn" onclick="openChatWithUser('${u.key}')">💬 Chat</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+document.getElementById("userSearch").oninput = renderUsersTable;
+
+// --- INSPECT SPECIFIC USER'S CALCULATIONS ---
+window.inspectUserCalculations = async function(userKey, userName, sheetId) {
+  const panel = document.getElementById("userDrilldownPanel");
+  const title = document.getElementById("drilldownTitle");
+  const tbody = document.getElementById("userDrilldownBody");
+  panel.classList.remove("hidden");
+  title.textContent = `Calculations by ${userName}`;
+  tbody.innerHTML = `<tr><td colspan="6">Loading ${userName}'s personal Excel sheet...</td></tr>`;
+  panel.scrollIntoView({ behavior: "smooth" });
+
+  // Read directly from the user's personal Google Sheet if sheetId exists
+  if (sheetId) {
+    try {
+      const res = await fetch(`${SCRIPT_API_URL}?action=user_sheet&sheetId=${encodeURIComponent(sheetId)}&t=${Date.now()}`);
+      const data = await res.json();
+      if (data.status === "success" && data.history) {
+        renderDrilldownRows(data.history);
+        return;
+      }
+    } catch (e) {
+      console.warn("Fallback to local log filter:", e);
+    }
+  }
+
+  // Fallback filter from comprehensive logs
+  const userLogs = STATE.logs.filter(l => (String(l.name) + "|" + String(l.degree)).toLowerCase() === String(userKey).toLowerCase());
+  renderDrilldownRows(userLogs.map(l => ({
+    time: l.timestamp, tool: l.tool, name: l.name, degree: l.degree, result: l.result, eq: l.eq
+  })));
+};
+
+function renderDrilldownRows(rows) {
+  const tbody = document.getElementById("userDrilldownBody");
+  tbody.innerHTML = "";
+  if (!rows.length) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--muted);">No calculations recorded for this user yet.</td></tr>`;
+    return;
+  }
+  rows.forEach(r => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${r.time || ""}</td>
+      <td><strong>${r.tool || ""}</strong></td>
+      <td>${r.name || ""}</td>
+      <td>${r.degree || ""}</td>
+      <td><span class="badge">${r.result || ""}</span></td>
+      <td style="max-width:320px;white-space:pre-line;font-size:12px;">${r.eq || ""}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// --- RENDER ALL PLATFORM CALCULATIONS ---
+function renderAllLogsTable() {
+  const q = document.getElementById("logSearch").value.trim().toLowerCase();
+  const tbody = document.getElementById("allLogsTableBody");
+  tbody.innerHTML = "";
+
+  const filtered = STATE.logs.filter(l =>
+    String(l.tool).toLowerCase().includes(q) ||
+    String(l.name).toLowerCase().includes(q) ||
+    String(l.specialty).toLowerCase().includes(q) ||
+    String(l.result).toLowerCase().includes(q)
+  );
+
+  if (!filtered.length) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--muted);">No calculation logs match your filter.</td></tr>`;
+    return;
+  }
+
+  filtered.forEach(l => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${l.timestamp || ""}</td>
+      <td><strong>${l.name || ""}</strong></td>
+      <td>${l.degree || ""}</td>
+      <td><span class="badge">${l.specialty || ""}</span></td>
+      <td><strong>${l.tool || ""}</strong></td>
+      <td>${l.result || ""}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+document.getElementById("logSearch").oninput = renderAllLogsTable;
+
+// --- 2-WAY LIVE CHAT & FEEDBACK ---
+function renderChatSidebar() {
+  const list = document.getElementById("chatUsersList");
+  list.innerHTML = "";
+
+  if (!STATE.users.length) {
+    list.innerHTML = `<div style="padding:16px;color:var(--muted);font-size:13px;">No registered clinicians yet.</div>`;
+    return;
+  }
+
+  STATE.users.forEach(u => {
+    const userMsgCount = STATE.messages.filter(m => String(m.key).toLowerCase() === String(u.key).toLowerCase()).length;
+    const div = document.createElement("div");
+    div.className = "chat-user-item" + (STATE.selectedChatUser && STATE.selectedChatUser.key === u.key ? " active" : "");
+    div.innerHTML = `
+      <strong>${u.name}</strong>
+      <small>${u.degree} · ${userMsgCount} msg(s)</small>
+    `;
+    div.onclick = () => selectChatDoctor(u);
+    list.appendChild(div);
+  });
+}
+
+window.openChatWithUser = function(userKey) {
+  document.querySelector('[data-tab="tabChat"]').click();
+  const found = STATE.users.find(u => String(u.key).toLowerCase() === String(userKey).toLowerCase());
+  if (found) selectChatDoctor(found);
+};
+
+function selectChatDoctor(userObj) {
+  STATE.selectedChatUser = userObj;
+  document.getElementById("activeChatDoctorTitle").textContent = `Chatting with ${userObj.name} (${userObj.degree})`;
+  document.getElementById("adminChatInput").disabled = false;
+  document.getElementById("adminChatSendBtn").disabled = false;
+  renderChatSidebar();
+  renderChatConversation(userObj);
+}
+
+function renderChatConversation(userObj) {
+  const box = document.getElementById("chatMessagesBox");
+  box.innerHTML = "";
+
+  const convo = STATE.messages.filter(m => String(m.key).toLowerCase() === String(userObj.key).toLowerCase());
+  if (!convo.length) {
+    box.innerHTML = `<div style="color:var(--muted);text-align:center;margin-top:60px;">No feedback or messages with ${userObj.name} yet. Send a message below!</div>`;
+    return;
+  }
+
+  convo.forEach(m => {
+    const bubble = document.createElement("div");
+    const isAdmin = m.sender === "admin";
+    bubble.className = "msg-bubble " + (isAdmin ? "msg-admin" : "msg-clinician");
+    bubble.innerHTML = `
+      <div>${m.message}</div>
+      <span class="msg-meta">${isAdmin ? "Admin (You)" : m.name} · ${m.timestamp}</span>
+    `;
+    box.appendChild(bubble);
+  });
+  box.scrollTop = box.scrollHeight;
+}
+
+document.getElementById("adminChatForm").onsubmit = async function(e) {
+  e.preventDefault();
+  if (!STATE.selectedChatUser) return;
+  const inp = document.getElementById("adminChatInput");
+  const text = inp.value.trim();
+  if (!text) return;
+
+  const payload = {
+    type: "admin_reply",
+    timestamp: new Date().toLocaleString(),
+    key: STATE.selectedChatUser.key,
+    name: STATE.selectedChatUser.name,
+    degree: STATE.selectedChatUser.degree,
+    message: text
+  };
+
+  // Optimistic UI update
+  STATE.messages.push({
+    timestamp: payload.timestamp,
+    key: payload.key,
+    name: payload.name,
+    degree: payload.degree,
+    sender: "admin",
+    message: text
+  });
+  inp.value = "";
+  renderChatConversation(STATE.selectedChatUser);
+
+  fetch(SCRIPT_API_URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify(payload)
+  });
+};
+
+document.getElementById("refreshBtn").onclick = fetchAdminData;
+fetchAdminData();
+// Auto-refresh every 20 seconds for live chat & calculations
+setInterval(fetchAdminData, 20000);
+</script>
+</body>
+</html>

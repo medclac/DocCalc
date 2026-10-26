@@ -15,6 +15,7 @@
   --muted: #64748b;
   --border: #e2e8f0;
   --green: #10b981;
+  --modal-overlay: rgba(0, 0, 0, 0.45);
 }
 * { box-sizing: border-box; }
 body {
@@ -137,6 +138,22 @@ table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: lef
 th { background: #f8fafc; padding: 11px 12px; font-weight: 700; color: var(--muted); border-bottom: 1px solid var(--border); }
 td { padding: 11px 12px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
 tr:hover td { background: #f8fafc; }
+
+.avatar-cell {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: bold;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
 .badge {
   display: inline-block;
   padding: 3px 8px;
@@ -158,6 +175,7 @@ tr:hover td { background: #f8fafc; }
   text-decoration: none;
   display: inline-block;
   margin-right: 4px;
+  margin-bottom: 4px;
 }
 .action-btn:hover { background: #f1f5f9; }
 
@@ -237,6 +255,32 @@ tr:hover td { background: #f8fafc; }
   font-size: 14px;
 }
 
+/* MODAL OVERLAYS */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--modal-overlay);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+}
+.modal {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 420px;
+  padding: 24px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+  text-align: center;
+}
+.modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.modal-header h3 { margin: 0; font-size: 18px; }
+.modal-close { border: 0; background: transparent; font-size: 20px; cursor: pointer; color: var(--muted); }
+
 .hidden { display: none !important; }
 @media (max-width: 768px) {
   .charts-grid { grid-template-columns: 1fr; }
@@ -248,6 +292,28 @@ tr:hover td { background: #f8fafc; }
 </head>
 <body>
 
+<!-- ADMIN LOGIN MODAL -->
+<div id="adminLoginModal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+  <div class="modal" style="max-width: 360px; text-align: left;">
+    <div style="font-size: 32px; margin-bottom: 6px; text-align: center;">🔐</div>
+    <h3 style="margin: 0 0 6px; font-size: 20px; text-align: center;">DocStat Admin Login</h3>
+    <p style="font-size: 12.5px; color: var(--muted); text-align: center; margin: 0 0 16px;">Please log in to access the command center.</p>
+    
+    <form id="adminLoginForm" style="display: flex; flex-direction: column; gap: 12px;">
+      <div>
+        <label style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 4px;">Username</label>
+        <input type="text" id="loginUser" placeholder="Enter username" style="width: 100%; padding: 11px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px;" required>
+      </div>
+      <div>
+        <label style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 4px;">Password</label>
+        <input type="password" id="loginPass" placeholder="Enter password" style="width: 100%; padding: 11px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px;" required>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 11px; margin-top: 4px;">Login to Dashboard</button>
+      <div id="loginErrorMsg" style="color: #dc2626; font-size: 12px; text-align: center; min-height: 16px;"></div>
+    </form>
+  </div>
+</div>
+
 <header>
   <div class="brand">
     <h1>📊 DocStat Admin Command Center</h1>
@@ -258,6 +324,7 @@ tr:hover td { background: #f8fafc; }
     <a id="linkAnalyticsSheet" href="#" target="_blank" class="btn">📈 Comprehensive Charts Excel</a>
     <a id="linkUsersFolder" href="#" target="_blank" class="btn">🗂️ Individual Users Folder</a>
     <button id="refreshBtn" class="btn btn-primary" type="button">🔄 Refresh Live Data</button>
+    <button id="logoutBtn" class="btn" style="background: rgba(239, 68, 68, 0.2); border-color: rgba(239, 68, 68, 0.4);" type="button">🔒 Logout</button>
   </div>
 </header>
 
@@ -321,12 +388,13 @@ tr:hover td { background: #f8fafc; }
         <table>
           <thead>
             <tr>
+              <th style="width:50px;">Avatar</th>
               <th>Doctor Name</th>
               <th>Degree & Specialty</th>
               <th>First Login</th>
               <th>Last Active</th>
               <th>Total Calcs</th>
-              <th>Actions (View Calculations / Excel / Chat)</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody id="usersTableBody"></tbody>
@@ -401,11 +469,62 @@ tr:hover td { background: #f8fafc; }
   </div>
 </div>
 
+<!-- PROFILE POPUP MODAL -->
+<div id="profileModal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Clinician Profile</h3>
+      <button class="modal-close" onclick="closeProfileModal()">✕</button>
+    </div>
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 6px 0;">
+      <div id="profileModalAvatar" style="width: 84px; height: 84px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 32px; overflow: hidden; border: 2px solid var(--border);">🧑🏻‍⚕️</div>
+      <div>
+        <h2 id="profileModalName" style="margin: 0 0 4px; font-size: 18px;"></h2>
+        <p id="profileModalDegree" style="margin: 0 0 6px; color: var(--muted); font-size: 13.5px;"></p>
+        <p id="profileModalHospital" style="margin: 0; color: var(--text); font-size: 13px; font-weight: 600;"></p>
+      </div>
+      <a id="downloadAvatarBtn" class="btn btn-primary hidden" style="width: 100%; justify-content: center; margin-top: 8px;" download="doctor_avatar.png">⬇️ Download Photo</a>
+    </div>
+  </div>
+</div>
+
 <script>
 // ============================================================================
 // PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL BELOW
 // ============================================================================
 const SCRIPT_API_URL = "https://script.google.com/macros/s/AKfycbzJx3gZcITimEC2B2lNR0feu0y7CebvRBNWWuaxYl71o5GPSvF1rsbpYb12UR-XxjLE/exec";
+
+// --- ADMIN AUTHENTICATION CHECK ---
+function checkAdminAuth() {
+  const isAuth = localStorage.getItem("docstat_admin_auth");
+  if (isAuth !== "true") {
+    document.getElementById("adminLoginModal").classList.remove("hidden");
+  } else {
+    fetchAdminData();
+  }
+}
+
+document.getElementById("adminLoginForm").onsubmit = function(e) {
+  e.preventDefault();
+  const u = document.getElementById("loginUser").value.trim();
+  const p = document.getElementById("loginPass").value.trim();
+  const err = document.getElementById("loginErrorMsg");
+
+  if (u === "Anmol" && p === "1998") {
+    localStorage.setItem("docstat_admin_auth", "true");
+    document.getElementById("adminLoginModal").classList.add("hidden");
+    fetchAdminData();
+  } else {
+    err.textContent = "Invalid username or password.";
+  }
+};
+
+document.getElementById("logoutBtn").onclick = function() {
+  if (confirm("Are you sure you want to log out of Admin?")) {
+    localStorage.removeItem("docstat_admin_auth");
+    location.reload();
+  }
+};
 
 let STATE = {
   users: [],
@@ -523,21 +642,27 @@ function renderUsersTable() {
   );
 
   if (!filtered.length) {
-    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--muted);">No clinicians found.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--muted);">No clinicians found.</td></tr>`;
     return;
   }
 
   filtered.forEach(u => {
+    const avatarHtml = u.avatar 
+      ? `<img src="${u.avatar}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">` 
+      : `🧑🏻‍⚕️`;
+
     const tr = document.createElement("tr");
     tr.innerHTML = `
+      <td><div class="avatar-cell">${avatarHtml}</div></td>
       <td><strong>${u.name}</strong></td>
       <td><span class="badge">${u.degree}</span></td>
       <td>${u.firstLogin || "—"}</td>
       <td>${u.lastActive || "—"}</td>
       <td><strong>${u.totalCalcs || 0}</strong></td>
       <td>
-        <button type="button" class="action-btn" onclick="inspectUserCalculations('${u.key}', '${u.name.replace(/'/g, "\\'")}', '${u.sheetId || ""}')">🔍 What They Calculated</button>
-        ${u.sheetUrl ? `<a href="${u.sheetUrl}" target="_blank" class="action-btn">📄 Open User Excel</a>` : ""}
+        <button type="button" class="action-btn" onclick='openProfileModal(${JSON.stringify(u)})'>👤 Profile</button>
+        <button type="button" class="action-btn" onclick="inspectUserCalculations('${u.key}', '${u.name.replace(/'/g, "\\'")}', '${u.sheetId || ""}')">🔍 Calcs</button>
+        ${u.sheetUrl ? `<a href="${u.sheetUrl}" target="_blank" class="action-btn">📄 Excel</a>` : ""}
         <button type="button" class="action-btn" onclick="openChatWithUser('${u.key}')">💬 Chat</button>
       </td>
     `;
@@ -545,6 +670,32 @@ function renderUsersTable() {
   });
 }
 document.getElementById("userSearch").oninput = renderUsersTable;
+
+// --- PROFILE POPUP MODAL ---
+window.openProfileModal = function(user) {
+  document.getElementById("profileModalName").textContent = user.name;
+  document.getElementById("profileModalDegree").textContent = user.degree;
+  document.getElementById("profileModalHospital").textContent = user.hospital ? `🏥 ${user.hospital}` : "";
+
+  const avatarDiv = document.getElementById("profileModalAvatar");
+  const downloadBtn = document.getElementById("downloadAvatarBtn");
+
+  if (user.avatar && user.avatar.startsWith("data:image")) {
+    avatarDiv.innerHTML = `<img src="${user.avatar}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
+    downloadBtn.href = user.avatar;
+    downloadBtn.download = `${user.name.replace(/[^a-zA-Z0-9]/g, '_')}_avatar.png`;
+    downloadBtn.classList.remove("hidden");
+  } else {
+    avatarDiv.innerHTML = "🧑🏻‍⚕️";
+    downloadBtn.classList.add("hidden");
+  }
+
+  document.getElementById("profileModal").classList.remove("hidden");
+};
+
+window.closeProfileModal = function() {
+  document.getElementById("profileModal").classList.add("hidden");
+};
 
 // --- INSPECT SPECIFIC USER'S CALCULATIONS ---
 window.inspectUserCalculations = async function(userKey, userName, sheetId) {
@@ -556,7 +707,6 @@ window.inspectUserCalculations = async function(userKey, userName, sheetId) {
   tbody.innerHTML = `<tr><td colspan="6">Loading ${userName}'s personal Excel sheet...</td></tr>`;
   panel.scrollIntoView({ behavior: "smooth" });
 
-  // Read directly from the user's personal Google Sheet if sheetId exists
   if (sheetId) {
     try {
       const res = await fetch(`${SCRIPT_API_URL}?action=user_sheet&sheetId=${encodeURIComponent(sheetId)}&t=${Date.now()}`);
@@ -570,7 +720,6 @@ window.inspectUserCalculations = async function(userKey, userName, sheetId) {
     }
   }
 
-  // Fallback filter from comprehensive logs
   const userLogs = STATE.logs.filter(l => (String(l.name) + "|" + String(l.degree)).toLowerCase() === String(userKey).toLowerCase());
   renderDrilldownRows(userLogs.map(l => ({
     time: l.timestamp, tool: l.tool, name: l.name, degree: l.degree, result: l.result, eq: l.eq
@@ -708,7 +857,6 @@ document.getElementById("adminChatForm").onsubmit = async function(e) {
     message: text
   };
 
-  // Optimistic UI update
   STATE.messages.push({
     timestamp: payload.timestamp,
     key: payload.key,
@@ -729,9 +877,14 @@ document.getElementById("adminChatForm").onsubmit = async function(e) {
 };
 
 document.getElementById("refreshBtn").onclick = fetchAdminData;
-fetchAdminData();
-// Auto-refresh every 20 seconds for live chat & calculations
-setInterval(fetchAdminData, 20000);
+
+// Initialize Admin Auth Check on Load
+checkAdminAuth();
+setInterval(() => {
+  if (localStorage.getItem("docstat_admin_auth") === "true") {
+    fetchAdminData();
+  }
+}, 20000);
 </script>
 </body>
 </html>

@@ -921,6 +921,17 @@ window.S = S;
  window.GOOGLE_SHEET_WEBHOOK_URL = GOOGLE_SHEET_WEBHOOK_URL;
 
  function logToolCalculation(toolName, resultVal, formulaText) {
+ const now = Date.now();
+ const throttleKey = `doccalc_last_logged_${(currentTool ? currentTool.id : toolName).replace(/\s+/g, '_')}`;
+ const lastLoggedTime = parseInt(localStorage.getItem(throttleKey) || "0", 10);
+
+ // 15-second Habitual Clicking Protection check
+ if (now - lastLoggedTime < 15000) {
+ return; // Bypasses sending duplicate log/data entry within 15 seconds without showing notices
+ } else {
+ localStorage.setItem(throttleKey, now.toString());
+ }
+
  const email = (localStorage.getItem("doccalc_dr_email") || "").trim().toLowerCase();
  const name = localStorage.getItem("doccalc_dr_name") || "Anonymous";
  const degree = localStorage.getItem("doccalc_dr_degree") || "N/A";

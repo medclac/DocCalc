@@ -123,6 +123,19 @@ header {
 .chart-box h3 { margin: 0 0 12px; font-size: 15px; color: var(--navy); }
 .canvas-holder { position: relative; height: 290px; width: 100%; }
 
+.select-control {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text);
+  margin-top: 12px;
+  outline: none;
+}
+
 /* TABLES */
 .search-input {
   width: 100%;
@@ -351,30 +364,28 @@ tr:hover td { background: #f8fafc; }
 
   <!-- NAVIGATION TABS -->
   <div class="nav-tabs">
-    <button class="tab-btn active" data-tab="tabCharts">📈 Pie Charts & Graphs</button>
+    <button class="tab-btn active" data-tab="tabCharts">📈 Charts & Analytics</button>
     <button class="tab-btn" data-tab="tabUsers">🧑🏻‍⚕️ Clinicians & Individual Excels</button>
     <button class="tab-btn" data-tab="tabAllLogs">🧮 All Platform Calculations</button>
     <button class="tab-btn" data-tab="tabChat">💬 Clinician Feedback & Live Chat</button>
   </div>
 
-  <!-- TAB 1: PIE CHARTS & GRAPHS -->
+  <!-- TAB 1: CHARTS & ANALYTICS -->
   <div id="tabCharts" class="tab-section">
     <div class="charts-grid">
+      <!-- OVERALL SPECIALTIES CHART -->
       <div class="chart-box">
-        <h3>Calculator Basis · Usage Frequency (Pie Chart)</h3>
-        <div class="canvas-holder"><canvas id="calcPieCanvas"></canvas></div>
-      </div>
-      <div class="chart-box">
-        <h3>Calculator Basis · Usage Frequency (Bar Graph)</h3>
-        <div class="canvas-holder"><canvas id="calcBarCanvas"></canvas></div>
-      </div>
-      <div class="chart-box">
-        <h3>Specialty Basis · Total Usage (Pie Chart)</h3>
+        <h3>Platform Usage by Specialty (Overall)</h3>
         <div class="canvas-holder"><canvas id="specPieCanvas"></canvas></div>
       </div>
+
+      <!-- SELECTABLE INDIVIDUAL SPECIALTY CALCULATORS CHART -->
       <div class="chart-box">
-        <h3>Specialty Basis · Total Usage (Bar Graph)</h3>
-        <div class="canvas-holder"><canvas id="specBarCanvas"></canvas></div>
+        <h3>Calculator Breakdown by Specialty</h3>
+        <div class="canvas-holder"><canvas id="specialtyCalcBarCanvas"></canvas></div>
+        <select id="specialtySelect" class="select-control" onchange="renderSpecialtyCalcChart()">
+          <option value="">Select Specialty Category...</option>
+        </select>
       </div>
     </div>
   </div>
@@ -480,7 +491,8 @@ tr:hover td { background: #f8fafc; }
       <div id="profileModalAvatar" style="width: 84px; height: 84px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 32px; overflow: hidden; border: 2px solid var(--border);">🧑🏻‍⚕️</div>
       <div>
         <h2 id="profileModalName" style="margin: 0 0 4px; font-size: 18px;"></h2>
-        <p id="profileModalDegree" style="margin: 0 0 6px; color: var(--muted); font-size: 13.5px;"></p>
+        <p id="profileModalDegree" style="margin: 0 0 4px; color: var(--muted); font-size: 13.5px;"></p>
+        <p id="profileModalEmail" style="margin: 0 0 4px; color: var(--blue); font-size: 13px; font-weight: 500;"></p>
         <p id="profileModalHospital" style="margin: 0; color: var(--text); font-size: 13px; font-weight: 600;"></p>
       </div>
       <a id="downloadAvatarBtn" class="btn btn-primary hidden" style="width: 100%; justify-content: center; margin-top: 8px;" download="doctor_avatar.png">⬇️ Download Photo</a>
@@ -531,7 +543,7 @@ let STATE = {
   logs: [],
   calcFreq: {},
   specFreq: {},
-  messages: [],
+  messagesMap: {},
   selectedChatUser: null
 };
 
@@ -560,13 +572,28 @@ async function fetchAdminData() {
     STATE.logs = data.logs || [];
     STATE.calcFreq = data.calcFreq || {};
     STATE.specFreq = data.specFreq || {};
-    STATE.messages = data.messages || [];
+
+    STATE.messagesMap = {};
+    for (let u of STATE.users) {
+      try {
+        const msgRes = await fetch(`${SCRIPT_API_URL}?action=user_messages&name=${encodeURIComponent(u.name)}&degree=${encodeURIComponent(u.degree)}&t=${Date.now()}`);
+        const msgData = await msgRes.json();
+        if (msgData.status === "success" && msgData.messages) {
+          STATE.messagesMap[u.key] = msgData.messages;
+        } else {
+          STATE.messagesMap[u.key] = [];
+        }
+      } catch (err) {
+        STATE.messagesMap[u.key] = [];
+      }
+    }
 
     if (data.masterSheetUrl) document.getElementById("linkMasterSheet").href = data.masterSheetUrl;
     if (data.analyticsSheetUrl) document.getElementById("linkAnalyticsSheet").href = data.analyticsSheetUrl;
     if (data.usersFolderUrl) document.getElementById("linkUsersFolder").href = data.usersFolderUrl;
 
     renderKPIs();
+    populateSpecialtyDropdown();
     renderCharts();
     renderUsersTable();
     renderAllLogsTable();
@@ -583,29 +610,70 @@ async function fetchAdminData() {
 function renderKPIs() {
   document.getElementById("kpiUsers").textContent = STATE.users.length;
   document.getElementById("kpiCalcs").textContent = STATE.logs.length;
-  document.getElementById("kpiMsgs").textContent = STATE.messages.length;
+  
+  let totalMsgs = 0;
+  Object.values(STATE.messagesMap).forEach(arr => totalMsgs += arr.length);
+  document.getElementById("kpiMsgs").textContent = totalMsgs;
 
   const sortedCalcs = Object.entries(STATE.calcFreq).sort((a, b) => b[1] - a[1]);
   document.getElementById("kpiTopCalc").textContent = sortedCalcs.length ? `${sortedCalcs[0][0]} (${sortedCalcs[0][1]})` : "No data yet";
 }
 
-// --- RENDER PIE CHARTS & BAR GRAPHS ---
+// --- POPULATE SPECIALTY SELECT DROPDOWN ---
+function populateSpecialtyDropdown() {
+  const select = document.getElementById("specialtySelect");
+  const currentVal = select.value;
+  
+  // Extract unique specialties from logs
+  const specialties = [...new Set(STATE.logs.map(l => (l.specialty || "GENERAL").toUpperCase()))].sort();
+  
+  select.innerHTML = `<option value="">Select Specialty Category...</option>`;
+  specialties.forEach(spec => {
+    const opt = document.createElement("option");
+    opt.value = spec;
+    opt.textContent = spec;
+    select.appendChild(opt);
+  });
+
+  if (specialties.includes(currentVal)) {
+    select.value = currentVal;
+  } else if (specialties.length > 0) {
+    select.value = specialties[0];
+  }
+}
+
+// --- RENDER CHARTS ---
 function renderCharts() {
   const palette = ["#2563eb", "#0ea5e9", "#10b981", "#f59e0b", "#8b5cf6", "#ec4899", "#ef4444", "#14b8a6", "#64748b"];
-
-  const calcEntries = Object.entries(STATE.calcFreq).sort((a, b) => b[1] - a[1]);
-  const calcLabels = calcEntries.length ? calcEntries.map(x => x[0]) : ["No Calculations Yet"];
-  const calcValues = calcEntries.length ? calcEntries.map(x => x[1]) : [1];
 
   const specEntries = Object.entries(STATE.specFreq).sort((a, b) => b[1] - a[1]);
   const specLabels = specEntries.length ? specEntries.map(x => x[0]) : ["No Specialties Yet"];
   const specValues = specEntries.length ? specEntries.map(x => x[1]) : [1];
 
-  drawChart("calcPieCanvas", "doughnut", calcLabels, calcValues, palette);
-  drawChart("calcBarCanvas", "bar", calcLabels, calcValues, "#2563eb");
   drawChart("specPieCanvas", "pie", specLabels, specValues, palette);
-  drawChart("specBarCanvas", "bar", specLabels, specValues, "#0ea5e9");
+  renderSpecialtyCalcChart();
 }
+
+// Render individual calculators breakdown for the selected specialty category
+window.renderSpecialtyCalcChart = function() {
+  const selectedSpec = document.getElementById("specialtySelect").value;
+  const filteredLogs = selectedSpec 
+    ? STATE.logs.filter(l => (l.specialty || "GENERAL").toUpperCase() === selectedSpec)
+    : STATE.logs;
+
+  // Tally calculators inside this specialty
+  const freqMap = {};
+  filteredLogs.forEach(l => {
+    const t = l.tool || "Unknown";
+    freqMap[t] = (freqMap[t] || 0) + 1;
+  });
+
+  const entries = Object.entries(freqMap).sort((a, b) => b[1] - a[1]);
+  const labels = entries.length ? entries.map(x => x[0]) : ["No Tools Used"];
+  const values = entries.length ? entries.map(x => x[1]) : [1];
+
+  drawChart("specialtyCalcBarCanvas", "bar", labels, values, "#2563eb");
+};
 
 function drawChart(canvasId, type, labels, values, colors) {
   if (chartInstances[canvasId]) chartInstances[canvasId].destroy();
@@ -675,6 +743,7 @@ document.getElementById("userSearch").oninput = renderUsersTable;
 window.openProfileModal = function(user) {
   document.getElementById("profileModalName").textContent = user.name;
   document.getElementById("profileModalDegree").textContent = user.degree;
+  document.getElementById("profileModalEmail").textContent = user.email ? `📧 ${user.email}` : "";
   document.getElementById("profileModalHospital").textContent = user.hospital ? `🏥 ${user.hospital}` : "";
 
   const avatarDiv = document.getElementById("profileModalAvatar");
@@ -791,12 +860,12 @@ function renderChatSidebar() {
   }
 
   STATE.users.forEach(u => {
-    const userMsgCount = STATE.messages.filter(m => String(m.key).toLowerCase() === String(u.key).toLowerCase()).length;
+    const userMsgs = STATE.messagesMap[u.key] || [];
     const div = document.createElement("div");
     div.className = "chat-user-item" + (STATE.selectedChatUser && STATE.selectedChatUser.key === u.key ? " active" : "");
     div.innerHTML = `
       <strong>${u.name}</strong>
-      <small>${u.degree} · ${userMsgCount} msg(s)</small>
+      <small>${u.degree} · ${userMsgs.length} msg(s)</small>
     `;
     div.onclick = () => selectChatDoctor(u);
     list.appendChild(div);
@@ -822,7 +891,7 @@ function renderChatConversation(userObj) {
   const box = document.getElementById("chatMessagesBox");
   box.innerHTML = "";
 
-  const convo = STATE.messages.filter(m => String(m.key).toLowerCase() === String(userObj.key).toLowerCase());
+  const convo = STATE.messagesMap[userObj.key] || [];
   if (!convo.length) {
     box.innerHTML = `<div style="color:var(--muted);text-align:center;margin-top:60px;">No feedback or messages with ${userObj.name} yet. Send a message below!</div>`;
     return;
@@ -851,20 +920,22 @@ document.getElementById("adminChatForm").onsubmit = async function(e) {
   const payload = {
     type: "admin_reply",
     timestamp: new Date().toLocaleString(),
-    key: STATE.selectedChatUser.key,
     name: STATE.selectedChatUser.name,
     degree: STATE.selectedChatUser.degree,
     message: text
   };
 
-  STATE.messages.push({
+  if (!STATE.messagesMap[STATE.selectedChatUser.key]) {
+    STATE.messagesMap[STATE.selectedChatUser.key] = [];
+  }
+
+  STATE.messagesMap[STATE.selectedChatUser.key].push({
     timestamp: payload.timestamp,
-    key: payload.key,
-    name: payload.name,
-    degree: payload.degree,
     sender: "admin",
+    name: "Admin",
     message: text
   });
+
   inp.value = "";
   renderChatConversation(STATE.selectedChatUser);
 

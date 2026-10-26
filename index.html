@@ -116,7 +116,7 @@ body {
 }
 
 /* ============================================================== */
-/* ANIMATED SPLASH SCREEN */
+/* ANIMATED SPLASH SCREEN (SNAKE DRAW & D REVEAL ON WHITE) */
 /* ============================================================== */
 #splash {
  position: fixed;
@@ -152,6 +152,7 @@ body {
  overflow: visible;
 }
 
+/* Snake tubing animation */
 .steth-border {
  fill: none;
  stroke: #1e3a8a;
@@ -178,6 +179,7 @@ body {
  to { stroke-dashoffset: 0; }
 }
 
+/* D Letterform fade & scale */
 .letter-d {
  transform-origin: 100px 100px;
  opacity: 0;
@@ -315,6 +317,7 @@ main { max-width: 760px; margin: auto; padding: 16px; }
  outline: none;
 }
 .search:focus { border-color: #2463eb; box-shadow: 0 0 0 3px rgba(36,99,235,0.15); }
+.search-hints { font-size: 11.5px; color: var(--text-muted); margin-top: 6px; padding-left: 4px; }
 h2 { font-size: 21px; margin: 8px 0; }
 .muted { color: var(--text-muted); font-size: 13px; line-height: 1.5; }
 
@@ -404,6 +407,43 @@ button { cursor: pointer; font: inherit; }
 .equation { font-size: 12.5px; line-height: 1.6; color: var(--result-text); white-space: pre-line; }
 .copy { float: right; padding: 6px 11px; border: 1px solid var(--result-border); border-radius: 7px; background: var(--bg-card); font-weight: 600; color: var(--result-val); }
 
+/* SEVERITY DYNAMIC THEMES */
+.result.severity-critical {
+ background: var(--contra-bg) !important;
+ border-color: var(--contra-border) !important;
+}
+.result.severity-critical .value,
+.result.severity-critical .caption,
+.result.severity-critical .res-subhead,
+.result.severity-critical .copy {
+ color: var(--contra-text) !important;
+}
+.result.severity-critical .copy { border-color: var(--contra-border) !important; }
+
+.result.severity-moderate {
+ background: var(--notice-bg) !important;
+ border-color: var(--notice-border) !important;
+}
+.result.severity-moderate .value,
+.result.severity-moderate .caption,
+.result.severity-moderate .res-subhead,
+.result.severity-moderate .copy {
+ color: var(--notice-text) !important;
+}
+.result.severity-moderate .copy { border-color: var(--notice-border) !important; }
+
+.result.severity-mild {
+ background: var(--result-bg) !important;
+ border-color: var(--result-border) !important;
+}
+.result.severity-mild .value,
+.result.severity-mild .caption,
+.result.severity-mild .res-subhead,
+.result.severity-mild .copy {
+ color: var(--result-val) !important;
+}
+.result.severity-mild .copy { border-color: var(--result-border) !important; }
+
 .reference-card { margin-top: 22px; border-top: 1px solid var(--border-color); padding-top: 16px; }
 .ref-heading { font-size: 14px; font-weight: 750; color: var(--text-main); margin: 0 0 6px; display: flex; align-items: center; gap: 6px; }
 .ref-desc { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; }
@@ -417,7 +457,27 @@ table.ref-table tr.active-grade td { border-top: 2px solid #38a169; border-botto
 
 .academic-refs { margin-top: 24px; border-top: 1px solid var(--border-color); padding-top: 18px; }
 .ref-card-item { background: var(--ref-card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; margin-bottom: 12px; }
-.ref-card-citation { font-size: 12px; color: var(--text-muted); line-height: 1.5; white-space: pre-line; }
+.ref-card-citation { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; }
+
+.ref-card-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.ref-btn-link {
+ display: inline-flex;
+ align-items: center;
+ gap: 4px;
+ padding: 6px 12px;
+ font-size: 11.5px;
+ font-weight: 600;
+ text-decoration: none;
+ border-radius: 6px;
+ background: var(--badge-calc-bg);
+ color: var(--badge-calc-text);
+ border: 1px solid var(--badge-calc-border);
+ transition: all 0.15s ease;
+ word-break: break-all;
+}
+.ref-btn-link:hover { filter: brightness(0.95); }
+.ref-btn-link.secondary { background: var(--tag-bg); color: var(--tag-text); border: 1px solid var(--border-color); }
+.ref-btn-link.secondary:hover { filter: brightness(0.95); }
 
 .modal-overlay {
  position: fixed;
@@ -768,6 +828,9 @@ window.S = S;
  "use strict";
  const $ = id => document.getElementById(id);
 
+ // ============================================================== -->
+ // GOOGLE APPS SCRIPT WEBHOOK CONFIGURATION (WITH OFFLINE QUEUE)
+ // ============================================================== -->
  const GOOGLE_SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzJx3gZcITimEC2B2lNR0feu0y7CebvRBNWWuaxYl71o5GPSvF1rsbpYb12UR-XxjLE/exec";
  const OFFLINE_QUEUE_KEY = "doccalc_offline_sync_queue";
  let isSyncingQueue = false;

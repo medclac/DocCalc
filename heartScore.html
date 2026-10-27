@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>HEART Score for Chest Pain Triage</title>
+<title>HEART Score for Chest Pain</title>
 <style>
   body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -92,32 +92,32 @@
 </head>
 <body>
 <div class="container">
-  <h1>HEART Score for Chest Pain Triage</h1>
+  <h1>HEART Score for Chest Pain</h1>
   <div class="meta-tag">Calculation ID: heartScore</div>
 
   <div class="section-title">1. Formula & Parameters</div>
-  <div class="formula-box">Additive scoring: History + ECG + Age + Risk Factors + Troponin</div>
-  <div class="normal-range-box">Normal Range / Target: Score 0–3</div>
+  <div class="formula-box">Score = History (0-2) + ECG (0-2) + Age (0-2) + Risk Factors (0-2) + Troponin (0-2)</div>
+  <div class="normal-range-box">Normal Range / Target: Score 0–3 = Low 6-week MACE risk (0.9%–1.7%)</div>
   <p><b>Formula Breakdown & Units:</b></p>
   <ul>
-    <li>Score 4–6: Moderate risk. Score 7–10: High risk.</li>
+    <li>History: Suspicion for ischemia (0-2 pts).</li><li>ECG: Normal to significant ST depression (0-2 pts).</li><li>Age: <45 (0), 45-64 (1), ≥65 (2).</li><li>Risk Factors: Cardiovascular risk factors or prior CAD (0-2 pts).</li><li>Troponin: Normal to >3x normal limit (0-2 pts).</li>
   </ul>
 
   <div class="section-title">2. Clinical & Medical Significance</div>
-  <p>Rapid emergency department risk stratification for acute chest pain.</p>
+  <p>Enables safe, early discharge of low-risk chest pain patients while identifying high-risk individuals requiring invasive coronary angiography.</p>
 
   <div class="section-title">3. Useful Conditions & Medical Decisions</div>
   <p><b>Useful Conditions / Indications:</b></p>
   <ul>
-    <li>Acute Chest Pain</li><li>Acute Coronary Syndrome</li>
+    <li>Acute Coronary Syndrome (ACS)</li><li>Stable Angina</li><li>Non-Cardiac Chest Pain</li>
   </ul>
-  <p><b>Key Medical Decision:</b> Determines early discharge vs. hospital observation and invasive angiography.</p>
+  <p><b>Key Medical Decision:</b> Determines outpatient discharge, observation unit serial troponins, or immediate inpatient cardiology admission.</p>
 
   <div class="section-title">4. Pathophysiological Background</div>
-  <p>Multi-variable scoring of ischemic probability and coronary risk.</p>
+  <p>Atherosclerotic plaque disruption, coronary vasospasm, or supply-demand mismatch leads to myocardial ischemia and biomarker release.</p>
 
   <div class="section-title">5. Medical Background & Evidence</div>
-  <p>Backus et al. (Int J Cardiol, 2013).</p>
+  <p>Developed and validated by Backus, Six, Kelder et al. (Int J Cardiol, 2013).</p>
 
   <div class="footer">
     This information is researched and verified source of information from open sources.<br>

@@ -110,4 +110,3 @@ jobs:
           name: DocStat-v${{ github.run_number }}-APK
           path: final-apk/*.apk
           if-no-files-found: error
-          

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Clavien–Dindo Classification of Surgical Complications</title>
+<style>
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #2c3e50;
+    line-height: 1.6;
+    font-size: 11pt;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 20px;
+  }
+  .container {
+    max-width: 750px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 35px;
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  }
+  h1 {
+    font-size: 18pt;
+    color: #0e6251;
+    margin-top: 0;
+    border-bottom: 2px solid #16a085;
+    padding-bottom: 8px;
+  }
+  .meta-tag {
+    background-color: #e8f8f5;
+    color: #117a65;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 9pt;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 15px;
+  }
+  .section-title {
+    font-size: 11.5pt;
+    color: #117a65;
+    border-bottom: 1px solid #a3e4d7;
+    padding-bottom: 4px;
+    margin-top: 22px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+  .formula-box {
+    background: #fdfefe;
+    border: 2px dashed #16a085;
+    padding: 12px;
+    text-align: center;
+    border-radius: 6px;
+    font-size: 12pt;
+    font-weight: bold;
+    color: #0e6251;
+    margin-bottom: 10px;
+  }
+  .normal-range-box {
+    background: #e8f8f5;
+    border: 1px solid #a3e4d7;
+    padding: 8px 12px;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 10.5pt;
+    font-weight: bold;
+    color: #0e6251;
+    margin-bottom: 15px;
+  }
+  ul {
+    margin: 0 0 10px 0;
+    padding-left: 20px;
+  }
+  li {
+    margin-bottom: 4px;
+  }
+  p {
+    margin: 0 0 10px 0;
+    text-align: justify;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    font-size: 10pt;
+  }
+  th, td {
+    border: 1px solid #d5dbdb;
+    padding: 8px 10px;
+    text-align: left;
+  }
+  th {
+    background-color: #e8f8f5;
+    color: #0e6251;
+    font-weight: bold;
+  }
+  tr:nth-child(even) {
+    background-color: #fcfcfc;
+  }
+  .footer {
+    margin-top: 30px;
+    border-top: 1px solid #d5dbdb;
+    padding-top: 12px;
+    font-size: 8.5pt;
+    color: #7f8c8d;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Clavien–Dindo Classification of Surgical Complications</h1>
+  <div class="meta-tag">Calculation ID: clavienDindo</div>
+
+  <div class="section-title">1. Formula & Parameters</div>
+  <div class="formula-box">Grading postoperative morbidity based on the therapeutic intervention required to treat the complication</div>
+  <div class="normal-range-box">Normal Range / Target: Grade 0 (No Complication)</div>
+  <p><b>Formula Breakdown & Units:</b></p>
+  <ul>
+    <li><b>Grades I–II:</b> Bedside care / pharmacological treatment.</li><li><b>Grades IIIa–IIIb:</b> Interventions without/with general anesthesia.</li><li><b>Grades IVa–IVb:</b> ICU single/multiorgan failure.</li><li><b>Grade V:</b> Mortality.</li>
+  </ul>
+
+  <div class="section-title">2. Clinical & Medical Significance</div>
+  <p>The Clavien-Dindo classification is the universal standard for reporting postoperative surgical complications. By grading complications according to the invasiveness of therapy required to manage them, it provides an objective, reproducible metric for surgical audits, quality improvement, and clinical trials.</p>
+
+  <div class="section-title">3. Useful Conditions & Medical Decisions</div>
+  <p><b>Useful Conditions / Indications:</b></p>
+  <ul>
+    <li>Postoperative Surgical Audit & Quality Improvement</li><li>Morbidity & Mortality (M&M) Reporting</li>
+  </ul>
+  <p><b>Key Medical Decision:</b> Standardizes complication reporting across surgical specialties and clinical trials.</p>
+  <table>
+    <thead>
+      <tr><th>Grade</th><th>Definition</th><th>Therapy Required</th><th>Clinical Example</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Grade I</td><td>Minor deviation from ideal postop course</td><td>Antiemetics, antipyretics, wound opening at bedside</td><td>Superficial wound opening, transient urinary retention</td></tr>
+<tr><td>Grade II</td><td>Complication requiring specific drug therapy</td><td>Antibiotics, therapeutic anticoagulation, TPN, blood transfusion</td><td>Surgical site infection needing IV abx, DVT, pneumonia</td></tr>
+<tr><td>Grade IIIa</td><td>Intervention not requiring general anesthesia</td><td>Percutaneous drainage, interventional radiology, endoscopy</td><td>CT-guided drain of intra-abdominal abscess under local</td></tr>
+<tr><td>Grade IIIb</td><td>Intervention requiring general anesthesia</td><td>Re-laparotomy, operative repair, revision anastomosis</td><td>Wound dehiscence reclosure, anastomotic leak re-exploration</td></tr>
+<tr><td>Grade IVa</td><td>Single organ failure requiring ICU support</td><td>Hemodialysis, mechanical ventilation, inotropes</td><td>Acute renal failure on CRRT, ARDS on ventilator</td></tr>
+<tr><td>Grade IVb</td><td>Multiorgan failure requiring ICU support</td><td>Multi-system support in intensive care unit</td><td>Septic shock with respiratory failure and acute tubular necrosis</td></tr>
+<tr><td>Grade V</td><td>Mortality</td><td>Death of patient</td><td>Postoperative mortality</td></tr>
+
+    </tbody>
+  </table>
+
+  <div class="section-title">4. Pathophysiological Background</div>
+  <p>Gradates the severity of physiological deviation from an ideal postoperative course requiring therapeutic remediation.</p>
+
+  <div class="section-title">5. Medical Background & Evidence</div>
+  <p>Dindo D, Demartines N, Clavien PA. (Ann Surg. 2004;240(2):205-213).</p>
+
+  <div class="footer">
+    This information is researched and verified source of information from open sources.<br>
+    <b>Approved by DocStat R/D team</b>
+  </div>
+</div>
+</body>
+</html>

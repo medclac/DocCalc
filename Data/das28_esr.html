@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>DAS28-ESR (Disease Activity Score 28 with ESR)</title>
+<style>
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #2c3e50;
+    line-height: 1.6;
+    font-size: 11pt;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 20px;
+  }
+  .container {
+    max-width: 750px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 35px;
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  }
+  h1 {
+    font-size: 18pt;
+    color: #0e6251;
+    margin-top: 0;
+    border-bottom: 2px solid #16a085;
+    padding-bottom: 8px;
+  }
+  .meta-tag {
+    background-color: #e8f8f5;
+    color: #117a65;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 9pt;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 15px;
+  }
+  .section-title {
+    font-size: 11.5pt;
+    color: #117a65;
+    border-bottom: 1px solid #a3e4d7;
+    padding-bottom: 4px;
+    margin-top: 22px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+  .formula-box {
+    background: #fdfefe;
+    border: 2px dashed #16a085;
+    padding: 12px;
+    text-align: center;
+    border-radius: 6px;
+    font-size: 12pt;
+    font-weight: bold;
+    color: #0e6251;
+    margin-bottom: 10px;
+  }
+  .normal-range-box {
+    background: #e8f8f5;
+    border: 1px solid #a3e4d7;
+    padding: 8px 12px;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 10.5pt;
+    font-weight: bold;
+    color: #0e6251;
+    margin-bottom: 15px;
+  }
+  ul {
+    margin: 0 0 10px 0;
+    padding-left: 20px;
+  }
+  li {
+    margin-bottom: 4px;
+  }
+  p {
+    margin: 0 0 10px 0;
+    text-align: justify;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    font-size: 10pt;
+  }
+  th, td {
+    border: 1px solid #d5dbdb;
+    padding: 8px 10px;
+    text-align: left;
+  }
+  th {
+    background-color: #e8f8f5;
+    color: #0e6251;
+    font-weight: bold;
+  }
+  tr:nth-child(even) {
+    background-color: #fcfcfc;
+  }
+  .footer {
+    margin-top: 30px;
+    border-top: 1px solid #d5dbdb;
+    padding-top: 12px;
+    font-size: 8.5pt;
+    color: #7f8c8d;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>DAS28-ESR (Disease Activity Score 28 with ESR)</h1>
+  <div class="meta-tag">Calculation ID: das28_esr</div>
+
+  <div class="section-title">1. Formula & Parameters</div>
+  <div class="formula-box">0.56 × √(TJC) + 0.28 × √(SJC) + 0.70 × ln(ESR) + 0.014 × PatientGlobal</div>
+  <div class="normal-range-box">Normal Range / Target: < 2.6 (Clinical Remission)</div>
+  <p><b>Formula Breakdown & Units:</b></p>
+  <ul>
+    <li><b>TJC:</b> Tender Joint Count (0–28).</li><li><b>SJC:</b> Swollen Joint Count (0–28).</li><li><b>ESR:</b> Erythrocyte Sedimentation Rate (mm/hr).</li><li><b>Patient Global Health:</b> Visual Analogue Scale (0–100 mm).</li>
+  </ul>
+
+  <div class="section-title">2. Clinical & Medical Significance</div>
+  <p>The Disease Activity Score 28 using Erythrocyte Sedimentation Rate (DAS28-ESR) is the premier composite measure utilized globally to quantify disease activity in rheumatoid arthritis (RA). By integrating counts of tender and swollen joints across 28 specific anatomical sites with acute-phase reactants (ESR) and patient global assessment, DAS28 provides an objective continuous score. This score guides treat-to-target clinical strategies, determining whether to maintain, de-escalate, or aggressively intensify synthetic or biologic disease-modifying antirheumatic drugs (DMARDs).</p>
+
+  <div class="section-title">3. Useful Conditions & Medical Decisions</div>
+  <p><b>Useful Conditions / Indications:</b></p>
+  <ul>
+    <li>Rheumatoid Arthritis Disease Activity Monitoring</li><li>Treat-to-Target Therapeutic Optimization</li><li>Clinical Trial Endpoints for Biologic/Targeted DMARDs</li>
+  </ul>
+  <p><b>Key Medical Decision:</b> Directs treatment intensification when scores indicate moderate or high disease activity (>3.2) or confirms sustained remission (<2.6) for potential DMARD tapering.</p>
+  <table>
+    <thead>
+      <tr><th>DAS28-ESR Score</th><th>Disease Activity State</th><th>Therapeutic Target</th><th>Recommended Strategy</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>< 2.6</td><td>Remission</td><td>Primary Treat-to-Target Goal</td><td>Maintain current DMARD regimen; consider tapering if sustained >6 months</td></tr>
+<tr><td>2.6 – 3.2</td><td>Low Disease Activity (LDA)</td><td>Acceptable Alternative Target</td><td>Continue current therapy; closely monitor every 3–6 months</td></tr>
+<tr><td>3.3 – 5.1</td><td>Moderate Disease Activity</td><td>Target Not Achieved</td><td>Adjust/intensify synthetic DMARDs or consider initiating biologic/targeted synthetic DMARD</td></tr>
+<tr><td>> 5.1</td><td>High Disease Activity</td><td>Active Severe Synovitis</td><td>Urgent escalation: switch or add bDMARD/tsDMARD; consider bridging corticosteroids</td></tr>
+
+    </tbody>
+  </table>
+
+  <div class="section-title">4. Pathophysiological Background</div>
+  <p>Synthesizes systemic inflammatory burden (ESR), subjective patient-reported systemic well-being (Global VAS), and local synovial macrophage/cytokine-driven joint inflammation (tender and swollen joint counts).</p>
+
+  <div class="section-title">5. Medical Background & Evidence</div>
+  <p>Prevoo ML, van 't Hof MA, Kuper HH, et al. (Arthritis Rheum. 1995;38(1):44-48).</p>
+
+  <div class="footer">
+    This information is researched and verified source of information from open sources.<br>
+    <b>Approved by DocStat R/D team</b>
+  </div>
+</div>
+</body>
+</html>

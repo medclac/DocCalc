@@ -1388,6 +1388,3 @@
  console.error("Critical error registering Rheumatology tools:", err);
  }
 })();
-ok
-!1skFbOcOZxm_Yer77pb-EKB8WFHs3RVrk "DEgwIt5uA1wYQmJ6zyQEaITFza0ZiT2NPWnhtX1llcjc3cGItRUtCOFdGSHMzUlZyayAB"5
-3"/\n!1skFbOcOZxm_Yer77pb-EKB8WFHs3RVrk\ntext/plain0

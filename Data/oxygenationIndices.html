@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PaO₂/FiO₂ (P/F) and SpO₂/FiO₂ (S/F) Ratio</title>
+<style>
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #2c3e50;
+    line-height: 1.6;
+    font-size: 11pt;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 20px;
+  }
+  .container {
+    max-width: 750px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 35px;
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  }
+  h1 {
+    font-size: 18pt;
+    color: #0e6251;
+    margin-top: 0;
+    border-bottom: 2px solid #16a085;
+    padding-bottom: 8px;
+  }
+  .meta-tag {
+    background-color: #e8f8f5;
+    color: #117a65;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 9pt;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 15px;
+  }
+  .section-title {
+    font-size: 11.5pt;
+    color: #117a65;
+    border-bottom: 1px solid #a3e4d7;
+    padding-bottom: 4px;
+    margin-top: 22px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+  .formula-box {
+    background: #fdfefe;
+    border: 2px dashed #16a085;
+    padding: 12px;
+    text-align: center;
+    border-radius: 6px;
+    font-size: 12pt;
+    font-weight: bold;
+    color: #0e6251;
+    margin-bottom: 10px;
+  }
+  .normal-range-box {
+    background: #e8f8f5;
+    border: 1px solid #a3e4d7;
+    padding: 8px 12px;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 10.5pt;
+    font-weight: bold;
+    color: #0e6251;
+    margin-bottom: 15px;
+  }
+  ul {
+    margin: 0 0 10px 0;
+    padding-left: 20px;
+  }
+  li {
+    margin-bottom: 4px;
+  }
+  p {
+    margin: 0 0 10px 0;
+    text-align: justify;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    font-size: 10pt;
+  }
+  th, td {
+    border: 1px solid #d5dbdb;
+    padding: 8px 10px;
+    text-align: left;
+  }
+  th {
+    background-color: #e8f8f5;
+    color: #0e6251;
+    font-weight: bold;
+  }
+  tr:nth-child(even) {
+    background-color: #fcfcfc;
+  }
+  .footer {
+    margin-top: 30px;
+    border-top: 1px solid #d5dbdb;
+    padding-top: 12px;
+    font-size: 8.5pt;
+    color: #7f8c8d;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>PaO₂/FiO₂ (P/F) and SpO₂/FiO₂ (S/F) Ratio</h1>
+  <div class="meta-tag">Calculation ID: oxygenationIndices</div>
+
+  <div class="section-title">1. Formula & Parameters</div>
+  <div class="formula-box">P/F = PaO₂ ÷ FiO₂ | S/F = SpO₂ ÷ FiO₂</div>
+  <div class="normal-range-box">Normal Range / Target: Normal Range</div>
+  <p><b>Formula Breakdown & Units:</b></p>
+  <ul>
+    <li><b>FiO₂:</b> Decimal fraction (0.21–1.0).</li><li><b>PaO₂ / SpO₂:</b> Arterial blood gas or pulse oximetry.</li>
+  </ul>
+
+  <div class="section-title">2. Clinical & Medical Significance</div>
+  <p>Oxygenation indices quantify the severity of hypoxemic respiratory failure. While the P/F ratio derived from arterial blood gas is the gold standard for ARDS classification, the non-invasive S/F ratio provides an excellent continuous surrogate using pulse oximetry, minimizing painful repeated arterial punctures.</p>
+
+  <div class="section-title">3. Useful Conditions & Medical Decisions</div>
+  <p><b>Useful Conditions / Indications:</b></p>
+  <ul>
+    <li>Acute Hypoxemic Respiratory Failure</li><li>ARDS Surveillance</li>
+  </ul>
+  <p><b>Key Medical Decision:</b> Assesses hypoxemia severity and tracks response to oxygen therapy and PEEP titration.</p>
+  <table>
+    <thead>
+      <tr><th>Index Value</th><th>Equivalent Hypoxemia Tier</th><th>ARDS Staging</th><th>Clinical Meaning</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>P/F > 300 (S/F > 315)</td><td>Normal / Preserved</td><td>No ARDS</td><td>Normal alveolar-capillary oxygen diffusion</td></tr>
+<tr><td>P/F 201–300 (S/F 236–315)</td><td>Mild Gas Exchange Deficit</td><td>Mild ARDS</td><td>Initiate low-level PEEP; assess underlying parenchymal cause</td></tr>
+<tr><td>P/F 101–200 (S/F 151–235)</td><td>Moderate Hypoxemia</td><td>Moderate ARDS</td><td>High risk of respiratory fatigue; optimize lung-protective ventilation</td></tr>
+<tr><td>P/F ≤ 100 (S/F ≤ 150)</td><td>Severe Hypoxemic Failure</td><td>Severe ARDS</td><td>Refractory shunting; prone positioning, paralytics, ECMO evaluation</td></tr>
+
+    </tbody>
+  </table>
+
+  <div class="section-title">4. Pathophysiological Background</div>
+  <p>Measures gas exchange efficiency across the alveolar-capillary membrane under specific inspired oxygen fractions.</p>
+
+  <div class="section-title">5. Medical Background & Evidence</div>
+  <p>Rice TW, Wheeler AP, Bernard GR, et al. (Chest. 2007;132(2):410-417).</p>
+
+  <div class="footer">
+    This information is researched and verified source of information from open sources.<br>
+    <b>Approved by DocStat R/D team</b>
+  </div>
+</div>
+</body>
+</html>

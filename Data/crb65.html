@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CRB-65 Pneumonia Severity Score</title>
+<style>
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #2c3e50;
+    line-height: 1.6;
+    font-size: 11pt;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 20px;
+  }
+  .container {
+    max-width: 750px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 35px;
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  }
+  h1 {
+    font-size: 18pt;
+    color: #0e6251;
+    margin-top: 0;
+    border-bottom: 2px solid #16a085;
+    padding-bottom: 8px;
+  }
+  .meta-tag {
+    background-color: #e8f8f5;
+    color: #117a65;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 9pt;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 15px;
+  }
+  .section-title {
+    font-size: 11.5pt;
+    color: #117a65;
+    border-bottom: 1px solid #a3e4d7;
+    padding-bottom: 4px;
+    margin-top: 22px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+  .formula-box {
+    background: #fdfefe;
+    border: 2px dashed #16a085;
+    padding: 12px;
+    text-align: center;
+    border-radius: 6px;
+    font-size: 12pt;
+    font-weight: bold;
+    color: #0e6251;
+    margin-bottom: 10px;
+  }
+  .normal-range-box {
+    background: #e8f8f5;
+    border: 1px solid #a3e4d7;
+    padding: 8px 12px;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 10.5pt;
+    font-weight: bold;
+    color: #0e6251;
+    margin-bottom: 15px;
+  }
+  ul {
+    margin: 0 0 10px 0;
+    padding-left: 20px;
+  }
+  li {
+    margin-bottom: 4px;
+  }
+  p {
+    margin: 0 0 10px 0;
+    text-align: justify;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    font-size: 10pt;
+  }
+  th, td {
+    border: 1px solid #d5dbdb;
+    padding: 8px 10px;
+    text-align: left;
+  }
+  th {
+    background-color: #e8f8f5;
+    color: #0e6251;
+    font-weight: bold;
+  }
+  tr:nth-child(even) {
+    background-color: #fcfcfc;
+  }
+  .footer {
+    margin-top: 30px;
+    border-top: 1px solid #d5dbdb;
+    padding-top: 12px;
+    font-size: 8.5pt;
+    color: #7f8c8d;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>CRB-65 Pneumonia Severity Score</h1>
+  <div class="meta-tag">Calculation ID: crb65</div>
+
+  <div class="section-title">1. Formula & Parameters</div>
+  <div class="formula-box">Sum of 4 criteria: Confusion, RR ≥30, BP criteria, Age ≥65 (Urea-free)</div>
+  <div class="normal-range-box">Normal Range / Target: 0 points (Low Risk)</div>
+  <p><b>Formula Breakdown & Units:</b></p>
+  <ul>
+    <li><b>Confusion, RR ≥30, BP criteria, Age ≥65:</b> 1 point each.</li>
+  </ul>
+
+  <div class="section-title">2. Clinical & Medical Significance</div>
+  <p>The CRB-65 score is a urea-free bedside risk stratification tool for community-acquired pneumonia. Designed for primary care, emergency triage, or prehospital environments where blood tests are unavailable, it provides rapid mortality risk assessment to guide immediate hospital referral.</p>
+
+  <div class="section-title">3. Useful Conditions & Medical Decisions</div>
+  <p><b>Useful Conditions / Indications:</b></p>
+  <ul>
+    <li>Primary Care & Prehospital Pneumonia Triage</li>
+  </ul>
+  <p><b>Key Medical Decision:</b> Determines urgent hospital referral and admission requirements before laboratory blood results are finalized.</p>
+  <table>
+    <thead>
+      <tr><th>CRB-65 Score</th><th>Risk Stratification</th><th>30-Day Mortality</th><th>Recommended Disposition</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>0 points</td><td>Very Low Risk</td><td>0.9% – 1.2%</td><td>Outpatient management usually suitable; educate on red flag symptoms</td></tr>
+<tr><td>1 – 2 points</td><td>Intermediate Risk</td><td>5.2% – 8.2%</td><td>Hospital referral recommended; consider admission or close surveillance</td></tr>
+<tr><td>3 – 4 points</td><td>Severe High Risk</td><td>18% – 34%</td><td>Immediate urgent hospital admission; evaluate for ICU transfer</td></tr>
+
+    </tbody>
+  </table>
+
+  <div class="section-title">4. Pathophysiological Background</div>
+  <p>Evaluates vital sign instability, advanced age, and acute neurological disturbance resulting from pulmonary infection.</p>
+
+  <div class="section-title">5. Medical Background & Evidence</div>
+  <p>Bauer TT, Ewig S, Marre R, et al. (Respir Med. 2006;100(2):310-318).</p>
+
+  <div class="footer">
+    This information is researched and verified source of information from open sources.<br>
+    <b>Approved by DocStat R/D team</b>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CURB-65 Pneumonia Severity Score</title>
+<style>
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #2c3e50;
+    line-height: 1.6;
+    font-size: 11pt;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 20px;
+  }
+  .container {
+    max-width: 750px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 35px;
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  }
+  h1 {
+    font-size: 18pt;
+    color: #0e6251;
+    margin-top: 0;
+    border-bottom: 2px solid #16a085;
+    padding-bottom: 8px;
+  }
+  .meta-tag {
+    background-color: #e8f8f5;
+    color: #117a65;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 9pt;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 15px;
+  }
+  .section-title {
+    font-size: 11.5pt;
+    color: #117a65;
+    border-bottom: 1px solid #a3e4d7;
+    padding-bottom: 4px;
+    margin-top: 22px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+  .formula-box {
+    background: #fdfefe;
+    border: 2px dashed #16a085;
+    padding: 12px;
+    text-align: center;
+    border-radius: 6px;
+    font-size: 12pt;
+    font-weight: bold;
+    color: #0e6251;
+    margin-bottom: 10px;
+  }
+  .normal-range-box {
+    background: #e8f8f5;
+    border: 1px solid #a3e4d7;
+    padding: 8px 12px;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 10.5pt;
+    font-weight: bold;
+    color: #0e6251;
+    margin-bottom: 15px;
+  }
+  ul {
+    margin: 0 0 10px 0;
+    padding-left: 20px;
+  }
+  li {
+    margin-bottom: 4px;
+  }
+  p {
+    margin: 0 0 10px 0;
+    text-align: justify;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    font-size: 10pt;
+  }
+  th, td {
+    border: 1px solid #d5dbdb;
+    padding: 8px 10px;
+    text-align: left;
+  }
+  th {
+    background-color: #e8f8f5;
+    color: #0e6251;
+    font-weight: bold;
+  }
+  tr:nth-child(even) {
+    background-color: #fcfcfc;
+  }
+  .footer {
+    margin-top: 30px;
+    border-top: 1px solid #d5dbdb;
+    padding-top: 12px;
+    font-size: 8.5pt;
+    color: #7f8c8d;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>CURB-65 Pneumonia Severity Score</h1>
+  <div class="meta-tag">Calculation ID: curb65</div>
+
+  <div class="section-title">1. Formula & Parameters</div>
+  <div class="formula-box">Sum of 5 criteria: Confusion, Urea >7 mmol/L, RR ≥30, BP criteria, Age ≥65</div>
+  <div class="normal-range-box">Normal Range / Target: Score 0 – 1 (Low Risk)</div>
+  <p><b>Formula Breakdown & Units:</b></p>
+  <ul>
+    <li><b>Confusion:</b> AMTS ≤8 or new disorientation.</li><li><b>Urea:</b> >7.0 mmol/L (BUN >19 mg/dL).</li><li><b>RR:</b> ≥30 breaths/min.</li><li><b>BP:</b> SBP <90 or DBP ≤60 mmHg.</li><li><b>Age:</b> ≥65 years.</li>
+  </ul>
+
+  <div class="section-title">2. Clinical & Medical Significance</div>
+  <p>The CURB-65 score is a widely validated clinical prediction rule used to estimate 30-day mortality in patients with community-acquired pneumonia (CAP). By stratifying risk based on mental status, renal function, respiratory rate, blood pressure, and age, it helps physicians determine the appropriate site of care—ranging from outpatient oral therapy to emergency hospital admission or intensive care unit escalation.</p>
+
+  <div class="section-title">3. Useful Conditions & Medical Decisions</div>
+  <p><b>Useful Conditions / Indications:</b></p>
+  <ul>
+    <li>Community-Acquired Pneumonia (CAP) Triage</li><li>Lower Respiratory Tract Infection Severity Staging</li>
+  </ul>
+  <p><b>Key Medical Decision:</b> Guides site of care decisions (outpatient vs inpatient ward vs ICU admission).</p>
+  <table>
+    <thead>
+      <tr><th>CURB-65 Score</th><th>Risk Category</th><th>30-Day Mortality</th><th>Recommended Site of Care</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>0 – 1 points</td><td>Low Risk</td><td>0.7% – 2.1%</td><td>Outpatient oral antimicrobial therapy if socially and clinically stable</td></tr>
+<tr><td>2 points</td><td>Moderate Risk</td><td>~ 9.2%</td><td>Hospital inpatient admission or closely supervised outpatient short-stay observation</td></tr>
+<tr><td>3 – 5 points</td><td>Severe / High Risk</td><td>15% – 40%</td><td>Immediate inpatient hospital admission; evaluate for HDU/ICU level care stat</td></tr>
+
+    </tbody>
+  </table>
+
+  <div class="section-title">4. Pathophysiological Background</div>
+  <p>Reflects acute systemic inflammation, hypoperfusion, end-organ stress, and physiological reserve depletion during infection.</p>
+
+  <div class="section-title">5. Medical Background & Evidence</div>
+  <p>Lim WS, van der Eerden MM, Laing R, et al. (Thorax. 2003;58(5):377-382).</p>
+
+  <div class="footer">
+    This information is researched and verified source of information from open sources.<br>
+    <b>Approved by DocStat R/D team</b>
+  </div>
+</div>
+</body>
+</html>

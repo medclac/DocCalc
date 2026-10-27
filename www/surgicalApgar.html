@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Surgical Apgar Score (SAS)</title>
+<style>
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #2c3e50;
+    line-height: 1.6;
+    font-size: 11pt;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 20px;
+  }
+  .container {
+    max-width: 750px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 35px;
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  }
+  h1 {
+    font-size: 18pt;
+    color: #0e6251;
+    margin-top: 0;
+    border-bottom: 2px solid #16a085;
+    padding-bottom: 8px;
+  }
+  .meta-tag {
+    background-color: #e8f8f5;
+    color: #117a65;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 9pt;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 15px;
+  }
+  .section-title {
+    font-size: 11.5pt;
+    color: #117a65;
+    border-bottom: 1px solid #a3e4d7;
+    padding-bottom: 4px;
+    margin-top: 22px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+  .formula-box {
+    background: #fdfefe;
+    border: 2px dashed #16a085;
+    padding: 12px;
+    text-align: center;
+    border-radius: 6px;
+    font-size: 12pt;
+    font-weight: bold;
+    color: #0e6251;
+    margin-bottom: 10px;
+  }
+  .normal-range-box {
+    background: #e8f8f5;
+    border: 1px solid #a3e4d7;
+    padding: 8px 12px;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 10.5pt;
+    font-weight: bold;
+    color: #0e6251;
+    margin-bottom: 15px;
+  }
+  ul {
+    margin: 0 0 10px 0;
+    padding-left: 20px;
+  }
+  li {
+    margin-bottom: 4px;
+  }
+  p {
+    margin: 0 0 10px 0;
+    text-align: justify;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    font-size: 10pt;
+  }
+  th, td {
+    border: 1px solid #d5dbdb;
+    padding: 8px 10px;
+    text-align: left;
+  }
+  th {
+    background-color: #e8f8f5;
+    color: #0e6251;
+    font-weight: bold;
+  }
+  tr:nth-child(even) {
+    background-color: #fcfcfc;
+  }
+  .footer {
+    margin-top: 30px;
+    border-top: 1px solid #d5dbdb;
+    padding-top: 12px;
+    font-size: 8.5pt;
+    color: #7f8c8d;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Surgical Apgar Score (SAS)</h1>
+  <div class="meta-tag">Calculation ID: surgicalApgar</div>
+
+  <div class="section-title">1. Formula & Parameters</div>
+  <div class="formula-box">Sum of EBL score + Lowest MAP score + Lowest Heart Rate score (0 to 10 points)</div>
+  <div class="normal-range-box">Normal Range / Target: Normal Range</div>
+  <p><b>Formula Breakdown & Units:</b></p>
+  <ul>
+    <li><b>EBL:</b> Estimated blood loss.</li><li><b>Lowest MAP:</b> Mean arterial pressure during surgery.</li><li><b>Lowest HR:</b> Intraoperative heart rate.</li>
+  </ul>
+
+  <div class="section-title">2. Clinical & Medical Significance</div>
+  <p>The Surgical Apgar Score (SAS) is a simple 10-point intraoperative scoring system derived from estimated blood loss, lowest mean arterial pressure, and lowest heart rate. It provides an immediate postoperative assessment predicting 30-day major surgical complications and mortality.</p>
+
+  <div class="section-title">3. Useful Conditions & Medical Decisions</div>
+  <p><b>Useful Conditions / Indications:</b></p>
+  <ul>
+    <li>Immediate Postoperative Risk Stratification</li>
+  </ul>
+  <p><b>Key Medical Decision:</b> Identifies high-risk surgical patients (score ≤4) who benefit from postoperative ICU or HDU monitoring.</p>
+  <table>
+    <thead>
+      <tr><th>Surgical Apgar Score</th><th>Risk Category</th><th>Major Complication Rate</th><th>Relative Risk of Death</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>0 – 4 Points</td><td>High Risk</td><td>> 30% – 50%</td><td>Up to 16x baseline mortality; triage to ICU/HDU</td></tr>
+<tr><td>5 – 6 Points</td><td>Intermediate Risk</td><td>15% – 20%</td><td>Elevated risk; step-down care and close surgical surveillance</td></tr>
+<tr><td>7 – 8 Points</td><td>Average / Low Risk</td><td>5% – 8%</td><td>Routine post-surgical floor care</td></tr>
+<tr><td>9 – 10 Points</td><td>Minimal Risk</td><td>< 3%</td><td>Optimal intraoperative stability; rapid standard recovery</td></tr>
+
+    </tbody>
+  </table>
+
+  <div class="section-title">4. Pathophysiological Background</div>
+  <p>Reflects intraoperative hemodynamic stability, surgical blood loss, and physiological stress.</p>
+
+  <div class="section-title">5. Medical Background & Evidence</div>
+  <p>Gawande AA, Kwaan MR, Regenbogen SE, et al. (J Am Coll Surg. 2007;204(2):201-208).</p>
+
+  <div class="footer">
+    This information is researched and verified source of information from open sources.<br>
+    <b>Approved by DocStat R/D team</b>
+  </div>
+</div>
+</body>
+</html>

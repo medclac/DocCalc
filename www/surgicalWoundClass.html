@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CDC Surgical Wound Classification</title>
+<style>
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #2c3e50;
+    line-height: 1.6;
+    font-size: 11pt;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 20px;
+  }
+  .container {
+    max-width: 750px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 35px;
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  }
+  h1 {
+    font-size: 18pt;
+    color: #0e6251;
+    margin-top: 0;
+    border-bottom: 2px solid #16a085;
+    padding-bottom: 8px;
+  }
+  .meta-tag {
+    background-color: #e8f8f5;
+    color: #117a65;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 9pt;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 15px;
+  }
+  .section-title {
+    font-size: 11.5pt;
+    color: #117a65;
+    border-bottom: 1px solid #a3e4d7;
+    padding-bottom: 4px;
+    margin-top: 22px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+  .formula-box {
+    background: #fdfefe;
+    border: 2px dashed #16a085;
+    padding: 12px;
+    text-align: center;
+    border-radius: 6px;
+    font-size: 12pt;
+    font-weight: bold;
+    color: #0e6251;
+    margin-bottom: 10px;
+  }
+  .normal-range-box {
+    background: #e8f8f5;
+    border: 1px solid #a3e4d7;
+    padding: 8px 12px;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 10.5pt;
+    font-weight: bold;
+    color: #0e6251;
+    margin-bottom: 15px;
+  }
+  ul {
+    margin: 0 0 10px 0;
+    padding-left: 20px;
+  }
+  li {
+    margin-bottom: 4px;
+  }
+  p {
+    margin: 0 0 10px 0;
+    text-align: justify;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    font-size: 10pt;
+  }
+  th, td {
+    border: 1px solid #d5dbdb;
+    padding: 8px 10px;
+    text-align: left;
+  }
+  th {
+    background-color: #e8f8f5;
+    color: #0e6251;
+    font-weight: bold;
+  }
+  tr:nth-child(even) {
+    background-color: #fcfcfc;
+  }
+  .footer {
+    margin-top: 30px;
+    border-top: 1px solid #d5dbdb;
+    padding-top: 12px;
+    font-size: 8.5pt;
+    color: #7f8c8d;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>CDC Surgical Wound Classification</h1>
+  <div class="meta-tag">Calculation ID: surgicalWoundClass</div>
+
+  <div class="section-title">1. Formula & Parameters</div>
+  <div class="formula-box">Categorizes operative wounds into Classes I through IV based on microbial contamination level</div>
+  <div class="normal-range-box">Normal Range / Target: Normal Range</div>
+  <p><b>Formula Breakdown & Units:</b></p>
+  <ul>
+    <li><b>Class I:</b> Clean. <b>Class II:</b> Clean-Contaminated. <b>Class III:</b> Contaminated. <b>Class IV:</b> Dirty-Infected.</li>
+  </ul>
+
+  <div class="section-title">2. Clinical & Medical Significance</div>
+  <p>The CDC surgical wound classification system categorizes operative incisions based on intrinsic microbial contamination at the time of surgery. This classification predicts surgical site infection (SSI) risk and dictates appropriate antibiotic prophylaxis and wound closure strategies.</p>
+
+  <div class="section-title">3. Useful Conditions & Medical Decisions</div>
+  <p><b>Useful Conditions / Indications:</b></p>
+  <ul>
+    <li>Surgical Site Infection (SSI) Prevention</li><li>Operative Wound Management</li>
+  </ul>
+  <p><b>Key Medical Decision:</b> Guides antibiotic prophylaxis administration and decisions regarding primary versus delayed primary wound closure.</p>
+  <table>
+    <thead>
+      <tr><th>Wound Class</th><th>Contamination Level</th><th>Baseline SSI Risk</th><th>Antibiotic Prophylaxis Strategy</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Class I: Clean</td><td>Uninfected, non-traumatic, closed primary</td><td>1% – 3%</td><td>Generally not required unless prosthetic implant or hernia mesh inserted</td></tr>
+<tr><td>Class II: Clean-Contam</td><td>Controlled viscous entry; minimal spill</td><td>3% – 8%</td><td>Single prophylactic IV pre-incision dose (e.g., Cefazolin ± Metronidazole)</td></tr>
+<tr><td>Class III: Contaminated</td><td>Gross enteric spill, acute inflammation</td><td>10% – 15%</td><td>Prophylactic or therapeutic regimen; consider delayed primary skin closure</td></tr>
+<tr><td>Class IV: Dirty-Infected</td><td>Active infection, pus, stool, devitalized tissue</td><td>> 25% – 40%</td><td>Full therapeutic antibiotic course; leave skin/subcutaneous tissue open for secondary closure</td></tr>
+
+    </tbody>
+  </table>
+
+  <div class="section-title">4. Pathophysiological Background</div>
+  <p>Reflects bacterial load and tissue contamination within the surgical field.</p>
+
+  <div class="section-title">5. Medical Background & Evidence</div>
+  <p>Berríos-Torres SI, Umscheid CA, Bratzler DW, et al. (JAMA Surg. 2017;152(8):784-791).</p>
+
+  <div class="footer">
+    This information is researched and verified source of information from open sources.<br>
+    <b>Approved by DocStat R/D team</b>
+  </div>
+</div>
+</body>
+</html>

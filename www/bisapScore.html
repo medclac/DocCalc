@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>BISAP Score for Acute Pancreatitis</title>
+<style>
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #2c3e50;
+    line-height: 1.6;
+    font-size: 11pt;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 20px;
+  }
+  .container {
+    max-width: 750px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 35px;
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  }
+  h1 {
+    font-size: 18pt;
+    color: #0e6251;
+    margin-top: 0;
+    border-bottom: 2px solid #16a085;
+    padding-bottom: 8px;
+  }
+  .meta-tag {
+    background-color: #e8f8f5;
+    color: #117a65;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 9pt;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 15px;
+  }
+  .section-title {
+    font-size: 11.5pt;
+    color: #117a65;
+    border-bottom: 1px solid #a3e4d7;
+    padding-bottom: 4px;
+    margin-top: 22px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+  .formula-box {
+    background: #fdfefe;
+    border: 2px dashed #16a085;
+    padding: 12px;
+    text-align: center;
+    border-radius: 6px;
+    font-size: 12pt;
+    font-weight: bold;
+    color: #0e6251;
+    margin-bottom: 10px;
+  }
+  .normal-range-box {
+    background: #e8f8f5;
+    border: 1px solid #a3e4d7;
+    padding: 8px 12px;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 10.5pt;
+    font-weight: bold;
+    color: #0e6251;
+    margin-bottom: 15px;
+  }
+  ul {
+    margin: 0 0 10px 0;
+    padding-left: 20px;
+  }
+  li {
+    margin-bottom: 4px;
+  }
+  p {
+    margin: 0 0 10px 0;
+    text-align: justify;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    font-size: 10pt;
+  }
+  th, td {
+    border: 1px solid #d5dbdb;
+    padding: 8px 10px;
+    text-align: left;
+  }
+  th {
+    background-color: #e8f8f5;
+    color: #0e6251;
+    font-weight: bold;
+  }
+  tr:nth-child(even) {
+    background-color: #fcfcfc;
+  }
+  .footer {
+    margin-top: 30px;
+    border-top: 1px solid #d5dbdb;
+    padding-top: 12px;
+    font-size: 8.5pt;
+    color: #7f8c8d;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>BISAP Score for Acute Pancreatitis</h1>
+  <div class="meta-tag">Calculation ID: bisapScore</div>
+
+  <div class="section-title">1. Formula & Parameters</div>
+  <div class="formula-box">Sum of 5 clinical and laboratory parameters evaluated within 24 hours of admission</div>
+  <div class="normal-range-box">Normal Range / Target: Normal Range</div>
+  <p><b>Formula Breakdown & Units:</b></p>
+  <ul>
+    <li><b>B:</b> BUN >25 mg/dL. <b>I:</b> Impaired mental status. <b>S:</b> SIRS. <b>A:</b> Age >60. <b>P:</b> Pleural effusion.</li>
+  </ul>
+
+  <div class="section-title">2. Clinical & Medical Significance</div>
+  <p>The BISAP score is a rapid, simplified prognostic scoring system calculated within the first 24 hours of hospital presentation for acute pancreatitis. It accurately predicts in-hospital mortality and risk of severe organ failure, guiding early intensive care triage.</p>
+
+  <div class="section-title">3. Useful Conditions & Medical Decisions</div>
+  <p><b>Useful Conditions / Indications:</b></p>
+  <ul>
+    <li>Early Acute Pancreatitis Triage</li>
+  </ul>
+  <p><b>Key Medical Decision:</b> Identifies high-risk patients within 24 hours who require immediate ICU admission and aggressive fluid management.</p>
+  <table>
+    <thead>
+      <tr><th>BISAP Score</th><th>Severity Stratum</th><th>In-Hospital Mortality</th><th>Recommended Care Level</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>0 – 1 Points</td><td>Low Risk</td><td>< 1%</td><td>General surgical ward; monitored fluid rehydration</td></tr>
+<tr><td>2 Points</td><td>Moderate Risk</td><td>1.6% – 2%</td><td>Step-down unit or telemetry monitoring</td></tr>
+<tr><td>3 Points</td><td>High Risk (Severe)</td><td>5.3% – 8%</td><td>Intensive Care Unit (ICU) admission; aggressive volume titration</td></tr>
+<tr><td>4 – 5 Points</td><td>Very High Risk (Critical)</td><td>10% – 22%+</td><td>ICU admission; continuous invasive hemodynamic monitoring; consult surgery/GI</td></tr>
+
+    </tbody>
+  </table>
+
+  <div class="section-title">4. Pathophysiological Background</div>
+  <p>Reflects early hemoconcentration, systemic inflammation, and third-space fluid accumulation.</p>
+
+  <div class="section-title">5. Medical Background & Evidence</div>
+  <p>Wu BU, Johannes RS, Sun X, et al. (Am J Gastroenterol. 2008;103(11):2686-2691).</p>
+
+  <div class="footer">
+    This information is researched and verified source of information from open sources.<br>
+    <b>Approved by DocStat R/D team</b>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ASDAS-CRP (Ankylosing Spondylitis Disease Activity Score)</title>
+<style>
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #2c3e50;
+    line-height: 1.6;
+    font-size: 11pt;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 20px;
+  }
+  .container {
+    max-width: 750px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 35px;
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  }
+  h1 {
+    font-size: 18pt;
+    color: #0e6251;
+    margin-top: 0;
+    border-bottom: 2px solid #16a085;
+    padding-bottom: 8px;
+  }
+  .meta-tag {
+    background-color: #e8f8f5;
+    color: #117a65;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 9pt;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 15px;
+  }
+  .section-title {
+    font-size: 11.5pt;
+    color: #117a65;
+    border-bottom: 1px solid #a3e4d7;
+    padding-bottom: 4px;
+    margin-top: 22px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+  .formula-box {
+    background: #fdfefe;
+    border: 2px dashed #16a085;
+    padding: 12px;
+    text-align: center;
+    border-radius: 6px;
+    font-size: 12pt;
+    font-weight: bold;
+    color: #0e6251;
+    margin-bottom: 10px;
+  }
+  .normal-range-box {
+    background: #e8f8f5;
+    border: 1px solid #a3e4d7;
+    padding: 8px 12px;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 10.5pt;
+    font-weight: bold;
+    color: #0e6251;
+    margin-bottom: 15px;
+  }
+  ul {
+    margin: 0 0 10px 0;
+    padding-left: 20px;
+  }
+  li {
+    margin-bottom: 4px;
+  }
+  p {
+    margin: 0 0 10px 0;
+    text-align: justify;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    font-size: 10pt;
+  }
+  th, td {
+    border: 1px solid #d5dbdb;
+    padding: 8px 10px;
+    text-align: left;
+  }
+  th {
+    background-color: #e8f8f5;
+    color: #0e6251;
+    font-weight: bold;
+  }
+  tr:nth-child(even) {
+    background-color: #fcfcfc;
+  }
+  .footer {
+    margin-top: 30px;
+    border-top: 1px solid #d5dbdb;
+    padding-top: 12px;
+    font-size: 8.5pt;
+    color: #7f8c8d;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>ASDAS-CRP (Ankylosing Spondylitis Disease Activity Score)</h1>
+  <div class="meta-tag">Calculation ID: asdas_crp</div>
+
+  <div class="section-title">1. Formula & Parameters</div>
+  <div class="formula-box">0.121×BackPain + 0.058×Stiffness + 0.110×PatientGlobal + 0.073×Peripheral + 0.579×ln(CRP+1)</div>
+  <div class="normal-range-box">Normal Range / Target: Normal Range</div>
+  <p><b>Formula Breakdown & Units:</b></p>
+  <ul>
+    <li><b>BackPain, Stiffness, PatientGlobal, Peripheral:</b> 0–10 scales.</li><li><b>CRP:</b> mg/L.</li>
+  </ul>
+
+  <div class="section-title">2. Clinical & Medical Significance</div>
+  <p>The Ankylosing Spondylitis Disease Activity Score using CRP (ASDAS-CRP) is the preferred composite index for axial spondyloarthritis. By integrating patient-reported measures with an objective acute-phase reactant (CRP), ASDAS provides superior responsiveness and prognostic accuracy compared to BASDAI alone.</p>
+
+  <div class="section-title">3. Useful Conditions & Medical Decisions</div>
+  <p><b>Useful Conditions / Indications:</b></p>
+  <ul>
+    <li>Axial Spondyloarthritis Treat-to-Target Monitoring</li>
+  </ul>
+  <p><b>Key Medical Decision:</b> Guides therapeutic decisions and biological initiation/switching based on objective inflammatory activity.</p>
+  <table>
+    <thead>
+      <tr><th>ASDAS-CRP Score</th><th>Disease Activity State</th><th>Therapeutic Target</th><th>Management Strategy</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>< 1.3</td><td>Inactive Disease</td><td>Primary Target</td><td>Optimal control; maintain regimen</td></tr>
+<tr><td>1.3 – 2.0</td><td>Low Disease Activity</td><td>Acceptable Target</td><td>Continue current therapy with periodic monitoring</td></tr>
+<tr><td>2.1 – 3.5</td><td>High Disease Activity</td><td>Unacceptable</td><td>Consider initiating or switching to TNF-i, IL-17-i, or JAK-i</td></tr>
+<tr><td>> 3.5</td><td>Very High Disease Activity</td><td>Severe Active Inflammation</td><td>Urgent escalation to targeted biologic/synthetic DMARD</td></tr>
+
+    </tbody>
+  </table>
+
+  <div class="section-title">4. Pathophysiological Background</div>
+  <p>Combines patient-reported axial symptoms with hepatic acute-phase protein synthesis driven by IL-17 and TNF pathways.</p>
+
+  <div class="section-title">5. Medical Background & Evidence</div>
+  <p>Sieper J, Rudwaleit M, Baraliakos X, et al. (Ann Rheum Dis. 2009;68(11):1670-1672).</p>
+
+  <div class="footer">
+    This information is researched and verified source of information from open sources.<br>
+    <b>Approved by DocStat R/D team</b>
+  </div>
+</div>
+</body>
+</html>

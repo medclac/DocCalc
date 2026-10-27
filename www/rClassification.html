@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Residual Tumor (R) Classification (UICC / AJCC)</title>
+<style>
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #2c3e50;
+    line-height: 1.6;
+    font-size: 11pt;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 20px;
+  }
+  .container {
+    max-width: 750px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 35px;
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  }
+  h1 {
+    font-size: 18pt;
+    color: #0e6251;
+    margin-top: 0;
+    border-bottom: 2px solid #16a085;
+    padding-bottom: 8px;
+  }
+  .meta-tag {
+    background-color: #e8f8f5;
+    color: #117a65;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 9pt;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 15px;
+  }
+  .section-title {
+    font-size: 11.5pt;
+    color: #117a65;
+    border-bottom: 1px solid #a3e4d7;
+    padding-bottom: 4px;
+    margin-top: 22px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+  .formula-box {
+    background: #fdfefe;
+    border: 2px dashed #16a085;
+    padding: 12px;
+    text-align: center;
+    border-radius: 6px;
+    font-size: 12pt;
+    font-weight: bold;
+    color: #0e6251;
+    margin-bottom: 10px;
+  }
+  .normal-range-box {
+    background: #e8f8f5;
+    border: 1px solid #a3e4d7;
+    padding: 8px 12px;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 10.5pt;
+    font-weight: bold;
+    color: #0e6251;
+    margin-bottom: 15px;
+  }
+  ul {
+    margin: 0 0 10px 0;
+    padding-left: 20px;
+  }
+  li {
+    margin-bottom: 4px;
+  }
+  p {
+    margin: 0 0 10px 0;
+    text-align: justify;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    font-size: 10pt;
+  }
+  th, td {
+    border: 1px solid #d5dbdb;
+    padding: 8px 10px;
+    text-align: left;
+  }
+  th {
+    background-color: #e8f8f5;
+    color: #0e6251;
+    font-weight: bold;
+  }
+  tr:nth-child(even) {
+    background-color: #fcfcfc;
+  }
+  .footer {
+    margin-top: 30px;
+    border-top: 1px solid #d5dbdb;
+    padding-top: 12px;
+    font-size: 8.5pt;
+    color: #7f8c8d;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Residual Tumor (R) Classification (UICC / AJCC)</h1>
+  <div class="meta-tag">Calculation ID: rClassification</div>
+
+  <div class="section-title">1. Formula & Parameters</div>
+  <div class="formula-box">Pathological margin status classification: R0 (negative), R1 (microscopic positive), R2 (macroscopic residual)</div>
+  <div class="normal-range-box">Normal Range / Target: Normal Range</div>
+  <p><b>Formula Breakdown & Units:</b></p>
+  <ul>
+    <li><b>R0:</b> Complete microscopic/macroscopic resection. <b>R1:</b> Microscopic positive margins. <b>R2:</b> Gross residual tumor.</li>
+  </ul>
+
+  <div class="section-title">2. Clinical & Medical Significance</div>
+  <p>The Residual Tumor (R) classification is the universal pathological descriptor defining the completeness of cancer surgery. Achieving an R0 resection is the primary surgical objective for curative-intent oncologic procedures to prevent local recurrence.</p>
+
+  <div class="section-title">3. Useful Conditions & Medical Decisions</div>
+  <p><b>Useful Conditions / Indications:</b></p>
+  <ul>
+    <li>Oncologic Resection Margin Audit</li>
+  </ul>
+  <p><b>Key Medical Decision:</b> Guides adjuvant radiation and re-resection decisions when positive margins (R1/R2) are present.</p>
+  <table>
+    <thead>
+      <tr><th>Category</th><th>Margin Status</th><th>Prognostic Implication</th><th>Next Oncologic Step</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>R0</td><td>Negative (clear margins)</td><td>Optimal locoregional control and disease-free survival</td><td>Standard surveillance ± adjuvant chemotherapy/radiotherapy</td></tr>
+<tr><td>R1</td><td>Positive microscopic margin</td><td>Significantly increased risk of locoregional recurrence</td><td>Consider re-resection to achieve clear margins or adjuvant radiation</td></tr>
+<tr><td>R2</td><td>Positive gross macroscopic margin</td><td>Palliative status; high progression risk</td><td>Palliative radiotherapy, systemic chemo, or targeted therapy</td></tr>
+<tr><td>RX</td><td>Cannot be assessed</td><td>Indeterminate surgical clearance</td><td>Re-review histology slides with dedicated oncologic pathologist</td></tr>
+
+    </tbody>
+  </table>
+
+  <div class="section-title">4. Pathophysiological Background</div>
+  <p>Denotes the presence or absence of residual neoplastic tissue remaining in the patient after surgery.</p>
+
+  <div class="section-title">5. Medical Background & Evidence</div>
+  <p>Wittekind C, Compton CC, Brierley J. (Ann Surg Oncol. 2013;20(1):14-18).</p>
+
+  <div class="footer">
+    This information is researched and verified source of information from open sources.<br>
+    <b>Approved by DocStat R/D team</b>
+  </div>
+</div>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Docstat - Clinical & Medical Calculator</title>
+  <title>DocStat - Clinical & Medical Calculator</title>
   <style>
     :root {
       --primary: #0284c7;
@@ -28,7 +28,6 @@
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       color: var(--dark);
       background-color: #f8fafc;
-      /* Default clean medical gradient pattern if no custom background image is found */
       background-image: radial-gradient(#e0f2fe 1px, transparent 1px), radial-gradient(#f1f5f9 1px, #f8fafc 1px);
       background-size: 24px 24px;
       background-position: 0 0, 12px 12px;
@@ -62,7 +61,6 @@
       text-align: center;
     }
 
-    /* Logo handling */
     .logo-container {
       width: 80px;
       height: 80px;
@@ -80,7 +78,7 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      display: none; /* Shown dynamically if image exists */
+      display: none;
     }
 
     .logo-svg {
@@ -96,8 +94,15 @@
     h1 {
       font-size: 2rem;
       font-weight: 800;
-      color: var(--dark);
       letter-spacing: -0.025em;
+    }
+
+    .brand-doc {
+      color: #000000;
+    }
+
+    .brand-stat {
+      color: #0066FF;
     }
 
     .tagline {
@@ -225,7 +230,6 @@
       color: #334155;
     }
 
-    /* Accordion / Terms */
     details {
       border: 1px solid var(--border);
       border-radius: 10px;
@@ -306,16 +310,15 @@
 
     <!-- HERO CARD -->
     <div class="card header-section">
-      <!-- Logo Container with Dynamic Fallback -->
       <div class="logo-container" id="logoBox">
-        <!-- Default SVG Medical Cross & Pulse Icon -->
         <svg class="logo-svg" id="logoSvg" viewBox="0 0 24 24">
           <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
         </svg>
-        <img src="" alt="Docstat Logo" class="logo-img" id="logoImg">
+        <img src="" alt="DocStat Logo" class="logo-img" id="logoImg">
       </div>
 
-      <h1>Docstat</h1>
+      <!-- Updated Name with Black Doc and 0066FF Stat -->
+      <h1><span class="brand-doc">Doc</span><span class="brand-stat">Stat</span></h1>
       <p class="tagline">Clinical statistics and medical risk scoring calculator for healthcare professionals.</p>
 
       <div class="badge-bar">
@@ -330,28 +333,27 @@
       </div>
 
       <div class="actions">
-        <!-- Direct Web App Link -->
         <a href="app.html" class="btn btn-primary">
           <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
           Open Web Version (Browser)
         </a>
 
-        <!-- Direct APK Download Link -->
-        <a href="Docstat.apk" download="Docstat.apk" class="btn btn-outline">
+        <!-- Updated Download Link to DocStat.apk -->
+        <a href="DocStat.apk" download="DocStat.apk" class="btn btn-outline">
           <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-          Download Android APK (~15 MB)
+          Download Android APK (~10 MB)
         </a>
       </div>
     </div>
 
-    <!-- HOW TO USE IN IOS (HOME SCREEN) -->
+    <!-- HOW TO USE IN IOS -->
     <div class="card">
       <div class="section-title">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="3" ry="3"/><line x1="12" y1="18" x2="12" y2="18"/></svg>
         How to Use on iPhone / iPad (iOS)
       </div>
       <p style="color: var(--slate); font-size: 0.92rem; margin-bottom: 1rem; line-height: 1.5;">
-        Since the downloadable file is strictly an Android APK, iOS users can install Docstat directly to their home screen as a standalone web app:
+        Since app is under-developement for IOS platforms hence downloadable file is strictly an Android APK, iOS users can install DocStat directly to their home screen as a standalone web app:
       </p>
       <ul class="steps-list">
         <li class="step-item">
@@ -368,7 +370,7 @@
         </li>
         <li class="step-item">
           <span class="step-num ios-step-num">4</span>
-          <div>Name it <strong>Docstat</strong> and tap <strong>Add</strong> in the top-right corner. It will now launch like a native app without browser bars.</div>
+          <div>Name it <strong>DocStat</strong> and tap <strong>Add</strong> in the top-right corner. It will now launch like a native app without browser bars.</div>
         </li>
       </ul>
     </div>
@@ -391,7 +393,7 @@
         </li>
         <li class="step-item">
           <span class="step-num">2</span>
-          <div>Open your device's <strong>Files</strong> or <strong>Downloads</strong> manager and tap <code>Docstat.apk</code>.</div>
+          <div>Open your device's <strong>Files</strong> or <strong>Downloads</strong> manager and tap <code>DocStat.apk</code>.</div>
         </li>
         <li class="step-item">
           <span class="step-num">3</span>
@@ -419,7 +421,7 @@
       </div>
     </div>
 
-    <!-- TERMS & CONDITIONS (EXPANDABLE) -->
+    <!-- TERMS & CONDITIONS -->
     <div class="card">
       <div class="section-title" style="margin-bottom: 0.5rem;">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--light-slate)" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
@@ -429,22 +431,20 @@
       <details>
         <summary>Terms & Conditions</summary>
         <div class="accordion-content">
-          <p style="margin-top: 10px;"><strong>1. Clinical Judgment:</strong> Docstat is designed solely as an informational reference and decision-support calculator for trained healthcare professionals. It does not replace independent clinical evaluation or diagnostic judgment.</p>
-          <p style="margin-top: 10px;"><strong>2. No Doctor-Patient Relationship:</strong> The calculations, values, and guidelines generated by Docstat do not constitute medical consultations or patient-specific treatment directives.</p>
-          <p style="margin-top: 10px;"><strong>3. Updates & Edits:</strong> You can append your future legal statements, terms of use, or data privacy guidelines directly in this section.</p>
+          <p style="margin-top: 10px;"><strong>1. Clinical Judgment:</strong> DocStat is designed solely as an informational reference and educational-support calculator for trained healthcare professionals. It does not replace independent clinical evaluation or diagnostic judgment.</p>
+          <p style="margin-top: 10px;"><strong>2. No Doctor-Patient Relationship:</strong> The calculations, values, and guidelines generated by DocStat do not constitute medical consultations or patient-specific treatment directives.</p>
+          <p style="margin-top: 10px;"><strong>3. Updates & Edits:</strong> your future legal statements, terms of use, or data privacy guidelines will be regularly updated directly in this section.</p>
         </div>
       </details>
     </div>
 
     <footer>
-      &copy; Docstat • Built for clinical decision support
+      &copy; DocStat • Built for clinical decision support
     </footer>
 
   </div>
 
-  <!-- DYNAMIC IMAGE RESOLVER SCRIPT -->
   <script>
-    // 1. Dynamic Background Loader
     function tryBackgroundCandidates(urls) {
       if (urls.length === 0) return;
       const currentUrl = urls[0];
@@ -461,7 +461,6 @@
       img.src = currentUrl;
     }
 
-    // 2. Dynamic Logo Loader
     function tryLogoCandidates(urls) {
       if (urls.length === 0) return;
       const currentUrl = urls[0];
@@ -479,7 +478,6 @@
       img.src = currentUrl;
     }
 
-    // Auto-detect files present in the repo
     window.addEventListener('DOMContentLoaded', () => {
       tryBackgroundCandidates([
         'background.jpg',

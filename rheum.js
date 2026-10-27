@@ -1388,3 +1388,4 @@
  console.error("Critical error registering Rheumatology tools:", err);
  }
 })();
+;

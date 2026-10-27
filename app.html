@@ -1613,12 +1613,20 @@ window.S = S;
  lbl.textContent = f.label;
  wrap.appendChild(lbl);
 
- const defaultVal = f.value !== undefined ? f.value : (f.default !== undefined ? f.default : "");
+ const defaultVal = "";
 
  if (f.type === "select") {
  const sel = document.createElement("select");
  sel.id = "field_" + f.id;
  sel.name = f.id;
+ 
+ const defaultOpt = document.createElement("option");
+ defaultOpt.value = "";
+ defaultOpt.textContent = "-- Select --";
+ defaultOpt.selected = true;
+ defaultOpt.disabled = true;
+ sel.appendChild(defaultOpt);
+
  (f.options || []).forEach(opt => {
  const optEl = document.createElement("option");
  if (Array.isArray(opt)) {
@@ -1628,7 +1636,6 @@ window.S = S;
  optEl.value = opt.value;
  optEl.textContent = opt.label;
  }
- if (String(optEl.value) === String(defaultVal)) optEl.selected = true;
  sel.appendChild(optEl);
  });
  wrap.appendChild(sel);
@@ -1688,7 +1695,6 @@ window.S = S;
 
  $("result").classList.remove("show");
  showView("calculator");
- calculate();
  }
 
  function calculate() {

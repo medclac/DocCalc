@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>2HELPS2B Score (cEEG Seizure Risk)</title>
+<style>
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #2c3e50;
+    line-height: 1.6;
+    font-size: 11pt;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 20px;
+  }
+  .container {
+    max-width: 750px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 35px;
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  }
+  h1 {
+    font-size: 18pt;
+    color: #0e6251;
+    margin-top: 0;
+    border-bottom: 2px solid #16a085;
+    padding-bottom: 8px;
+  }
+  .meta-tag {
+    background-color: #e8f8f5;
+    color: #117a65;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 9pt;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 15px;
+  }
+  .section-title {
+    font-size: 11.5pt;
+    color: #117a65;
+    border-bottom: 1px solid #a3e4d7;
+    padding-bottom: 4px;
+    margin-top: 22px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+  .formula-box {
+    background: #fdfefe;
+    border: 2px dashed #16a085;
+    padding: 12px;
+    text-align: center;
+    border-radius: 6px;
+    font-size: 12pt;
+    font-weight: bold;
+    color: #0e6251;
+    margin-bottom: 10px;
+  }
+  .normal-range-box {
+    background: #e8f8f5;
+    border: 1px solid #a3e4d7;
+    padding: 8px 12px;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 10.5pt;
+    font-weight: bold;
+    color: #0e6251;
+    margin-bottom: 15px;
+  }
+  ul {
+    margin: 0 0 10px 0;
+    padding-left: 20px;
+  }
+  li {
+    margin-bottom: 4px;
+  }
+  p {
+    margin: 0 0 10px 0;
+    text-align: justify;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    font-size: 10pt;
+  }
+  th, td {
+    border: 1px solid #d5dbdb;
+    padding: 8px 10px;
+    text-align: left;
+  }
+  th {
+    background-color: #e8f8f5;
+    color: #0e6251;
+    font-weight: bold;
+  }
+  tr:nth-child(even) {
+    background-color: #fcfcfc;
+  }
+  .footer {
+    margin-top: 30px;
+    border-top: 1px solid #d5dbdb;
+    padding-top: 12px;
+    font-size: 8.5pt;
+    color: #7f8c8d;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>2HELPS2B Score (cEEG Seizure Risk)</h1>
+  <div class="meta-tag">Calculation ID: twoHelps2b</div>
+
+  <div class="section-title">1. Formula & Parameters</div>
+  <div class="formula-box">Additive scoring of cEEG patterns (Frequency, Periodic discharges, LPDs, Plus features, Spikes, BIRDs)</div>
+  <div class="normal-range-box">Normal Range / Target: 0 Points</div>
+  <p><b>Formula Breakdown & Units:</b></p>
+  <ul>
+    <li>Scores rhythmic frequency >2Hz, periodic discharges, LPDs, plus features, sporadic spikes, and BIRDs.</li>
+  </ul>
+
+  <div class="section-title">2. Clinical & Medical Significance</div>
+  <p>The 2HELPS2B score calculates the probability of seizures on continuous EEG (cEEG) in critically ill patients. It guides neuro-ICU monitoring duration, ensuring that patients with high-risk cEEG patterns undergo extended monitoring while sparing low-risk patients unnecessary resource utilization.</p>
+
+  <div class="section-title">3. Useful Conditions & Medical Decisions</div>
+  <p><b>Useful Conditions / Indications:</b></p>
+  <ul>
+    <li>Critical Care Continuous EEG Monitoring</li><li>Non-Convulsive Status Epilepticus Detection</li>
+  </ul>
+  <p><b>Key Medical Decision:</b> Determines optimal duration of cEEG monitoring (1 hour vs ≥24–48 hours).</p>
+  <table>
+    <thead>
+      <tr><th>2HELPS2B Score</th><th>Seizure Probability</th><th>cEEG Duration Recommendation</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>0 Points</td><td>< 5%</td><td>1 hour screening cEEG adequate</td></tr>
+<tr><td>1 Point</td><td>~ 12%</td><td>At least 12–24 hours cEEG recommended</td></tr>
+<tr><td>≥ 2 Points</td><td>> 25% – 70%</td><td>Extended cEEG (≥ 24–48 hours) strongly indicated</td></tr>
+
+    </tbody>
+  </table>
+
+  <div class="section-title">4. Pathophysiological Background</div>
+  <p>Reflects critical cortical network hyperexcitability and electrographic seizure patterns.</p>
+
+  <div class="section-title">5. Medical Background & Evidence</div>
+  <p>Struck AF, Tabaeizadeh M, Shafi MM, et al. (JAMA Neurol. 2020;77(4):460-467).</p>
+
+  <div class="footer">
+    This information is researched and verified source of information from open sources.<br>
+    <b>Approved by DocStat R/D team</b>
+  </div>
+</div>
+</body>
+</html>

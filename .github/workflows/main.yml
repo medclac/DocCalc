@@ -50,7 +50,7 @@ jobs:
             npx cap add android
           fi
 
-      # 3. Generate Android App Launcher Icons from icon.png
+      # 3. Generate Android App Launcher Icons from edge-to-edge icon.png
       - name: Generate App Icons
         run: |
           mkdir -p assets
@@ -97,11 +97,17 @@ jobs:
             -Pandroid.injected.signing.key.password="$KEYSTORE_PASSWORD" \
             --no-daemon
 
-      # 8. Upload the signed APK
+      # 8. Rename built APK for a clean custom filename
+      - name: Rename APK
+        run: |
+          mkdir -p final-apk
+          cp android/app/build/outputs/apk/release/app-release.apk final-apk/DocStat-v${{ github.run_number }}.apk || cp android/app/build/outputs/apk/release/release.apk final-apk/DocStat-v${{ github.run_number }}.apk
+
+      # 9. Upload the renamed signed APK artifact
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: DocStat-v${{ github.run_number }}-APK
-          path: android/app/build/outputs/apk/release/*.apk
+          path: final-apk/*.apk
           if-no-files-found: error
           

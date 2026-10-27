@@ -1718,7 +1718,7 @@ window.S = S;
  severity = res.severity;
  } else if (/\b(mild|low risk|normal|good prognosis|unlikely|negative|grade 1|grade i|stage 1|stage i|class 1|class i)\b/i.test(combinedText)) {
  severity = "mild";
- } else if (/\b(critical|severe|high risk|poor|emergency|immediate|grade 3|grade 4|grade iii|grade iv|stage 3|stage 4|stage iii|stage iv|class 3|class 4|class iii|class iv)\b/i.test(combinedText)) {
+ } else if (/\b(critical|severe|significant|high risk|poor|emergency|immediate|grade 3|grade 4|grade iii|grade iv|stage 3|stage 4|stage iii|stage iv|class 3|class 4|class iii|class iv)\b/i.test(combinedText)) {
  severity = "critical";
  } else if (/\b(moderate|intermediate|medium risk|grade 2|grade ii|stage 2|stage ii|class 2|class ii)\b/i.test(combinedText)) {
  severity = "moderate";

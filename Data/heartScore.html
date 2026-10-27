@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>HEART Score for Chest Pain</title>
+<style>
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #2c3e50;
+    line-height: 1.5;
+    font-size: 11pt;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 20px;
+  }
+  .container {
+    max-width: 700px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+  h1 {
+    font-size: 18pt;
+    color: #0e6251;
+    margin-top: 0;
+    border-bottom: 2px solid #16a085;
+    padding-bottom: 8px;
+  }
+  .meta-tag {
+    background-color: #e8f8f5;
+    color: #117a65;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 9pt;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 15px;
+  }
+  .section-title {
+    font-size: 11pt;
+    color: #117a65;
+    border-bottom: 1px solid #a3e4d7;
+    padding-bottom: 4px;
+    margin-top: 20px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+  .formula-box {
+    background: #fdfefe;
+    border: 2px dashed #16a085;
+    padding: 12px;
+    text-align: center;
+    border-radius: 6px;
+    font-size: 12pt;
+    font-weight: bold;
+    color: #0e6251;
+    margin-bottom: 10px;
+  }
+  .normal-range-box {
+    background: #e8f8f5;
+    border: 1px solid #a3e4d7;
+    padding: 8px 12px;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 10.5pt;
+    font-weight: bold;
+    color: #0e6251;
+    margin-bottom: 15px;
+  }
+  ul {
+    margin: 0 0 10px 0;
+    padding-left: 20px;
+  }
+  li {
+    margin-bottom: 4px;
+  }
+  p {
+    margin: 0 0 10px 0;
+  }
+  .footer {
+    margin-top: 25px;
+    border-top: 1px solid #d5dbdb;
+    padding-top: 10px;
+    font-size: 8.5pt;
+    color: #7f8c8d;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>HEART Score for Chest Pain</h1>
+  <div class="meta-tag">Calculation ID: heartScore</div>
+
+  <div class="section-title">1. Formula & Parameters</div>
+  <div class="formula-box">Score = History (0-2) + ECG (0-2) + Age (0-2) + Risk Factors (0-2) + Troponin (0-2)</div>
+  <div class="normal-range-box">Normal Range / Target: Score 0–3 = Low 6-week MACE risk (0.9%–1.7%)</div>
+  <p><b>Formula Breakdown & Units:</b></p>
+  <ul>
+    <li>History: Suspicion for ischemia (0-2 pts).</li><li>ECG: Normal to significant ST depression (0-2 pts).</li><li>Age: <45 (0), 45-64 (1), ≥65 (2).</li><li>Risk Factors: Cardiovascular risk factors or prior CAD (0-2 pts).</li><li>Troponin: Normal to >3x normal limit (0-2 pts).</li>
+  </ul>
+
+  <div class="section-title">2. Clinical & Medical Significance</div>
+  <p>Enables safe, early discharge of low-risk chest pain patients while identifying high-risk individuals requiring invasive coronary angiography.</p>
+
+  <div class="section-title">3. Useful Conditions & Medical Decisions</div>
+  <p><b>Useful Conditions / Indications:</b></p>
+  <ul>
+    <li>Acute Coronary Syndrome (ACS)</li><li>Stable Angina</li><li>Non-Cardiac Chest Pain</li>
+  </ul>
+  <p><b>Key Medical Decision:</b> Determines outpatient discharge, observation unit serial troponins, or immediate inpatient cardiology admission.</p>
+
+  <div class="section-title">4. Pathophysiological Background</div>
+  <p>Atherosclerotic plaque disruption, coronary vasospasm, or supply-demand mismatch leads to myocardial ischemia and biomarker release.</p>
+
+  <div class="section-title">5. Medical Background & Evidence</div>
+  <p>Developed and validated by Backus, Six, Kelder et al. (Int J Cardiol, 2013).</p>
+
+  <div class="footer">
+    This information is researched and verified source of information from open sources.<br>
+    <b>Approved by DocStat R/D team</b>
+  </div>
+</div>
+</body>
+</html>

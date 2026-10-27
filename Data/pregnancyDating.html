@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Pregnancy Dating (LMP, EDD & Gestational Age)</title>
+<style>
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #2c3e50;
+    line-height: 1.6;
+    font-size: 11pt;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 20px;
+  }
+  .container {
+    max-width: 750px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 35px;
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  }
+  h1 {
+    font-size: 18pt;
+    color: #0e6251;
+    margin-top: 0;
+    border-bottom: 2px solid #16a085;
+    padding-bottom: 8px;
+  }
+  .meta-tag {
+    background-color: #e8f8f5;
+    color: #117a65;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 9pt;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 15px;
+  }
+  .section-title {
+    font-size: 11.5pt;
+    color: #117a65;
+    border-bottom: 1px solid #a3e4d7;
+    padding-bottom: 4px;
+    margin-top: 22px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+  .formula-box {
+    background: #fdfefe;
+    border: 2px dashed #16a085;
+    padding: 12px;
+    text-align: center;
+    border-radius: 6px;
+    font-size: 12pt;
+    font-weight: bold;
+    color: #0e6251;
+    margin-bottom: 10px;
+  }
+  .normal-range-box {
+    background: #e8f8f5;
+    border: 1px solid #a3e4d7;
+    padding: 8px 12px;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 10.5pt;
+    font-weight: bold;
+    color: #0e6251;
+    margin-bottom: 15px;
+  }
+  ul {
+    margin: 0 0 10px 0;
+    padding-left: 20px;
+  }
+  li {
+    margin-bottom: 4px;
+  }
+  p {
+    margin: 0 0 10px 0;
+    text-align: justify;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    font-size: 10pt;
+  }
+  th, td {
+    border: 1px solid #d5dbdb;
+    padding: 8px 10px;
+    text-align: left;
+  }
+  th {
+    background-color: #e8f8f5;
+    color: #0e6251;
+    font-weight: bold;
+  }
+  tr:nth-child(even) {
+    background-color: #fcfcfc;
+  }
+  .footer {
+    margin-top: 30px;
+    border-top: 1px solid #d5dbdb;
+    padding-top: 12px;
+    font-size: 8.5pt;
+    color: #7f8c8d;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Pregnancy Dating (LMP, EDD & Gestational Age)</h1>
+  <div class="meta-tag">Calculation ID: pregnancyDating</div>
+
+  <div class="section-title">1. Formula & Parameters</div>
+  <div class="formula-box">Naegele's rule adjusted for cycle length: LMP + 280 days + (cycle − 28)</div>
+  <div class="normal-range-box">Normal Range / Target: Calculated dynamically based on LMP</div>
+  <p><b>Formula Breakdown & Units:</b></p>
+  <ul>
+    <li><b>LMP:</b> First day of Last Normal Menstrual Period.</li><li><b>Cycle Length:</b> Average cycle length in days (default 28).</li>
+  </ul>
+
+  <div class="section-title">2. Clinical & Medical Significance</div>
+  <p>Accurate gestational dating is the cornerstone of safe antenatal care, guiding interpretation of anomaly scans, biochemical screening tests, and timing of delivery. When menstrual dating is reliable and corroborated by first-trimester ultrasound crown-rump length (CRL), it significantly minimizes post-term induction rates and iatrogenic prematurity. This tool operationalizes ACOG and international standards to compute expected delivery dates and track critical gestational milestones.</p>
+
+  <div class="section-title">3. Useful Conditions & Medical Decisions</div>
+  <p><b>Useful Conditions / Indications:</b></p>
+  <ul>
+    <li>Routine Antenatal Dating</li><li>First and Second Trimester Obstetric Screening</li>
+  </ul>
+  <p><b>Key Medical Decision:</b> Establishes the definitive Estimated Due Date (EDD) to guide all subsequent obstetric management timelines.</p>
+  <table>
+    <thead>
+      <tr><th>Gestational Stage</th><th>Gestational Weeks</th><th>Key Antenatal Milestones & Routine Testing</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1st Trimester</td><td>0+0 to 13+6 Weeks</td><td>Dating scan (CRL), baseline bloods, aneuploidy screening</td></tr>
+<tr><td>2nd Trimester</td><td>14+0 to 27+6 Weeks</td><td>Anomaly scan (18–20 wks), 75g OGTT (24–28 wks), Anti-D if Rh-negative</td></tr>
+<tr><td>3rd Trimester</td><td>28+0 to 40+6 Weeks</td><td>Growth scans, GBS screening (36–37 wks), labor preparation</td></tr>
+<tr><td>Post-Term Period</td><td>≥ 41+0 Weeks</td><td>Membrane sweep, biophysical profile, induction before 42+0 weeks</td></tr>
+
+    </tbody>
+  </table>
+
+  <div class="section-title">4. Pathophysiological Background</div>
+  <p>Based on the biological constant of human gestation averaging 280 days (40 weeks) from the first day of the last menstrual period in a standard 28-day cycle.</p>
+
+  <div class="section-title">5. Medical Background & Evidence</div>
+  <p>ACOG Committee Opinion No. 700: Methods for Estimating the Due Date (Obstet Gynecol. 2017;129(5):e150-e154).</p>
+
+  <div class="footer">
+    This information is researched and verified source of information from open sources.<br>
+    <b>Approved by DocStat R/D team</b>
+  </div>
+</div>
+</body>
+</html>

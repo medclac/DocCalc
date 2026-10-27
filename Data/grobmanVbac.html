@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>VBAC / TOLAC Success Predictor (Grobman Model)</title>
+<style>
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #2c3e50;
+    line-height: 1.6;
+    font-size: 11pt;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 20px;
+  }
+  .container {
+    max-width: 750px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 35px;
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  }
+  h1 {
+    font-size: 18pt;
+    color: #0e6251;
+    margin-top: 0;
+    border-bottom: 2px solid #16a085;
+    padding-bottom: 8px;
+  }
+  .meta-tag {
+    background-color: #e8f8f5;
+    color: #117a65;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 9pt;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 15px;
+  }
+  .section-title {
+    font-size: 11.5pt;
+    color: #117a65;
+    border-bottom: 1px solid #a3e4d7;
+    padding-bottom: 4px;
+    margin-top: 22px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+  .formula-box {
+    background: #fdfefe;
+    border: 2px dashed #16a085;
+    padding: 12px;
+    text-align: center;
+    border-radius: 6px;
+    font-size: 12pt;
+    font-weight: bold;
+    color: #0e6251;
+    margin-bottom: 10px;
+  }
+  .normal-range-box {
+    background: #e8f8f5;
+    border: 1px solid #a3e4d7;
+    padding: 8px 12px;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 10.5pt;
+    font-weight: bold;
+    color: #0e6251;
+    margin-bottom: 15px;
+  }
+  ul {
+    margin: 0 0 10px 0;
+    padding-left: 20px;
+  }
+  li {
+    margin-bottom: 4px;
+  }
+  p {
+    margin: 0 0 10px 0;
+    text-align: justify;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    font-size: 10pt;
+  }
+  th, td {
+    border: 1px solid #d5dbdb;
+    padding: 8px 10px;
+    text-align: left;
+  }
+  th {
+    background-color: #e8f8f5;
+    color: #0e6251;
+    font-weight: bold;
+  }
+  tr:nth-child(even) {
+    background-color: #fcfcfc;
+  }
+  .footer {
+    margin-top: 30px;
+    border-top: 1px solid #d5dbdb;
+    padding-top: 12px;
+    font-size: 8.5pt;
+    color: #7f8c8d;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>VBAC / TOLAC Success Predictor (Grobman Model)</h1>
+  <div class="meta-tag">Calculation ID: grobmanVbac</div>
+
+  <div class="section-title">1. Formula & Parameters</div>
+  <div class="formula-box">Multivariable logistic regression nomogram predicting vaginal birth after cesarean success</div>
+  <div class="normal-range-box">Normal Range / Target: Normal Range</div>
+  <p><b>Formula Breakdown & Units:</b></p>
+  <ul>
+    <li>Incorporates maternal age, BMI, prior vaginal delivery, prior VBAC success, and prior CS indication.</li>
+  </ul>
+
+  <div class="section-title">2. Clinical & Medical Significance</div>
+  <p>The Grobman nomogram provides an evidence-based, individualized probability estimate for successful vaginal birth after one prior low-transverse cesarean delivery (TOLAC). Accurate prediction helps clinicians and patients engage in informed shared decision-making, balancing the benefits of successful VBAC against the rare risk of uterine rupture.</p>
+
+  <div class="section-title">3. Useful Conditions & Medical Decisions</div>
+  <p><b>Useful Conditions / Indications:</b></p>
+  <ul>
+    <li>Trial of Labor After Cesarean (TOLAC) Counselling</li>
+  </ul>
+  <p><b>Key Medical Decision:</b> Guides shared decision-making between trial of labor after cesarean (TOLAC) and elective repeat cesarean delivery (ERCS).</p>
+  <table>
+    <thead>
+      <tr><th>Predicted VBAC Probability</th><th>Clinical Category</th><th>Shared Decision-Making Guidance</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Probability ≥ 75%</td><td>Highly Favourable Candidate</td><td>TOLAC has high success odds comparable to multiparous labor; lowest maternal morbidity when successful</td></tr>
+<tr><td>Probability 60% – 74%</td><td>Acceptable / Favourable Candidate</td><td>ACOG guidelines support trial of labor with continuous electronic fetal monitoring and rapid OR availability</td></tr>
+<tr><td>Probability < 60%</td><td>Higher Risk of Failed TOLAC</td><td>Increased risk of emergency intrapartum cesarean and associated complications; discuss elective repeat CS (ERCS) at 39 weeks</td></tr>
+
+    </tbody>
+  </table>
+
+  <div class="section-title">4. Pathophysiological Background</div>
+  <p>Integrates obstetric history and anatomical pelvic capacity predictors of successful trial of labor.</p>
+
+  <div class="section-title">5. Medical Background & Evidence</div>
+  <p>Grobman WA, Lai Y, Landon MB, et al. (Obstet Gynecol. 2007;109(4):806-812).</p>
+
+  <div class="footer">
+    This information is researched and verified source of information from open sources.<br>
+    <b>Approved by DocStat R/D team</b>
+  </div>
+</div>
+</body>
+</html>

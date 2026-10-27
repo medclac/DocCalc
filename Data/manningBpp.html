@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Manning Biophysical Profile (BPP)</title>
+<style>
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #2c3e50;
+    line-height: 1.6;
+    font-size: 11pt;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 20px;
+  }
+  .container {
+    max-width: 750px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 35px;
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  }
+  h1 {
+    font-size: 18pt;
+    color: #0e6251;
+    margin-top: 0;
+    border-bottom: 2px solid #16a085;
+    padding-bottom: 8px;
+  }
+  .meta-tag {
+    background-color: #e8f8f5;
+    color: #117a65;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 9pt;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 15px;
+  }
+  .section-title {
+    font-size: 11.5pt;
+    color: #117a65;
+    border-bottom: 1px solid #a3e4d7;
+    padding-bottom: 4px;
+    margin-top: 22px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+  .formula-box {
+    background: #fdfefe;
+    border: 2px dashed #16a085;
+    padding: 12px;
+    text-align: center;
+    border-radius: 6px;
+    font-size: 12pt;
+    font-weight: bold;
+    color: #0e6251;
+    margin-bottom: 10px;
+  }
+  .normal-range-box {
+    background: #e8f8f5;
+    border: 1px solid #a3e4d7;
+    padding: 8px 12px;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 10.5pt;
+    font-weight: bold;
+    color: #0e6251;
+    margin-bottom: 15px;
+  }
+  ul {
+    margin: 0 0 10px 0;
+    padding-left: 20px;
+  }
+  li {
+    margin-bottom: 4px;
+  }
+  p {
+    margin: 0 0 10px 0;
+    text-align: justify;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    font-size: 10pt;
+  }
+  th, td {
+    border: 1px solid #d5dbdb;
+    padding: 8px 10px;
+    text-align: left;
+  }
+  th {
+    background-color: #e8f8f5;
+    color: #0e6251;
+    font-weight: bold;
+  }
+  tr:nth-child(even) {
+    background-color: #fcfcfc;
+  }
+  .footer {
+    margin-top: 30px;
+    border-top: 1px solid #d5dbdb;
+    padding-top: 12px;
+    font-size: 8.5pt;
+    color: #7f8c8d;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Manning Biophysical Profile (BPP)</h1>
+  <div class="meta-tag">Calculation ID: manningBpp</div>
+
+  <div class="section-title">1. Formula & Parameters</div>
+  <div class="formula-box">Sum of 5 fetal variables (NST, Breathing, Movement, Tone, Amniotic Fluid; 0–10 points)</div>
+  <div class="normal-range-box">Normal Range / Target: Normal Range</div>
+  <p><b>Formula Breakdown & Units:</b></p>
+  <ul>
+    <li>Evaluates 5 biophysical parameters scored 2 (normal) or 0 (abnormal) each.</li>
+  </ul>
+
+  <div class="section-title">2. Clinical & Medical Significance</div>
+  <p>The Manning Biophysical Profile (BPP) combines real-time ultrasonography with non-stress fetal heart rate monitoring to assess fetal well-being in high-risk pregnancies. A normal score (8–10) reliably assures fetal oxygenation and absence of acute or chronic fetal hypoxia, helping clinicians avoid unnecessary iatrogenic preterm deliveries.</p>
+
+  <div class="section-title">3. Useful Conditions & Medical Decisions</div>
+  <p><b>Useful Conditions / Indications:</b></p>
+  <ul>
+    <li>High-Risk Antenatal Fetal Surveillance</li><li>Fetal Growth Restriction & Post-Term Pregnancy</li>
+  </ul>
+  <p><b>Key Medical Decision:</b> Guides timing of delivery versus expectant outpatient surveillance in high-risk pregnancies.</p>
+  <table>
+    <thead>
+      <tr><th>BPP Score</th><th>Fetal Acidosis Risk</th><th>Clinical Interpretation</th><th>Management Action</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Score 8/10 or 10/10</td><td>Minimal risk (<1/1000 stillbirth in 1 wk)</td><td>Normal non-hypoxic fetus</td><td>Repeat testing weekly or per protocol; continue prenatal care</td></tr>
+<tr><td>Score 6/10</td><td>Possible fetal acidosis / indeterminate</td><td>Equivocal fetal status</td><td>Repeat test within 12–24 hours; if oligohydramnios present or ≥37 weeks, consider delivery</td></tr>
+<tr><td>Score 4/10</td><td>High probability of fetal acidemia</td><td>Abnormal / Fetal compromise</td><td>Strong consideration for delivery if gestational age ≥32 weeks; intensive inpatient monitoring</td></tr>
+<tr><td>Score 0/10 to 2/10</td><td>Almost certain severe fetal asphyxia</td><td>Severe fetal compromise</td><td>Immediate delivery indicated after maternal stabilization</td></tr>
+
+    </tbody>
+  </table>
+
+  <div class="section-title">4. Pathophysiological Background</div>
+  <p>Fetal biophysical activities are hierarchically controlled by distinct neurological centers; hypoxia selectively abolishes breathing, movement, and tone in reverse order of CNS maturation.</p>
+
+  <div class="section-title">5. Medical Background & Evidence</div>
+  <p>Manning FA, Platt LD, Sipos L. (Am J Obstet Gynecol. 1980;136(6):787-795).</p>
+
+  <div class="footer">
+    This information is researched and verified source of information from open sources.<br>
+    <b>Approved by DocStat R/D team</b>
+  </div>
+</div>
+</body>
+</html>

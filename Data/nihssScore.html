@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>National Institutes of Health Stroke Scale (NIHSS)</title>
+<style>
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #2c3e50;
+    line-height: 1.6;
+    font-size: 11pt;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 20px;
+  }
+  .container {
+    max-width: 750px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 35px;
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  }
+  h1 {
+    font-size: 18pt;
+    color: #0e6251;
+    margin-top: 0;
+    border-bottom: 2px solid #16a085;
+    padding-bottom: 8px;
+  }
+  .meta-tag {
+    background-color: #e8f8f5;
+    color: #117a65;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 9pt;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 15px;
+  }
+  .section-title {
+    font-size: 11.5pt;
+    color: #117a65;
+    border-bottom: 1px solid #a3e4d7;
+    padding-bottom: 4px;
+    margin-top: 22px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+  .formula-box {
+    background: #fdfefe;
+    border: 2px dashed #16a085;
+    padding: 12px;
+    text-align: center;
+    border-radius: 6px;
+    font-size: 12pt;
+    font-weight: bold;
+    color: #0e6251;
+    margin-bottom: 10px;
+  }
+  .normal-range-box {
+    background: #e8f8f5;
+    border: 1px solid #a3e4d7;
+    padding: 8px 12px;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 10.5pt;
+    font-weight: bold;
+    color: #0e6251;
+    margin-bottom: 15px;
+  }
+  ul {
+    margin: 0 0 10px 0;
+    padding-left: 20px;
+  }
+  li {
+    margin-bottom: 4px;
+  }
+  p {
+    margin: 0 0 10px 0;
+    text-align: justify;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    font-size: 10pt;
+  }
+  th, td {
+    border: 1px solid #d5dbdb;
+    padding: 8px 10px;
+    text-align: left;
+  }
+  th {
+    background-color: #e8f8f5;
+    color: #0e6251;
+    font-weight: bold;
+  }
+  tr:nth-child(even) {
+    background-color: #fcfcfc;
+  }
+  .footer {
+    margin-top: 30px;
+    border-top: 1px solid #d5dbdb;
+    padding-top: 12px;
+    font-size: 8.5pt;
+    color: #7f8c8d;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>National Institutes of Health Stroke Scale (NIHSS)</h1>
+  <div class="meta-tag">Calculation ID: nihssScore</div>
+
+  <div class="section-title">1. Formula & Parameters</div>
+  <div class="formula-box">Sum of 11 neurological examination categories (0 to 42 points)</div>
+  <div class="normal-range-box">Normal Range / Target: 0 Points (Normal Examination)</div>
+  <p><b>Formula Breakdown & Units:</b></p>
+  <ul>
+    <li>Evaluates LOC, gaze, visual fields, facial palsy, motor limbs, ataxia, sensory, language, dysarthria, and neglect.</li>
+  </ul>
+
+  <div class="section-title">2. Clinical & Medical Significance</div>
+  <p>The National Institutes of Health Stroke Scale (NIHSS) is the universal quantitative standard for evaluating acute ischemic stroke severity. In hyperacute stroke care, NIHSS guides critical time-sensitive therapeutic decisions, including intravenous thrombolysis and endovascular mechanical thrombectomy. A score of 6 or higher combined with symptoms of large vessel occlusion strongly identifies candidates for emergent neurointerventional reperfusion therapy.</p>
+
+  <div class="section-title">3. Useful Conditions & Medical Decisions</div>
+  <p><b>Useful Conditions / Indications:</b></p>
+  <ul>
+    <li>Acute Ischemic Stroke</li><li>Transient Ischemic Attack (TIA)</li><li>Intracranial Hemorrhage Neurological Staging</li>
+  </ul>
+  <p><b>Key Medical Decision:</b> Determines eligibility for intravenous alteplase/tenecteplase (<4.5 hours) and mechanical thrombectomy (<24 hours).</p>
+  <table>
+    <thead>
+      <tr><th>NIHSS Score</th><th>Severity Category</th><th>LVO Probability</th><th>Reperfusion Recommendation</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1 – 4 Points</td><td>Minor Stroke</td><td>< 10%</td><td>IV thrombolysis if disabling deficit; otherwise DAPT</td></tr>
+<tr><td>5 – 15 Points</td><td>Moderate Stroke</td><td>~ 40% – 60%</td><td>IV thrombolysis (<4.5h) + urgent CTA/MRA for thrombectomy</td></tr>
+<tr><td>16 – 20 Points</td><td>Moderate-to-Severe</td><td>> 70%</td><td>Emergency EVT screening + IV thrombolysis</td></tr>
+<tr><td>21 – 42 Points</td><td>Severe Stroke</td><td>> 85%</td><td>Emergency EVT; high risk of hemorrhagic transformation</td></tr>
+
+    </tbody>
+  </table>
+
+  <div class="section-title">4. Pathophysiological Background</div>
+  <p>Reflects the volume and specific neuroanatomical localization of cerebral ischemia within vascular territories (e.g., MCA, ACA, PCA).</p>
+
+  <div class="section-title">5. Medical Background & Evidence</div>
+  <p>Brott T, Adams HP Jr, Olinger CP, et al. (Stroke. 1989;20(7):864-870).</p>
+
+  <div class="footer">
+    This information is researched and verified source of information from open sources.<br>
+    <b>Approved by DocStat R/D team</b>
+  </div>
+</div>
+</body>
+</html>

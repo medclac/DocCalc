@@ -54,16 +54,22 @@ jobs:
       - name: Generate App Icons
         run: |
           mkdir -p assets
-          cp icon.png assets/icon-only.png 2>/dev/null || true
-          cp icon.png assets/icon-foreground.png 2>/dev/null || true
-          cp icon.png assets/icon-background.png 2>/dev/null || true
-          npx @capacitor/assets generate --android || true
+          cp icon.png assets/icon.png
+          npx @capacitor/assets generate --android --assetPath assets
 
       - name: Sync Capacitor Android
         run: |
           npx cap sync android
 
-      # 4. Restore keystore from GitHub Secret and verify existence
+      # 4. Set Installed App Name to DocStat
+      - name: Update App Name in Strings.xml
+        run: |
+          STRINGS_PATH="android/app/src/main/res/values/strings.xml"
+          if [ -f "$STRINGS_PATH" ]; then
+            sed -i 's/<string name="app_name">.*<\/string>/<string name="app_name">DocStat<\/string>/g' "$STRINGS_PATH"
+          fi
+
+      # 5. Restore keystore from GitHub Secret and verify existence
       - name: Restore Keystore from Secret
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
@@ -71,12 +77,12 @@ jobs:
           echo "$KEYSTORE_BASE64" | base64 --decode > "$GITHUB_WORKSPACE/android/app/release.jks"
           ls -lh "$GITHUB_WORKSPACE/android/app/release.jks"
 
-      # 5. Auto-increment versionCode so updates are accepted by Android
+      # 6. Auto-increment versionCode so updates are accepted by Android
       - name: Auto-Increment Version Code
         run: |
           sed -i 's/versionCode 1/versionCode ${{ github.run_number }}/g' android/app/build.gradle || true
 
-      # 6. Build and sign release APK using the full absolute path
+      # 7. Build and sign release APK using the full absolute path
       - name: Sign and Build Android Release APK
         working-directory: android
         env:
@@ -91,10 +97,11 @@ jobs:
             -Pandroid.injected.signing.key.password="$KEYSTORE_PASSWORD" \
             --no-daemon
 
-      # 7. Upload the signed APK
+      # 8. Upload the signed APK
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: DocStat-v${{ github.run_number }}-APK
           path: android/app/build/outputs/apk/release/*.apk
           if-no-files-found: error
+          

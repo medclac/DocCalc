@@ -422,9 +422,11 @@ input:focus, select:focus { border-color: #2463eb; }
 
 .actions { display: flex; gap: 9px; margin-top: 16px; }
 button { cursor: pointer; font: inherit; }
-.primary, .secondary { padding: 13px; border: 0; border-radius: 10px; font-weight: 750; }
+.primary, .secondary, .notes-btn { padding: 13px; border: 0; border-radius: 10px; font-weight: 750; }
 .primary { background: #2463eb; color: white; flex: 1; }
 .secondary { background: var(--btn-back-bg); color: var(--btn-back-text); }
+.notes-btn { background: #ffffff; color: #17324e; border: 1px solid var(--border-color); flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background 0.15s ease; }
+.notes-btn:hover { background: var(--tab-bg); }
 
 .result { display: none; margin-top: 20px; padding: 16px; border-radius: 12px; background: var(--result-bg); border: 1px solid var(--result-border); }
 .result.show { display: block; }
@@ -433,7 +435,6 @@ button { cursor: pointer; font: inherit; }
 .res-subhead { font-size: 11.5px; font-weight: 750; color: var(--result-text); text-transform: uppercase; margin: 12px 0 4px; letter-spacing: 0.4px; }
 .equation { font-size: 12.5px; line-height: 1.6; color: var(--result-text); white-space: pre-line; }
 .copy { float: right; padding: 6px 11px; border: 1px solid var(--result-border); border-radius: 7px; background: #ffffff; font-weight: 600; color: #075c42; }
-.source-btn { float: right; clear: both; margin-top: 6px; padding: 6px 11px; border: 1px solid var(--result-border); border-radius: 7px; background: #ffffff; font-weight: 600; color: #075c42; }
 
 /* SEVERITY DYNAMIC THEMES */
 .result.severity-critical {
@@ -445,8 +446,7 @@ button { cursor: pointer; font: inherit; }
 .result.severity-critical .res-subhead {
  color: var(--contra-text) !important;
 }
-.result.severity-critical .copy,
-.result.severity-critical .source-btn {
+.result.severity-critical .copy {
  background: #ffffff !important;
  color: var(--contra-text) !important;
  border-color: var(--contra-border) !important;
@@ -461,8 +461,7 @@ button { cursor: pointer; font: inherit; }
 .result.severity-moderate .res-subhead {
  color: var(--notice-text) !important;
 }
-.result.severity-moderate .copy,
-.result.severity-moderate .source-btn {
+.result.severity-moderate .copy {
  background: #ffffff !important;
  color: var(--notice-text) !important;
  border-color: var(--notice-border) !important;
@@ -477,8 +476,7 @@ button { cursor: pointer; font: inherit; }
 .result.severity-mild .res-subhead {
  color: var(--result-val) !important;
 }
-.result.severity-mild .copy,
-.result.severity-mild .source-btn {
+.result.severity-mild .copy {
  background: #ffffff !important;
  color: var(--result-val) !important;
  border-color: var(--result-border) !important;
@@ -708,12 +706,12 @@ C 100 110, 100 128, 100 144
  <div class="fields" id="fields"></div>
  <div class="actions">
  <button class="primary" type="submit">Calculate / Stage</button>
+ <button type="button" id="notesBtn" class="notes-btn">📋 Notes/info</button>
  <button class="secondary" type="button" id="reset">Reset</button>
  </div>
  </form>
  <div class="result" id="result" aria-live="polite">
  <button class="copy" id="copy" type="button">Copy</button>
- <button class="source-btn" id="sourceBtn" type="button">Source</button>
  <div class="caption">ASSESSMENT & CLASSIFICATION</div>
  <div class="value" id="value"></div>
  <div class="res-subhead">Interpretation & Management</div>
@@ -740,12 +738,16 @@ C 100 110, 100 128, 100 144
  <footer>DocStat · Educational prototype · Verify before clinical use</footer>
 </main>
 
-<!-- WHOLE-PAGE SOURCE VIEW (FULL SCREEN, NO HEADER) -->
-<div id="sourcePage" class="hidden" style="position: fixed; inset: 0; background: var(--bg-body); z-index: 2000; display: flex; flex-direction: column;">
- <div style="position: absolute; top: 12px; right: 16px; z-index: 2001;">
- <button type="button" id="closeSourcePageBtn" class="icon-btn" style="background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color); box-shadow: 0 2px 6px rgba(0,0,0,0.15); padding: 8px 14px; font-weight: 700;">✕ Close</button>
+<!-- POLISHED APP-FRAME WHOLE-PAGE SOURCE VIEW -->
+<div id="sourcePage" class="hidden" style="position: fixed; inset: 0; background: rgba(15, 39, 68, 0.6); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 12px;">
+ <div style="width: 100%; max-width: 850px; height: 92vh; background: #ffffff; border-radius: 16px; box-shadow: 0 12px 40px rgba(0,0,0,0.3); display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--border-color);">
+ <div style="display: flex; align-items: center; justify-content: flex-end; padding: 10px 14px; background: var(--bg-body); border-bottom: 1px solid var(--border-color);">
+ <button type="button" id="closeSourcePageBtn" class="icon-btn" style="background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color); padding: 6px 14px; font-weight: 700;">✕ Close</button>
  </div>
- <iframe id="fullSourceIframe" style="width: 100%; height: 100%; border: none; background: #ffffff;"></iframe>
+ <div style="flex: 1; width: 100%; background: #ffffff; overflow: hidden;">
+ <iframe id="fullSourceIframe" style="width: 100%; height: 100%; border: none;"></iframe>
+ </div>
+ </div>
 </div>
 
 <!-- SETTINGS MODAL -->
@@ -1826,8 +1828,8 @@ window.S = S;
  logToolCalculation(currentTool.name, valText, eqText);
  };
 
- // --- SOURCE BUTTON & WHOLE-PAGE VIEWER LOGIC ---
- $("sourceBtn").onclick = () => {
+ // --- NOTES/INFO BUTTON & POLISHED WHOLE-PAGE VIEWER LOGIC ---
+ $("notesBtn").onclick = () => {
  if (!currentTool || !currentTool.id) return;
  location.hash = "source=" + encodeURIComponent(currentTool.id);
  };
@@ -1910,7 +1912,7 @@ window.S = S;
  const data = await res.json();
  if (data.status === "success" && data.messages && data.messages.length) {
  box.innerHTML = "";
- data.messages.forEach(m => {
+ data.messages.messages.forEach(m => {
  const div = document.createElement("div");
  const isMe = m.sender === "clinician";
  div.style.cssText = `max-width:80%;padding:9px 12px;border-radius:10px;font-size:13px;line-height:1.4;align-self:${isMe ? "flex-end" : "flex-start"};background:${isMe ? "#2463eb" : "var(--bg-card)"};color:${isMe ? "#fff" : "var(--text-main)"};border:1px solid var(--border-color);`;

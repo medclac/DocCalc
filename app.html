@@ -1402,14 +1402,16 @@ window.S = S;
  }
 
  if (!rawHash) {
- $("fullSourceIframe").src = "";
+ const iframe = $("fullSourceIframe");
+ if (iframe) iframe.src = "about:blank";
  showView("home");
  isHandlingHash = false;
  return;
  }
 
  if (rawHash.startsWith("category=")) {
- $("fullSourceIframe").src = "";
+ const iframe = $("fullSourceIframe");
+ if (iframe) iframe.src = "about:blank";
  const catId = decodeURIComponent(rawHash.replace("category=", ""));
  currentCatId = catId;
  renderCategoryTools();
@@ -1419,7 +1421,8 @@ window.S = S;
  }
 
  if (rawHash.startsWith("tool=")) {
- $("fullSourceIframe").src = "";
+ const iframe = $("fullSourceIframe");
+ if (iframe) iframe.src = "about:blank";
  const toolId = decodeURIComponent(rawHash.replace("tool=", ""));
  const foundTool = (window.tools || []).find(t => t.id === toolId);
  if (foundTool && (!currentTool || currentTool.id !== toolId)) {
@@ -1436,14 +1439,11 @@ window.S = S;
  const sourcePath = `www/${calcId}.html`;
  const iframe = $("fullSourceIframe");
  
- if (iframe.getAttribute("data-src") !== sourcePath) {
- iframe.setAttribute("data-src", sourcePath);
- if (iframe.contentWindow) {
- iframe.contentWindow.location.replace(sourcePath);
- } else {
+ iframe.src = "about:blank";
+ setTimeout(() => {
  iframe.src = sourcePath;
- }
- }
+ }, 10);
+
  showView("source");
  isHandlingHash = false;
  return;
@@ -1843,15 +1843,12 @@ window.S = S;
 
  $("closeSourcePageBtn").onclick = () => {
  const iframe = $("fullSourceIframe");
- if (iframe && iframe.contentWindow) {
- iframe.contentWindow.location.replace("about:blank");
- }
- iframe.removeAttribute("data-src");
+ if (iframe) iframe.src = "about:blank";
 
  if (currentTool) {
- location.hash = "tool=" + encodeURIComponent(currentTool.id);
+ location.replace("#tool=" + encodeURIComponent(currentTool.id));
  } else {
- location.hash = "";
+ location.replace("#");
  }
  };
 

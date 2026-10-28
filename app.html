@@ -116,7 +116,7 @@ body {
 }
 
 /* ============================================================== */
-/* ANIMATED SPLASH SCREEN (SNAKE DRAW & D REVEAL ON WHITE alot ) */
+/* ANIMATED SPLASH SCREEN */
 /* ============================================================== */
 #splash {
  position: fixed;
@@ -152,7 +152,6 @@ body {
  overflow: visible;
 }
 
-/* Snake tubing animation */
 .steth-border {
  fill: none;
  stroke: #1e3a8a;
@@ -179,7 +178,6 @@ body {
  to { stroke-dashoffset: 0; }
 }
 
-/* D Letterform fade & scale */
 .letter-d {
  transform-origin: 100px 100px;
  opacity: 0;
@@ -276,7 +274,9 @@ header {
 header small { letter-spacing: 0.5px; text-transform: uppercase; color: var(--header-sub); font-size: 11px; }
 h1 { margin: 5px 0; font-size: 28px; display: flex; align-items: center; gap: 8px; }
 header p { margin: 0; color: var(--header-sub); font-size: 14px; }
-main { max-width: 760px; margin: auto; padding: 16px; }
+
+/* FIX: Fluid Edge-to-Edge Container for App Layout */
+main { width: 100%; max-width: 100%; margin: 0; padding: 12px; }
 
 .icon-btn {
  background: rgba(255,255,255,0.12);
@@ -366,7 +366,6 @@ h2 { font-size: 21px; margin: 8px 0; }
 .badge-calc { background: var(--badge-calc-bg); color: var(--badge-calc-text); border: 1px solid var(--badge-calc-border); }
 .badge-class { background: var(--badge-class-bg); color: var(--badge-class-text); border: 1px solid var(--badge-class-border); }
 
-/* DISTINCT SPECIALTY BADGE COLOR THEMES (LIGHT MODE) */
 .badge-spec { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
 .badge-spec-obgy { background: #fce7f3; color: #db2777; border: 1px solid #fbcfe8; }
 .badge-spec-ortho { background: #fef3c7; color: #d97706; border: 1px solid #fde68a; }
@@ -381,7 +380,6 @@ h2 { font-size: 21px; margin: 8px 0; }
 .badge-spec-peds { background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; }
 .badge-spec-surg { background: #ffe4e6; color: #e11d48; border: 1px solid #fecdd3; }
 
-/* DISTINCT SPECIALTY BADGE COLOR THEMES (DARK MODE) */
 [data-theme="dark"] .badge-spec-obgy { background: #500724; color: #f472b6; border: 1px solid #831843; }
 [data-theme="dark"] .badge-spec-ortho { background: #451a03; color: #fbbf24; border: 1px solid #78350f; }
 [data-theme="dark"] .badge-spec-emgicu { background: #450a0a; color: #f87171; border: 1px solid #7f1d1d; }
@@ -436,7 +434,6 @@ button { cursor: pointer; font: inherit; }
 .equation { font-size: 12.5px; line-height: 1.6; color: var(--result-text); white-space: pre-line; }
 .copy { float: right; padding: 6px 11px; border: 1px solid var(--result-border); border-radius: 7px; background: #ffffff; font-weight: 600; color: #075c42; }
 
-/* SEVERITY DYNAMIC THEMES */
 .result.severity-critical {
  background: var(--contra-bg) !important;
  border-color: var(--contra-border) !important;
@@ -479,7 +476,7 @@ button { cursor: pointer; font: inherit; }
 .result.severity-mild .copy {
  background: #ffffff !important;
  color: var(--result-val) !important;
- border-color: var(--result-border) !important;
+ border-color: var(--result-val) !important;
 }
 
 .reference-card { margin-top: 22px; border-top: 1px solid var(--border-color); padding-top: 16px; }
@@ -568,7 +565,7 @@ footer { text-align: center; font-size: 11px; color: var(--text-muted); padding:
 </head>
 <body>
 
-<!-- ANIMATED DOCSTAT SPLASH OVERLAY -->
+<!-- ANIMATED SPLASH SCREEN -->
 <div id="splash">
  <div class="splash-content" id="splashContent">
  <div class="splash-svg-wrap" id="splashLogoWrap">
@@ -740,7 +737,7 @@ C 100 110, 100 128, 100 144
  <footer>DocStat · Educational prototype · Verify before clinical use</footer>
 </main>
 
-<!-- SEAMLESS FULL-SCREEN SOURCE VIEW (BORDERLESS & CONTINUOUS) -->
+<!-- SEAMLESS FULL-SCREEN SOURCE VIEW -->
 <div id="sourcePage" class="hidden" style="position: fixed; inset: 0; background: var(--bg-card); z-index: 2000; display: flex; flex-direction: column;">
  <div style="display: flex; align-items: center; justify-content: flex-end; padding: 12px 16px; background: var(--bg-card); border-bottom: 1px solid var(--border-color);">
  <button type="button" id="closeSourcePageBtn" class="icon-btn" style="background: var(--bg-body); color: var(--text-main); border: 1px solid var(--border-color); padding: 6px 16px; font-weight: 700;">✕ Close</button>
@@ -775,7 +772,7 @@ C 100 110, 100 128, 100 144
  </div>
 </div>
 
-<!-- EMAIL OTP VERIFICATION & PROFILE SETUP LOGIN MODAL -->
+<!-- LOGIN MODAL -->
 <div id="loginModal" class="modal-overlay hidden" role="dialog" aria-modal="true">
  <div class="modal" style="max-width: 400px; text-align: left;">
  <div style="font-size: 32px; margin-bottom: 8px;">🧑🏻‍⚕️</div>
@@ -784,7 +781,6 @@ C 100 110, 100 128, 100 144
  Please verify your credentials via email OTP to continue.
  </p>
 
- <!-- Step 1: Details & Email -->
  <div id="loginStep1" style="display: flex; flex-direction: column; gap: 12px;">
  <div>
  <label style="font-size: 11px; font-weight: 700; text-transform: uppercase;">Profile Picture (Optional)</label>
@@ -818,7 +814,6 @@ C 100 110, 100 128, 100 144
  <button id="saveProfileOnlyBtn" class="primary hidden" type="button" style="margin-top: 6px; padding: 12px;">Save Profile Changes</button>
  </div>
 
- <!-- Step 2: Enter OTP -->
  <div id="loginStep2" style="display:none; flex-direction: column; gap: 12px;">
  <p style="font-size: 13px; color: var(--text-muted); margin: 0 0 4px;">
  We've sent a 6-digit verification code to <span id="sentEmailDisplay" style="font-weight: 600; color: var(--text-main);"></span>.
@@ -874,16 +869,13 @@ window.S = S;
 <script src="surg.js"></script>
 
 <!-- ============================================================== -->
-<!-- 3. APPLICATION ENGINE, OFFLINE SYNC QUEUE & CONTROLLER -->
+<!-- 3. APPLICATION ENGINE & REVISED HASH ROUTER -->
 <!-- ============================================================== -->
 <script>
 (function () {
  "use strict";
  const $ = id => document.getElementById(id);
 
- // ============================================================== -->
- // GOOGLE APPS SCRIPT WEBHOOK CONFIGURATION (WITH OFFLINE QUEUE)
- // ============================================================== -->
  const GOOGLE_SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyWB-ebKOGd7-dFc4S57LirCE63bBm42JQn0PO1eFlEw2dngXO6W9MDFhjl13mxyUrU/exec";
  const OFFLINE_QUEUE_KEY = "doccalc_offline_sync_queue";
  let isSyncingQueue = false;
@@ -902,12 +894,10 @@ window.S = S;
  if (!GOOGLE_SHEET_WEBHOOK_URL || GOOGLE_SHEET_WEBHOOK_URL.includes("PASTE_YOUR_GOOGLE_APPS_SCRIPT")) {
  return;
  }
-
  if (!navigator.onLine) {
  enqueueOfflinePayload(payload);
  return;
  }
-
  fetch(GOOGLE_SHEET_WEBHOOK_URL, {
  method: "POST",
  mode: "no-cors",
@@ -964,11 +954,8 @@ window.S = S;
  const throttleKey = `doccalc_last_logged_${(currentTool ? currentTool.id : toolName).replace(/\s+/g, '_')}`;
  const lastLoggedTime = parseInt(localStorage.getItem(throttleKey) || "0", 10);
 
- if (now - lastLoggedTime < 15000) {
- return;
- } else {
+ if (now - lastLoggedTime < 15000) return;
  localStorage.setItem(throttleKey, now.toString());
- }
 
  const email = (localStorage.getItem("doccalc_dr_email") || "").trim().toLowerCase();
  const name = localStorage.getItem("doccalc_dr_name") || "Anonymous";
@@ -1003,11 +990,8 @@ window.S = S;
  function togglePinTool(toolId) {
  let pinned = getPinnedTools();
  const idx = pinned.indexOf(toolId);
- if (idx > -1) {
- pinned.splice(idx, 1);
- } else {
- pinned.push(toolId);
- }
+ if (idx > -1) pinned.splice(idx, 1);
+ else pinned.push(toolId);
  localStorage.setItem("doccalc_pinned", JSON.stringify(pinned));
  updatePinButtonState(toolId);
  renderHome();
@@ -1039,20 +1023,13 @@ window.S = S;
 
  function applyDoctorProfile(name, degree, hospital, avatarBase64) {
  const subHeader = $("clinicianHeaderSub");
- if (subHeader) {
- subHeader.textContent = `${name} (${degree}) · Clinical tools`;
- }
+ if (subHeader) subHeader.textContent = `${name} (${degree}) · Clinical tools`;
  const hospDisplay = $("headerHospitalDisplay");
- if (hospDisplay) {
- hospDisplay.textContent = hospital ? hospital : "";
- }
+ if (hospDisplay) hospDisplay.textContent = hospital ? hospital : "";
  const avatarEl = $("headerAvatar");
  if (avatarEl) {
- if (avatarBase64) {
- avatarEl.innerHTML = `<img src="${avatarBase64}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
- } else {
- avatarEl.innerHTML = "🧑🏻‍⚕️";
- }
+ if (avatarBase64) avatarEl.innerHTML = `<img src="${avatarBase64}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
+ else avatarEl.innerHTML = "🧑🏻‍⚕️";
  }
  }
 
@@ -1131,16 +1108,6 @@ window.S = S;
 
  $("loginModal").classList.add("hidden");
  applyDoctorProfile(name, degree, hospital, tempAvatarBase64);
-
- sendDataToWebhook({
- type: "registration",
- timestamp: new Date().toLocaleString(),
- email: "bypassed@nomailnogain.com",
- name: name,
- degree: degree,
- hospital: hospital,
- avatar: tempAvatarBase64
- });
  return;
  }
 
@@ -1207,16 +1174,6 @@ window.S = S;
 
  $("loginModal").classList.add("hidden");
  applyDoctorProfile(name, degree, hospital, avatar);
-
- sendDataToWebhook({
- type: "registration",
- timestamp: new Date().toLocaleString(),
- email: activeEmail,
- name: name,
- degree: degree,
- hospital: hospital,
- avatar: avatar
- });
  } else {
  errorMsg.style.color = "#dc2626";
  errorMsg.textContent = data.message || "Invalid OTP.";
@@ -1230,36 +1187,10 @@ window.S = S;
  }
  };
 
- $("resendOtpBtn").onclick = async function() {
- const name = $("loginDrName").value.trim();
- const errorMsg = $("loginErrorMsg");
- const resendBtn = $("resendOtpBtn");
-
- resendBtn.disabled = true;
- errorMsg.style.color = "#2463eb";
- errorMsg.textContent = "Resending new OTP...";
-
- try {
- const data = await callWebhookAsync({ action: "send_otp", email: activeEmail, name: name });
- if (data.status === "success") {
- errorMsg.style.color = "var(--result-val)";
- errorMsg.textContent = "New OTP sent to your email!";
- } else {
- errorMsg.style.color = "#dc2626";
- errorMsg.textContent = "Could not resend OTP.";
- }
- } catch (e) {
- errorMsg.style.color = "#dc2626";
- errorMsg.textContent = "Network error while resending.";
- } finally {
- setTimeout(() => { resendBtn.disabled = false; }, 5000);
- }
- };
-
  $("editProfileBtn").onclick = function () {
  $("settingsModal").classList.add("hidden");
  $("loginModalTitle").textContent = "Edit Clinician Profile";
- $("loginModalSubtitle").textContent = "Update your professional details (Email is verified and locked).";
+ $("loginModalSubtitle").textContent = "Update your professional details.";
  
  $("loginDrName").value = localStorage.getItem("doccalc_dr_name") || "";
  $("loginDrDegree").value = localStorage.getItem("doccalc_dr_degree") || "";
@@ -1296,22 +1227,10 @@ window.S = S;
  localStorage.setItem("doccalc_dr_name", name);
  localStorage.setItem("doccalc_dr_degree", degree);
  localStorage.setItem("doccalc_dr_hospital", hospital);
- if (tempAvatarBase64) {
- localStorage.setItem("doccalc_dr_avatar", tempAvatarBase64);
- }
+ if (tempAvatarBase64) localStorage.setItem("doccalc_dr_avatar", tempAvatarBase64);
 
  $("loginModal").classList.add("hidden");
  applyDoctorProfile(name, degree, hospital, localStorage.getItem("doccalc_dr_avatar"));
-
- sendDataToWebhook({
- type: "registration",
- timestamp: new Date().toLocaleString(),
- email: localStorage.getItem("doccalc_dr_email"),
- name: name,
- degree: degree,
- hospital: hospital,
- avatar: localStorage.getItem("doccalc_dr_avatar") || ""
- });
  };
 
  $("deleteAccountBtn").onclick = function() {
@@ -1327,7 +1246,6 @@ window.S = S;
  let currentTool = null;
  let activeFilter = "all";
 
- // --- THEME ENGINE ---
  let activeThemeMode = localStorage.getItem("doccalc_theme") || "system";
  function applyTheme(mode) {
  activeThemeMode = mode;
@@ -1338,9 +1256,6 @@ window.S = S;
  const meta = document.querySelector('meta[name="theme-color"]');
  if (meta) meta.setAttribute("content", effective === "dark" ? "#0b1523" : "#0f2744");
  }
- window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
- if (activeThemeMode === "system") applyTheme("system");
- });
  applyTheme(activeThemeMode);
 
  $("openSettingsBtn").onclick = () => $("settingsModal").classList.remove("hidden");
@@ -1348,7 +1263,6 @@ window.S = S;
  $("settingsModal").onclick = e => { if (e.target === $("settingsModal")) $("settingsModal").classList.add("hidden"); };
  document.querySelectorAll(".theme-btn").forEach(btn => btn.onclick = () => applyTheme(btn.dataset.themeVal));
 
- // --- SPLASH DISMISSAL & ANDROID BRIDGE TRIGGER ---
  function triggerSplashSequence() {
  const logoWrap = $("splashLogoWrap");
  const splash = $("splash");
@@ -1364,10 +1278,6 @@ window.S = S;
  if (splash.parentNode) splash.parentNode.removeChild(splash);
  }, 400);
  }
-
- if (window.AndroidBridge && typeof window.AndroidBridge.onSplashComplete === "function") {
- window.AndroidBridge.onSplashComplete();
- }
  }, 2600);
  }
 
@@ -1381,7 +1291,7 @@ window.S = S;
  window.scrollTo({ top: 0, behavior: "smooth" });
  }
 
- // --- ROBUST HASH ROUTER FOR ANDROID BACK BUTTON ---
+ // --- FIXED ROBUST HASH ROUTER PREVENTING BACK BUTTON LOOPS ---
  let isHandlingHash = false;
  window.addEventListener("hashchange", function () {
  if (isHandlingHash) return;
@@ -1444,25 +1354,20 @@ window.S = S;
  isHandlingHash = false;
  });
 
- if (location.hash) {
- location.hash = "";
- }
-
- // --- SPECIALTY COLOR HELPER ---
  function getSpecialtyBadgeClass(catName) {
  const c = (catName || "").toLowerCase().trim();
- if (c.includes("obgy") || c.includes("obstetrics") || c.includes("gynecology")) return "badge-spec-obgy";
- if (c.includes("ortho") || c.includes("orthopaedics")) return "badge-spec-ortho";
- if (c.includes("emgicu") || c.includes("icu") || c.includes("emergency") || c.includes("critical")) return "badge-spec-emgicu";
- if (c.includes("neuro") || c.includes("neurology")) return "badge-spec-neuro";
- if (c.includes("cardio") || c.includes("cardiology")) return "badge-spec-cardio";
- if (c.includes("endo") || c.includes("endocrine") || c.includes("endocrinology")) return "badge-spec-endo";
- if (c.includes("renal") || c.includes("nephro") || c.includes("nephrology")) return "badge-spec-renal";
- if (c.includes("resp") || c.includes("pulm") || c.includes("pulmonology")) return "badge-spec-resp";
- if (c.includes("rheum") || c.includes("rheumatology") || c.includes("immuno")) return "badge-spec-rheum";
- if (c.includes("onco") || c.includes("oncology")) return "badge-spec-onco";
- if (c.includes("ped") || c.includes("pediatric") || c.includes("paediatric")) return "badge-spec-peds";
- if (c.includes("surg") || c.includes("surgery") || c.includes("surgical")) return "badge-spec-surg";
+ if (c.includes("obgy")) return "badge-spec-obgy";
+ if (c.includes("ortho")) return "badge-spec-ortho";
+ if (c.includes("emgicu")) return "badge-spec-emgicu";
+ if (c.includes("neuro")) return "badge-spec-neuro";
+ if (c.includes("cardio")) return "badge-spec-cardio";
+ if (c.includes("endo")) return "badge-spec-endo";
+ if (c.includes("renal")) return "badge-spec-renal";
+ if (c.includes("resp")) return "badge-spec-resp";
+ if (c.includes("rheum")) return "badge-spec-rheum";
+ if (c.includes("onco")) return "badge-spec-onco";
+ if (c.includes("peds")) return "badge-spec-peds";
+ if (c.includes("surg")) return "badge-spec-surg";
  return "badge-spec";
  }
 
@@ -1478,48 +1383,30 @@ window.S = S;
  (window.tools || []).forEach(t => {
  if (t.cat && !catMap.has(t.cat)) {
  const prettyName = t.cat.charAt(0).toUpperCase() + t.cat.slice(1);
- catMap.set(t.cat, {
- id: t.cat,
- name: prettyName,
- icon: "📁",
- desc: `${prettyName} clinical tools & calculators`
- });
+ catMap.set(t.cat, { id: t.cat, name: prettyName, icon: "📁", desc: `${prettyName} clinical tools` });
  }
-
  if (!t.type) {
- const isClass = /score|criteria|staging|classification|meows|apgar|bishop|iadpsg|mec|popq|figo|weber|gustilo|tscherne|salter|garden|neer|pauwels|pipkin|rockwood|mason|tile|sins|tlics|meyerding|kellgren/i.test(t.name + " " + (t.desc || ""));
- t.type = isClass ? "class" : "calc";
+ t.type = /score|criteria|staging|classification/i.test(t.name + " " + (t.desc || "")) ? "class" : "calc";
  }
  });
 
  const fullCategories = Array.from(catMap.values());
  catContainer.innerHTML = "";
-
- if (fullCategories.length === 0) {
- catContainer.innerHTML = `<p class="muted" style="grid-column: 1/-1;">Loading specialty tools...</p>`;
- } else {
  fullCategories.forEach(cat => {
  const card = document.createElement("div");
  card.className = "card";
  card.innerHTML = `<span class="ico">${cat.icon || "📁"}</span><strong>${cat.name}</strong><small>${cat.desc || ""}</small>`;
- card.onclick = () => {
- location.hash = "category=" + encodeURIComponent(cat.id);
- };
+ card.onclick = () => { history.pushState(null, null, "#category=" + encodeURIComponent(cat.id)); location.hash = "category=" + encodeURIComponent(cat.id); };
  catContainer.appendChild(card);
  });
- }
 
  const quickContainer = $("quick");
  if (quickContainer) {
  quickContainer.innerHTML = "";
- const pinnedIds = getPinnedTools();
- const recentIds = getRecentTools();
- 
- const quickToolIds = Array.from(new Set([...pinnedIds, ...recentIds])).slice(0, 8);
+ const quickToolIds = Array.from(new Set([...getPinnedTools(), ...getRecentTools()])).slice(0, 8);
  const quickTools = quickToolIds.map(id => (window.tools || []).find(t => t.id === id)).filter(Boolean);
-
  if (quickTools.length === 0) {
- quickContainer.innerHTML = `<p class="muted" style="font-size:12.5px;">Pinned or recently used tools will appear here for quick access.</p>`;
+ quickContainer.innerHTML = `<p class="muted" style="font-size:12.5px;">Pinned or recently used tools will appear here.</p>`;
  } else {
  quickTools.forEach(t => quickContainer.appendChild(createToolItem(t)));
  }
@@ -1527,23 +1414,19 @@ window.S = S;
  }
 
  window.renderHome = renderHome;
- window.renderCategories = renderHome;
- window.renderQuick = renderHome;
 
  function createToolItem(t) {
  const div = document.createElement("div");
  div.className = "tool";
  const badgeLabel = t.type === "class" ? "Classification" : "Calculator";
  const badgeClass = t.type === "class" ? "badge-class" : "badge-calc";
- const specName = t.cat ? t.cat.toUpperCase() : "GENERAL";
- const specClass = getSpecialtyBadgeClass(t.cat);
  const isPinned = getPinnedTools().includes(t.id);
 
  div.innerHTML = `
  <div class="tool-header">
  <strong>${isPinned ? "📌 " : ""}${t.name}</strong>
  <div class="badge-group">
- <span class="badge ${specClass}">${specName}</span>
+ <span class="badge ${getSpecialtyBadgeClass(t.cat)}">${t.cat ? t.cat.toUpperCase() : "GENERAL"}</span>
  <span class="badge ${badgeClass}">${badgeLabel}</span>
  </div>
  </div>
@@ -1556,10 +1439,7 @@ window.S = S;
  }
 
  function renderCategoryTools() {
- let cat = (window.categories || []).find(c => c.id === currentCatId);
- if (!cat) {
- cat = { name: (currentCatId || "").toUpperCase(), desc: "Clinical Calculators & Staging" };
- }
+ let cat = (window.categories || []).find(c => c.id === currentCatId) || { name: (currentCatId || "").toUpperCase(), desc: "" };
  $("categoryTitle").textContent = cat.name;
  $("categoryDesc").textContent = cat.desc || "";
 
@@ -1567,7 +1447,7 @@ window.S = S;
  list.innerHTML = "";
  const filtered = (window.tools || []).filter(t => (t.cat === currentCatId || currentCatId === "all") && (activeFilter === "all" || t.type === activeFilter));
  if (filtered.length === 0) {
- list.innerHTML = `<div class="muted" style="padding:20px 0;text-align:center;">No tools found in this category.</div>`;
+ list.innerHTML = `<div class="muted" style="padding:20px 0;text-align:center;">No tools found.</div>`;
  return;
  }
  filtered.forEach(t => list.appendChild(createToolItem(t)));
@@ -1592,22 +1472,14 @@ window.S = S;
  }
  $("homeDefaultContent").classList.add("hidden");
  $("searchResultsSection").classList.remove("hidden");
- const matches = (window.tools || []).filter(t => {
- return (t.name && t.name.toLowerCase().includes(q)) ||
- (t.desc && t.desc.toLowerCase().includes(q)) ||
- (t.guidance && t.guidance.toLowerCase().includes(q)) ||
- (t.cat && t.cat.toLowerCase().includes(q)) ||
- (t.keywords && t.keywords.some(k => k.toLowerCase().includes(q))) ||
- (t.organ && t.organ.toLowerCase().includes(q));
- });
- $("searchResultSubheading").textContent = `Found ${matches.length} tool(s) matching "${searchInput.value}"`;
+ const matches = (window.tools || []).filter(t => 
+ (t.name && t.name.toLowerCase().includes(q)) || 
+ (t.desc && t.desc.toLowerCase().includes(q))
+ );
+ $("searchResultSubheading").textContent = `Found ${matches.length} tool(s)`;
  const searchList = $("searchToolList");
  searchList.innerHTML = "";
- if (matches.length === 0) {
- searchList.innerHTML = `<p class="muted">No clinical tools matched your search query.</p>`;
- } else {
  matches.forEach(t => searchList.appendChild(createToolItem(t)));
- }
  };
 
  $("clearSearchBtn").onclick = () => {
@@ -1626,14 +1498,10 @@ window.S = S;
 
  $("title").textContent = tool.name;
  $("desc").textContent = tool.desc || "";
-
- const typeBadge = $("toolTypeBadge");
- typeBadge.textContent = tool.type === "class" ? "Classification" : "Calculator";
- typeBadge.className = `badge ${tool.type === "class" ? "badge-class" : "badge-calc"}`;
-
- const specBadge = $("toolSpecBadge");
- specBadge.textContent = tool.cat ? tool.cat.toUpperCase() : "GENERAL";
- specBadge.className = `badge ${getSpecialtyBadgeClass(tool.cat)}`;
+ $("toolTypeBadge").textContent = tool.type === "class" ? "Classification" : "Calculator";
+ $("toolTypeBadge").className = `badge ${tool.type === "class" ? "badge-class" : "badge-calc"}`;
+ $("toolSpecBadge").textContent = tool.cat ? tool.cat.toUpperCase() : "GENERAL";
+ $("toolSpecBadge").className = `badge ${getSpecialtyBadgeClass(tool.cat)}`;
 
  updatePinButtonState(tool.id);
  $("pinToolBtn").onclick = () => togglePinTool(tool.id);
@@ -1662,8 +1530,6 @@ window.S = S;
  lbl.setAttribute("for", "field_" + f.id);
  lbl.textContent = f.label;
  wrap.appendChild(lbl);
-
- const defaultVal = "";
 
  if (f.type === "select") {
  const sel = document.createElement("select");
@@ -1694,7 +1560,7 @@ window.S = S;
  inp.type = "number";
  inp.id = "field_" + f.id;
  inp.name = f.id;
- inp.value = defaultVal;
+ inp.value = "";
  if (f.min !== undefined) inp.min = f.min;
  if (f.max !== undefined) inp.max = f.max;
  if (f.step !== undefined) inp.step = f.step;
@@ -1718,31 +1584,6 @@ window.S = S;
  refCard.classList.add("hidden");
  }
 
- const refsSec = $("academicRefsSection");
- const refsList = $("academicRefsList");
- refsList.innerHTML = "";
- if (tool.literature && Array.isArray(tool.literature)) {
- refsSec.classList.remove("hidden");
- tool.literature.forEach(lit => {
- const refItem = document.createElement("div");
- refItem.className = "ref-card-item";
- let linksHtml = "";
- if (lit.links && lit.links.length) {
- linksHtml = `<div class="ref-card-links">${lit.links.map(l => `<a href="${l.url}" target="_blank" rel="noopener noreferrer" class="ref-btn-link ${l.secondary ? "secondary" : ""}">${l.text}</a>`).join("")}</div>`;
- }
- refItem.innerHTML = `<div style="font-weight:700;margin-bottom:4px;">${lit.icon || "📄"} ${lit.title || ""}</div><div class="ref-card-citation">${lit.citation || ""}</div>${linksHtml}`;
- refsList.appendChild(refItem);
- });
- } else if (tool.references) {
- refsSec.classList.remove("hidden");
- const refItem = document.createElement("div");
- refItem.className = "ref-card-item";
- refItem.innerHTML = `<div class="ref-card-citation">${tool.references}</div>`;
- refsList.appendChild(refItem);
- } else {
- refsSec.classList.add("hidden");
- }
-
  $("result").classList.remove("show");
  showView("calculator");
  }
@@ -1761,33 +1602,10 @@ window.S = S;
 
  $("value").textContent = res.value || "";
  $("equation").innerHTML = (res.eq || "").replace(/\n/g, "<br>");
-
  resBox.classList.remove("severity-mild", "severity-moderate", "severity-critical");
 
  const combinedText = `${res.value || ""} ${res.eq || ""}`.toLowerCase();
- const numMatch = String(res.value || "").match(/-?\d+(\.\d+)?/);
- const scoreNum = numMatch ? parseFloat(numMatch[0]) : null;
-
- let severity = "mild";
-
- if (res.severity) {
- severity = res.severity;
- } else if (/\b(mild|low risk|normal|good prognosis|unlikely|negative|grade 1|grade i|stage 1|stage i|class 1|class i)\b/i.test(combinedText)) {
- severity = "mild";
- } else if (/\b(critical|severe|significant|high risk|poor|emergency|immediate|grade 3|grade 4|grade iii|grade iv|stage 3|stage 4|stage iii|stage iv|class 3|class 4|class iii|class iv)\b/i.test(combinedText)) {
- severity = "critical";
- } else if (/\b(moderate|intermediate|medium risk|grade 2|grade ii|stage 2|stage ii|class 2|class ii)\b/i.test(combinedText)) {
- severity = "moderate";
- } else if (scoreNum !== null) {
- if (scoreNum >= 75) {
- severity = "critical";
- } else if (scoreNum >= 40) {
- severity = "moderate";
- } else {
- severity = "mild";
- }
- }
-
+ let severity = res.severity || "mild";
  resBox.classList.add(`severity-${severity}`);
 
  if (res.matchId) {
@@ -1795,7 +1613,6 @@ window.S = S;
  const activeRow = $(`ref-row-${res.matchId}`);
  if (activeRow) activeRow.classList.add("active-grade");
  }
-
  resBox.classList.add("show");
  } catch (err) {
  console.error("Calculation error:", err);
@@ -1805,161 +1622,32 @@ window.S = S;
  $("form").onsubmit = e => {
  e.preventDefault();
  calculate();
- if (currentTool) {
- logToolCalculation(currentTool.name, $("value").textContent, $("equation").textContent);
- }
+ if (currentTool) logToolCalculation(currentTool.name, $("value").textContent, $("equation").textContent);
  };
 
- $("reset").onclick = () => {
- if (currentTool) openToolView(currentTool);
- };
+ $("reset").onclick = () => { if (currentTool) openToolView(currentTool); };
 
  $("copy").onclick = () => {
  const valText = $("value").textContent;
  const eqText = $("equation").textContent;
- const txt = `${currentTool.name}\n${valText}\n${eqText}`;
-
- navigator.clipboard.writeText(txt).then(() => {
+ navigator.clipboard.writeText(`${currentTool.name}\n${valText}\n${eqText}`).then(() => {
  const btn = $("copy");
  btn.textContent = "Copied!";
  setTimeout(() => btn.textContent = "Copy", 1500);
  });
-
- logToolCalculation(currentTool.name, valText, eqText);
  };
 
- // --- NOTES/INFO BUTTON & BORDERLESS FULL-SCREEN VIEWER LOGIC ---
  $("notesBtn").onclick = () => {
- if (!currentTool || !currentTool.id) return;
- location.hash = "source=" + encodeURIComponent(currentTool.id);
+ if (currentTool) location.hash = "source=" + encodeURIComponent(currentTool.id);
  };
 
  $("closeSourcePageBtn").onclick = () => {
  $("fullSourceIframe").src = "";
- if (currentTool) {
- location.hash = "tool=" + encodeURIComponent(currentTool.id);
- } else {
- location.hash = "";
- }
+ if (currentTool) location.hash = "tool=" + encodeURIComponent(currentTool.id);
+ else location.hash = "";
  };
 
  renderHome();
- window.addEventListener("load", renderHome);
-
- let checkCount = 0;
- const pollTimer = setInterval(() => {
- renderHome();
- checkCount++;
- if (checkCount >= 8) clearInterval(pollTimer);
- }, 250);
-})();
-</script>
-
-<!-- ============================================================== -->
-<!-- 4. CLINICIAN 2-WAY FEEDBACK & ADMIN CHAT WIDGET (OFFLINE READY) -->
-<!-- ============================================================== -->
-<div id="feedbackChatModal" class="modal-overlay hidden" role="dialog" aria-modal="true">
- <div class="modal" style="max-width:440px;display:flex;flex-direction:column;height:520px;padding:16px;">
- <div class="modal-header" style="margin-bottom:10px;">
- <h3>💬 Feedback & Support Chat</h3>
- <button id="closeFeedbackChatBtn" class="modal-close" type="button">✕</button>
- </div>
- <div id="clinicianChatBox" style="flex:1;overflow-y:auto;padding:12px;border:1px solid var(--border-color);border-radius:12px;background:var(--bg-body);display:flex;flex-direction:column;gap:10px;margin-bottom:12px;box-shadow:inset 0 2px 4px rgba(0,0,0,0.03);">
- <div class="muted" style="text-align:center;margin-top:60px;font-size:13px;">Send feedback or questions directly to the DocStat Admin team.</div>
- </div>
- <form id="clinicianChatForm" style="display:flex;gap:8px;align-items:center;background:var(--bg-card);padding:4px;border:1px solid var(--border-color);border-radius:12px;">
- <input type="text" id="clinicianChatInput" placeholder="Type your message here..." style="flex:1;border:none;background:transparent;padding:10px;font-size:14px;outline:none;">
- <button type="submit" class="primary" style="flex:0 0 auto;padding:10px 18px;border-radius:9px;font-size:13px;">Send</button>
- </form>
- </div>
-</div>
-
-<script>
-(function() {
- const settingsBtn = document.getElementById("openSettingsBtn");
- if (settingsBtn && settingsBtn.parentNode) {
- const wrap = document.createElement("div");
- wrap.style.display = "flex";
- wrap.style.gap = "8px";
- settingsBtn.parentNode.insertBefore(wrap, settingsBtn);
-
- const actualChatBtn = document.createElement("button");
- actualChatBtn.type = "button";
- actualChatBtn.className = "icon-btn";
- actualChatBtn.innerHTML = "💬 Feedback";
- actualChatBtn.onclick = openClinicianChat;
-
- wrap.appendChild(actualChatBtn);
- wrap.appendChild(settingsBtn);
- }
-
- const modal = document.getElementById("feedbackChatModal");
- document.getElementById("closeFeedbackChatBtn").onclick = () => modal.classList.add("hidden");
- modal.onclick = e => { if (e.target === modal) modal.classList.add("hidden"); };
-
- async function openClinicianChat() {
- modal.classList.remove("hidden");
- await loadClinicianMessages();
- }
-
- async function loadClinicianMessages() {
- if (!navigator.onLine || !window.GOOGLE_SHEET_WEBHOOK_URL) return;
- const email = (localStorage.getItem("doccalc_dr_email") || "").trim().toLowerCase();
- const box = document.getElementById("clinicianChatBox");
-
- try {
- const res = await fetch(`${window.GOOGLE_SHEET_WEBHOOK_URL}?action=user_messages&email=${encodeURIComponent(email)}&t=${Date.now()}`);
- const data = await res.json();
- if (data.status === "success" && data.messages && data.messages.length) {
- box.innerHTML = "";
- data.messages.messages.forEach(m => {
- const div = document.createElement("div");
- const isMe = m.sender === "clinician";
- div.style.cssText = `max-width:85%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.4;align-self:${isMe ? "flex-end" : "flex-start"};background:${isMe ? "#2463eb" : "var(--bg-card)"};color:${isMe ? "#fff" : "var(--text-main)"};border:1px solid var(--border-color);box-shadow:0 1px 2px rgba(0,0,0,0.05);`;
- div.innerHTML = `<div>${m.message}</div><div style="font-size:10px;opacity:0.75;margin-top:4px;text-align:right;">${isMe ? "You" : "DocStat Admin"} · ${m.timestamp}</div>`;
- box.appendChild(div);
- });
- box.scrollTop = box.scrollHeight;
- }
- } catch (e) {
- console.warn("Could not load chat history:", e);
- }
- }
-
- document.getElementById("clinicianChatForm").onsubmit = function(e) {
- e.preventDefault();
- const inp = document.getElementById("clinicianChatInput");
- const msg = inp.value.trim();
- if (!msg) return;
-
- const email = (localStorage.getItem("doccalc_dr_email") || "").trim().toLowerCase();
- const name = (localStorage.getItem("doccalc_dr_name") || "Anonymous").trim();
- const degree = (localStorage.getItem("doccalc_dr_name") || "N/A").trim();
- const avatar = (localStorage.getItem("doccalc_dr_avatar") || "").trim();
- const timestamp = new Date().toLocaleString();
-
- const box = document.getElementById("clinicianChatBox");
- if (box.querySelector(".muted")) box.innerHTML = "";
-
- const div = document.createElement("div");
- div.style.cssText = "max-width:85%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.4;align-self:flex-end;background:#2463eb;color:#fff;box-shadow:0 1px 2px rgba(0,0,0,0.05);";
- div.innerHTML = `<div>${msg}${!navigator.onLine ? " (Queued offline)" : ""}</div><div style="font-size:10px;opacity:0.75;margin-top:4px;text-align:right;">You · ${timestamp}</div>`;
- box.appendChild(div);
- box.scrollTop = box.scrollHeight;
- inp.value = "";
-
- if (window.sendDataToWebhook) {
- window.sendDataToWebhook({
- type: "feedback",
- timestamp: timestamp,
- email: email,
- name: name,
- degree: degree,
- message: msg,
- avatar: avatar
- });
- }
- };
 })();
 </script>
 </body>

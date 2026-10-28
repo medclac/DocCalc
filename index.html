@@ -296,7 +296,7 @@
       text-decoration: underline;
     }
 
-    /* FULLSCREEN INTRO VIDEO OVERLAY STYLES */
+    /* FULLSCREEN INTRO VIDEO OVERLAY STYLES (Hidden on mobile via media query) */
     #introOverlay {
       position: fixed;
       top: 0;
@@ -312,6 +312,13 @@
       transition: opacity 0.6s ease;
     }
 
+    /* Hide fullscreen intro automatically on mobile/tablet widths */
+    @media (max-width: 768px) {
+      #introOverlay {
+        display: none !important;
+      }
+    }
+
     #introVideo {
       position: absolute;
       top: 0;
@@ -321,7 +328,6 @@
       object-fit: cover;
     }
 
-    /* Whitish haze border gradient fading transparent toward the center and edges */
     #introOverlay::after {
       content: '';
       position: absolute;
@@ -331,7 +337,6 @@
         radial-gradient(circle at center, rgba(255,255,255,0) 40%, rgba(255,255,255,0.75) 85%, rgba(255,255,255,1) 100%);
     }
 
-    /* Soft Mute/Unmute button bottom-left */
     #muteToggleBtn {
       position: absolute;
       bottom: 30px;
@@ -359,7 +364,6 @@
       transform: scale(1.05);
     }
 
-    /* IN-PAGE VIDEO EMBED STYLES (Above Android Installation) */
     .embedded-video-card {
       padding: 1.25rem;
     }
@@ -390,7 +394,7 @@
 </head>
 <body>
 
-  <!-- FULLSCREEN INTRO OVERLAY -->
+  <!-- FULLSCREEN INTRO OVERLAY (Runs only on PC view) -->
   <div id="introOverlay">
     <video id="introVideo" src="docstat-intro.mp4" playsinline autoplay muted></video>
     <button id="muteToggleBtn" onclick="toggleIntroAudio()">
@@ -443,7 +447,7 @@
         How to Use on iPhone / iPad (iOS)
       </div>
       <p style="color: var(--slate); font-size: 0.92rem; margin-bottom: 1rem; line-height: 1.5;">
-        Since app is under-developement for iOS platforms hence downloadable file is strictly an Android APK, iOS users can install DocStat directly to their home screen as a standalone web app:
+        Since app is under-development for iOS platforms hence downloadable file is strictly an Android APK, iOS users can install DocStat directly to their home screen as a standalone web app:
       </p>
       <ul class="steps-list">
         <li class="step-item">
@@ -463,6 +467,12 @@
           <div>Name it <strong>DocStat</strong> and tap <strong>Add</strong> in the top-right corner. It will now launch like a native app without browser bars.</div>
         </li>
       </ul>
+
+      <!-- Added requested text just below iOS guide -->
+      <div style="margin-top: 1.25rem; padding-top: 1rem; border-top: 1px dashed var(--border); font-size: 0.88rem; color: var(--slate); line-height: 1.5;">
+        <strong>iOS webscreen box</strong> ( under-development for iOS platforms )<br>
+        <span style="color: var(--teal); font-weight: 600;">(Soon in playstore and appstores to download directly)</span>
+      </div>
     </div>
 
     <!-- EMBEDDED VIDEO SECTION (Placed right above Android Installation) -->
@@ -525,6 +535,27 @@
       </div>
     </div>
 
+    <!-- WHO ARE WE? / TEAM INFO SECTION (Just above Terms & Conditions) -->
+    <div class="card" style="background: #f0fdfa; border: 1px solid #ccfbf1;">
+      <div class="section-title" style="color: #115e59;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Who are we?
+      </div>
+      <p style="color: #334155; font-size: 0.92rem; line-height: 1.6; margin-bottom: 1rem;">
+        DocStat team consists of doctors (mostly from MAMC New Delhi) and computer programmers that constantly seeks solution for helping healthcare professionals and medical students.
+      </p>
+      <p style="color: #334155; font-size: 0.92rem; line-height: 1.6; margin-bottom: 1rem;">
+        Give us feedbacks for our product on email or in app feedback chatbox.
+      </p>
+      <p style="color: #0f766e; font-weight: 600; font-size: 0.9rem; margin-bottom: 0.75rem;">
+        Soon to be on apple appstore and playstores stay tuned.
+      </p>
+      <p style="color: var(--slate); font-size: 0.88rem;">
+        Regards,<br>
+        <strong>Team DocStat</strong>
+      </p>
+    </div>
+
     <!-- TERMS & CONDITIONS -->
     <div class="card">
       <div class="section-title" style="margin-bottom: 0.5rem;">
@@ -549,7 +580,6 @@
   </div>
 
   <script>
-    // Audio toggle handler for the fullscreen intro overlay
     function toggleIntroAudio() {
       const video = document.getElementById('introVideo');
       const muteText = document.getElementById('muteText');
@@ -566,29 +596,29 @@
       }
     }
 
-    // Automatically fade out the intro overlay when the video finishes playing
     window.addEventListener('DOMContentLoaded', () => {
       const introVideo = document.getElementById('introVideo');
       const introOverlay = document.getElementById('introOverlay');
 
-      introVideo.addEventListener('ended', () => {
-        introOverlay.style.opacity = '0';
-        setTimeout(() => {
-          introOverlay.style.display = 'none';
-        }, 600);
-      });
-
-      // Fallback click handler if browser blocks autoplay audio/video
-      introOverlay.addEventListener('click', (e) => {
-        if (e.target.id === 'introOverlay') {
+      // Only run intro video overlay behavior on PC view (width > 768px)
+      if (window.innerWidth > 768) {
+        introVideo.addEventListener('ended', () => {
           introOverlay.style.opacity = '0';
           setTimeout(() => {
             introOverlay.style.display = 'none';
           }, 600);
-        }
-      });
+        });
 
-      // Background and logo handlers
+        introOverlay.addEventListener('click', (e) => {
+          if (e.target.id === 'introOverlay') {
+            introOverlay.style.opacity = '0';
+            setTimeout(() => {
+              introOverlay.style.display = 'none';
+            }, 600);
+          }
+        });
+      }
+
       tryBackgroundCandidates([
         'background.jpg',
         'background.png',

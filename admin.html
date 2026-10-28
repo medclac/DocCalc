@@ -5,391 +5,452 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>DocStat Admin · Analytics, Clinicians & Live Chat</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #f1f5f9;
-  --card: #ffffff;
-  --navy: #0f2744;
-  --blue: #2563eb;
-  --text: #0f172a;
-  --muted: #64748b;
-  --border: #e2e8f0;
-  --green: #10b981;
-  --modal-overlay: rgba(0, 0, 0, 0.45);
+  --bg: #121824;
+  --card-bg: #1b2434;
+  --card-border: #2a364f;
+  --sidebar-bg: #161f2e;
+  --accent-cyan: #00d2ff;
+  --accent-blue: #3a86ff;
+  --accent-purple: #8338ec;
+  --text-primary: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
+  --success: #10b981;
+  --danger: #ef4444;
+  --modal-overlay: rgba(10, 14, 23, 0.8);
 }
+
 * { box-sizing: border-box; }
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
   background: var(--bg);
-  color: var(--text);
+  color: var(--text-primary);
+  display: flex;
+  min-height: 100vh;
   transition: font-size 0.2s ease;
 }
 
 /* ==========================================================================
    VIEW MODES: DESKTOP FRIENDLY VS. ANDROID FRIENDLY
    ================================================================---------- */
-/* Android Friendly Override Class */
 body.android-friendly {
-  font-size: 15px; /* Larger base font for touch readability */
+  font-size: 15px;
 }
-body.android-friendly .container {
-  padding: 10px;
-}
-body.android-friendly header {
-  padding: 12px 14px;
+body.android-friendly .app-container {
   flex-direction: column;
-  align-items: stretch;
 }
-body.android-friendly .header-actions {
-  justify-content: stretch;
-}
-body.android-friendly .header-actions .btn {
-  flex: 1;
-  justify-content: center;
-  padding: 12px;
-  font-size: 14px;
+body.android-friendly sidebar {
+  width: 100%;
+  border-right: none;
+  border-bottom: 1px solid var(--card-border);
+  padding: 15px;
 }
 body.android-friendly .kpi-grid {
-  grid-template-columns: 1fr; /* Single column stack */
-  gap: 10px;
-}
-body.android-friendly .nav-tabs {
-  flex-direction: column;
-  gap: 6px;
-  padding: 8px;
-}
-body.android-friendly .tab-btn {
-  width: 100%;
-  min-width: 0;
-  padding: 14px;
-  font-size: 15px;
-  text-align: center;
+  grid-template-columns: 1fr;
+  gap: 12px;
 }
 body.android-friendly .charts-grid {
   grid-template-columns: 1fr;
-}
-body.android-friendly .chart-box {
-  padding: 12px;
-}
-body.android-friendly .canvas-holder {
-  height: 240px;
 }
 body.android-friendly .chat-layout {
   grid-template-columns: 1fr !important;
   height: auto !important;
 }
-body.android-friendly .chat-users {
-  max-height: 180px;
-  border-right: none;
-  border-bottom: 1px solid var(--border);
-}
-body.android-friendly .chat-messages {
-  height: 300px;
-}
-body.android-friendly table {
-  font-size: 13px;
-}
-body.android-friendly th, body.android-friendly td {
-  padding: 12px 10px;
-}
-body.android-friendly .action-btn {
-  padding: 8px 12px;
-  font-size: 13px;
-  margin-bottom: 6px;
-}
-body.android-friendly .search-input {
-  max-width: 100%;
-  padding: 12px;
-  font-size: 15px;
+
+/* APP LAYOUT */
+.app-container {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
 }
 
-/* Base UI Styles */
-header {
-  background: var(--navy);
-  color: #fff;
-  padding: 18px 24px;
+/* SIDEBAR */
+sidebar {
+  width: 260px;
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--card-border);
+  padding: 24px 18px;
   display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+.brand-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  box-shadow: 0 4px 12px rgba(0, 210, 255, 0.3);
+}
+.brand h1 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+  color: var(--text-primary);
+}
+.brand small {
+  display: block;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.nav-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+.tab-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+}
+.tab-btn.active {
+  background: linear-gradient(135deg, rgba(0, 210, 255, 0.15), rgba(58, 134, 255, 0.15));
+  border: 1px solid rgba(0, 210, 255, 0.3);
+  color: var(--accent-cyan);
+}
+
+.sidebar-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 20px;
+  border-top: 1px solid var(--card-border);
+}
+
+/* MAIN CONTENT AREA */
+main {
+  flex: 1;
+  padding: 28px;
+  overflow-y: auto;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.header-actions {
+  display: flex;
+  gap: 10px;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
 }
-.brand h1 { margin: 0; font-size: 22px; display: flex; align-items: center; gap: 8px; }
-.brand small { color: #94a3b8; font-size: 12px; }
-.header-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+/* BUTTONS */
 .btn {
-  padding: 9px 14px;
-  border-radius: 8px;
-  border: 1px solid rgba(255,255,255,0.2);
-  background: rgba(255,255,255,0.1);
-  color: #fff;
+  padding: 9px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--card-border);
+  background: var(--card-bg);
+  color: var(--text-primary);
   font-weight: 600;
   font-size: 13px;
   cursor: pointer;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+  transition: all 0.2s ease;
 }
-.btn:hover { background: rgba(255,255,255,0.2); }
-.btn-primary { background: var(--blue); border-color: var(--blue); }
-.btn-primary:hover { background: #1d4ed8; }
-
-/* Mode Switch Toggle Button Style */
+.btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+  border: none;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 210, 255, 0.25);
+}
+.btn-primary:hover {
+  opacity: 0.9;
+}
 .mode-toggle-btn {
-  background: #10b981;
-  border-color: #059669;
-  color: #ffffff;
-  font-weight: 700;
+  background: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.4);
+  color: var(--success);
 }
-.mode-toggle-btn:hover { background: #059669; }
-
-.container { max-width: 1280px; margin: 0 auto; padding: 20px; }
 
 /* KPI CARDS */
 .kpi-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 14px;
-  margin-bottom: 20px;
+  gap: 18px;
+  margin-bottom: 24px;
 }
 .kpi-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 16px 18px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
 }
-.kpi-card small { color: var(--muted); font-size: 12px; font-weight: 700; text-transform: uppercase; }
-.kpi-card .val { font-size: 28px; font-weight: 800; color: var(--navy); margin-top: 6px; }
-
-/* NAV TABS */
-.nav-tabs {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 20px;
-  background: #e2e8f0;
-  padding: 5px;
-  border-radius: 12px;
-  overflow-x: auto;
+.kpi-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 3px;
+  background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue));
 }
-.tab-btn {
-  flex: 1;
-  min-width: 150px;
-  padding: 11px 14px;
-  border: 0;
-  border-radius: 8px;
-  background: transparent;
-  color: #475569;
-  font-weight: 700;
-  font-size: 13.5px;
-  cursor: pointer;
+.kpi-card small {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
-.tab-btn.active {
-  background: var(--card);
-  color: var(--navy);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+.kpi-card .val {
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-top: 8px;
 }
 
 /* PANELS & CHARTS */
 .panel {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 20px;
-  margin-bottom: 20px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
 }
 .charts-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(460px, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(440px, 1fr));
+  gap: 20px;
 }
 .chart-box {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 18px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 20px;
 }
-.chart-box h3 { margin: 0 0 12px; font-size: 15px; color: var(--navy); }
-.canvas-holder { position: relative; height: 290px; width: 100%; }
+.chart-box h3 {
+  margin: 0 0 16px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.canvas-holder {
+  position: relative;
+  height: 280px;
+  width: 100%;
+}
 
 .select-control {
   width: 100%;
-  padding: 10px 12px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: #fff;
+  padding: 10px 14px;
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  background: var(--bg);
   font-size: 13.5px;
-  font-weight: 600;
-  color: var(--text);
-  margin-top: 12px;
+  color: var(--text-primary);
+  margin-top: 14px;
   outline: none;
 }
 
-/* TABLES */
+/* TABLES & LISTS */
 .search-input {
   width: 100%;
   max-width: 380px;
-  padding: 10px 14px;
-  border: 1px solid var(--border);
-  border-radius: 9px;
+  padding: 11px 16px;
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--text-primary);
   font-size: 14px;
-  margin-bottom: 14px;
+  margin-bottom: 18px;
+  outline: none;
 }
+.search-input:focus {
+  border-color: var(--accent-cyan);
+}
+
 .table-wrap { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
-th { background: #f8fafc; padding: 11px 12px; font-weight: 700; color: var(--muted); border-bottom: 1px solid var(--border); }
-td { padding: 11px 12px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
-tr:hover td { background: #f8fafc; }
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; text-align: left; }
+th { background: rgba(255, 255, 255, 0.03); padding: 12px 16px; font-weight: 600; color: var(--text-muted); border-bottom: 1px solid var(--card-border); }
+td { padding: 14px 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); vertical-align: middle; }
+tr:hover td { background: rgba(255, 255, 255, 0.02); }
 
 .avatar-cell {
-  width: 36px;
-  height: 36px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   object-fit: cover;
-  background: #e2e8f0;
+  background: var(--bg);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
-  font-weight: bold;
+  font-size: 18px;
+  border: 1px solid var(--card-border);
   overflow: hidden;
-  border: 1px solid var(--border);
 }
 
 .badge {
   display: inline-block;
-  padding: 3px 8px;
-  border-radius: 6px;
+  padding: 4px 10px;
+  border-radius: 8px;
   font-size: 11px;
   font-weight: 700;
-  background: #e0f2fe;
-  color: #0369a1;
+  background: rgba(0, 210, 255, 0.12);
+  color: var(--accent-cyan);
+  border: 1px solid rgba(0, 210, 255, 0.25);
 }
 .action-btn {
-  padding: 6px 10px;
-  border-radius: 6px;
-  border: 1px solid var(--border);
-  background: #fff;
-  color: var(--navy);
+  padding: 7px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--card-border);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
   font-weight: 600;
   font-size: 12px;
   cursor: pointer;
   text-decoration: none;
-  display: inline-block;
-  margin-right: 4px;
-  margin-bottom: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
-.action-btn:hover { background: #f1f5f9; }
+.action-btn:hover { background: rgba(255, 255, 255, 0.12); }
 
 /* CHAT LAYOUT */
 .chat-layout {
   display: grid;
-  grid-template-columns: 300px 1fr;
-  height: 540px;
-  border: 1px solid var(--border);
-  border-radius: 14px;
+  grid-template-columns: 280px 1fr;
+  height: 560px;
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
   overflow: hidden;
-  background: var(--card);
+  background: var(--card-bg);
 }
 .chat-users {
-  border-right: 1px solid var(--border);
+  border-right: 1px solid var(--card-border);
   overflow-y: auto;
-  background: #f8fafc;
+  background: var(--sidebar-bg);
 }
 .chat-user-item {
-  padding: 13px 15px;
-  border-bottom: 1px solid var(--border);
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--card-border);
   cursor: pointer;
 }
-.chat-user-item:hover, .chat-user-item.active { background: #e0f2fe; }
-.chat-user-item strong { display: block; font-size: 14px; }
-.chat-user-item small { color: var(--muted); font-size: 12px; }
+.chat-user-item:hover, .chat-user-item.active { background: rgba(0, 210, 255, 0.1); }
+.chat-user-item strong { display: block; font-size: 14px; color: var(--text-primary); }
+.chat-user-item small { color: var(--text-muted); font-size: 12px; }
 .chat-main { display: flex; flex-direction: column; height: 100%; }
 .chat-header {
-  padding: 14px 18px;
-  border-bottom: 1px solid var(--border);
-  font-weight: 700;
-  background: #fff;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--card-border);
+  font-weight: 600;
+  background: var(--card-bg);
 }
 .chat-messages {
   flex: 1;
-  padding: 18px;
+  padding: 20px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  background: #f8fafc;
+  gap: 12px;
+  background: var(--bg);
 }
 .msg-bubble {
-  max-width: 72%;
-  padding: 10px 14px;
-  border-radius: 12px;
+  max-width: 70%;
+  padding: 12px 16px;
+  border-radius: 14px;
   font-size: 13.5px;
-  line-height: 1.45;
+  line-height: 1.5;
 }
 .msg-clinician {
   align-self: flex-start;
-  background: #ffffff;
-  border: 1px solid var(--border);
-  color: var(--text);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  color: var(--text-primary);
 }
 .msg-admin {
   align-self: flex-end;
-  background: var(--blue);
-  color: #ffffff;
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+  color: #fff;
 }
-.msg-meta { font-size: 10px; opacity: 0.75; margin-top: 4px; display: block; }
+.msg-meta { font-size: 10px; opacity: 0.8; margin-top: 6px; display: block; }
 .chat-input-bar {
-  padding: 12px;
-  border-top: 1px solid var(--border);
+  padding: 14px;
+  border-top: 1px solid var(--card-border);
   display: flex;
-  gap: 8px;
-  background: #fff;
+  gap: 10px;
+  background: var(--card-bg);
 }
 .chat-input-bar input {
   flex: 1;
-  padding: 11px 14px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
+  padding: 11px 16px;
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--text-primary);
   font-size: 14px;
 }
 
-/* MODAL OVERLAYS */
+/* MODALS */
 .modal-overlay {
   position: fixed;
   inset: 0;
   background: var(--modal-overlay);
-  backdrop-filter: blur(3px);
+  backdrop-filter: blur(6px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  padding: 16px;
+  padding: 20px;
 }
 .modal {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 16px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 20px;
   width: 100%;
-  max-width: 420px;
+  max-width: 520px;
   padding: 24px;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.25);
-  text-align: center;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.5);
 }
-.modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-.modal-header h3 { margin: 0; font-size: 18px; }
-.modal-close { border: 0; background: transparent; font-size: 20px; cursor: pointer; color: var(--muted); }
+.modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.modal-header h3 { margin: 0; font-size: 18px; color: var(--text-primary); }
+.modal-close { border: 0; background: transparent; font-size: 22px; cursor: pointer; color: var(--text-muted); }
 
 .hidden { display: none !important; }
-@media (max-width: 768px) {
+
+@media (max-width: 900px) {
+  .app-container { flex-direction: column; }
+  sidebar { width: 100%; }
   .charts-grid { grid-template-columns: 1fr; }
-  .chat-layout { grid-template-columns: 1fr; height: auto; }
-  .chat-users { max-height: 200px; }
-  .chat-messages { height: 320px; }
 }
 </style>
 </head>
@@ -397,204 +458,217 @@ tr:hover td { background: #f8fafc; }
 
 <!-- ADMIN LOGIN MODAL -->
 <div id="adminLoginModal" class="modal-overlay hidden" role="dialog" aria-modal="true">
-  <div class="modal" style="max-width: 360px; text-align: left;">
-    <div style="font-size: 32px; margin-bottom: 6px; text-align: center;">🔐</div>
-    <h3 style="margin: 0 0 6px; font-size: 20px; text-align: center;">DocStat Admin Login</h3>
-    <p style="font-size: 12.5px; color: var(--muted); text-align: center; margin: 0 0 16px;">Please log in to access the command center.</p>
+  <div class="modal" style="max-width: 380px; text-align: center;">
+    <div style="font-size: 40px; margin-bottom: 12px;">🔐</div>
+    <h3 style="margin: 0 0 8px; font-size: 22px;">DocStat Admin</h3>
+    <p style="font-size: 13px; color: var(--text-muted); margin: 0 0 20px;">Please authenticate to access the admin command center.</p>
     
-    <form id="adminLoginForm" style="display: flex; flex-direction: column; gap: 12px;">
+    <form id="adminLoginForm" style="display: flex; flex-direction: column; gap: 14px; text-align: left;">
       <div>
-        <label style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 4px;">Username</label>
-        <input type="text" id="loginUser" placeholder="Enter username" style="width: 100%; padding: 11px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px;" required>
+        <label style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 6px;">Username</label>
+        <input type="text" id="loginUser" placeholder="Enter username" style="width: 100%; padding: 12px; border: 1px solid var(--card-border); border-radius: 10px; background: var(--bg); color: var(--text-primary);" required>
       </div>
       <div>
-        <label style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 4px;">Password</label>
-        <input type="password" id="loginPass" placeholder="Enter password" style="width: 100%; padding: 11px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px;" required>
+        <label style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 6px;">Password</label>
+        <input type="password" id="loginPass" placeholder="Enter password" style="width: 100%; padding: 12px; border: 1px solid var(--card-border); border-radius: 10px; background: var(--bg); color: var(--text-primary);" required>
       </div>
-      <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 11px; margin-top: 4px;">Login to Dashboard</button>
-      <div id="loginErrorMsg" style="color: #dc2626; font-size: 12px; text-align: center; min-height: 16px;"></div>
+      <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 12px; margin-top: 6px;">Login to Command Center</button>
+      <div id="loginErrorMsg" style="color: var(--danger); font-size: 12px; text-align: center; min-height: 16px;"></div>
     </form>
   </div>
 </div>
 
-<header>
-  <div class="brand">
-    <h1>📊 DocStat Admin Command Center</h1>
-    <small id="syncStatus">Connecting to Google Apps Script...</small>
-  </div>
-  <div class="header-actions">
-    <button id="viewModeToggleBtn" class="btn mode-toggle-btn" type="button" title="Switch between Friendly Desktop and Android-Friendly mode">📱 Mode: Friendly Desktop</button>
-    <a id="linkMasterSheet" href="#" target="_blank" class="btn">📁 Master Login Excel</a>
-    <a id="linkAnalyticsSheet" href="#" target="_blank" class="btn">📈 Comprehensive Charts Excel</a>
-    <a id="linkUsersFolder" href="#" target="_blank" class="btn">🗂️ Individual Users Folder</a>
-    <button id="refreshBtn" class="btn btn-primary" type="button">🔄 Refresh Live Data</button>
-    <button id="logoutBtn" class="btn" style="background: rgba(239, 68, 68, 0.2); border-color: rgba(239, 68, 68, 0.4);" type="button">🔒 Logout</button>
-  </div>
-</header>
-
-<div class="container">
-  <!-- KPI SUMMARY -->
-  <div class="kpi-grid">
-    <div class="kpi-card">
-      <small>Total Registered Clinicians</small>
-      <div class="val" id="kpiUsers">0</div>
-    </div>
-    <div class="kpi-card">
-      <small>Total Calculations Run</small>
-      <div class="val" id="kpiCalcs">0</div>
-    </div>
-    <div class="kpi-card">
-      <small>Top Calculator Used</small>
-      <div class="val" id="kpiTopCalc" style="font-size:18px;margin-top:10px;">—</div>
-    </div>
-    <div class="kpi-card">
-      <small>Feedback & Chat Messages</small>
-      <div class="val" id="kpiMsgs">0</div>
-    </div>
-  </div>
-
-  <!-- NAVIGATION TABS -->
-  <div class="nav-tabs">
-    <button class="tab-btn active" data-tab="tabCharts">📈 Charts & Analytics</button>
-    <button class="tab-btn" data-tab="tabUsers">🧑🏻‍⚕️ Clinicians & Individual Excels</button>
-    <button class="tab-btn" data-tab="tabAllLogs">🧮 All Platform Calculations</button>
-    <button class="tab-btn" data-tab="tabChat">💬 Clinician Feedback & Live Chat</button>
-  </div>
-
-  <!-- TAB 1: CHARTS & ANALYTICS -->
-  <div id="tabCharts" class="tab-section">
-    <div class="charts-grid">
-      <div class="chart-box">
-        <h3>Platform Usage by Specialty (Overall)</h3>
-        <div class="canvas-holder"><canvas id="specPieCanvas"></canvas></div>
+<div class="app-container">
+  <!-- SIDEBAR NAVIGATION -->
+  <sidebar>
+    <div>
+      <div class="brand">
+        <div class="brand-icon">📊</div>
+        <div>
+          <h1>DocStat Admin</h1>
+          <small id="syncStatus">Connecting...</small>
+        </div>
       </div>
-      <div class="chart-box">
-        <h3>Calculator Breakdown by Specialty</h3>
-        <div class="canvas-holder"><canvas id="specialtyCalcBarCanvas"></canvas></div>
-        <select id="specialtySelect" class="select-control" onchange="renderSpecialtyCalcChart()">
-          <option value="">Select Specialty Category...</option>
-        </select>
-      </div>
-    </div>
-  </div>
 
-  <!-- TAB 2: MASTER CLINICIANS LIST & INDIVIDUAL USER LOGS -->
-  <div id="tabUsers" class="tab-section hidden">
-    <div class="panel">
-      <h3 style="margin-top:0;">Master Clinicians Login Directory & Individual User Excels</h3>
-      <input type="text" id="userSearch" class="search-input" placeholder="Search doctor by name or degree...">
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th style="width:50px;">Avatar</th>
-              <th>Doctor Name</th>
-              <th>Degree & Specialty</th>
-              <th>First Login</th>
-              <th>Last Active</th>
-              <th>Total Calcs</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="usersTableBody"></tbody>
-        </table>
+      <div class="nav-tabs">
+        <button class="tab-btn active" data-tab="tabUsers">🧑🏻‍⚕️ Clinicians Directory</button>
+        <button class="tab-btn" data-tab="tabCharts">📈 Overall Analytics</button>
+        <button class="tab-btn" data-tab="tabAllLogs">🧮 Platform Calcs</button>
+        <button class="tab-btn" data-tab="tabChat">💬 Live Chat & Feedback</button>
       </div>
     </div>
 
-    <!-- DRILL-DOWN PANEL FOR SELECTED USER'S CALCULATIONS -->
-    <div id="userDrilldownPanel" class="panel hidden" style="border: 2px solid var(--blue);">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-        <h3 id="drilldownTitle" style="margin:0;color:var(--blue);">Individual User Calculation History</h3>
-        <button type="button" class="action-btn" onclick="document.getElementById('userDrilldownPanel').classList.add('hidden')">✕ Close</button>
+    <div class="sidebar-footer">
+      <button id="viewModeToggleBtn" class="btn mode-toggle-btn" type="button" style="width: 100%; justify-content: center;">📱 Mode: Friendly Desktop</button>
+      <button id="logoutBtn" class="btn" style="width: 100%; justify-content: center; background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.3); color: var(--danger);" type="button">🔒 Logout</button>
+    </div>
+  </sidebar>
+
+  <!-- MAIN DASHBOARD CONTENT -->
+  <main>
+    <header>
+      <div>
+        <h2 style="margin:0; font-size: 22px;">Command Dashboard</h2>
+        <span style="font-size: 13px; color: var(--text-muted);">Real-time monitoring and analytics</span>
       </div>
-      <div class="table-wrap">
+      <div class="header-actions">
+        <a id="linkMasterSheet" href="#" target="_blank" class="btn">📁 Master Login Excel</a>
+        <a id="linkAnalyticsSheet" href="#" target="_blank" class="btn">📈 Analytics Excel</a>
+        <a id="linkUsersFolder" href="#" target="_blank" class="btn">🗂️ Users Folder</a>
+        <button id="refreshBtn" class="btn btn-primary" type="button">🔄 Refresh Data</button>
+      </div>
+    </header>
+
+    <!-- KPI CARDS -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <small>Total Clinicians</small>
+        <div class="val" id="kpiUsers">0</div>
+      </div>
+      <div class="kpi-card">
+        <small>Calculations Run</small>
+        <div class="val" id="kpiCalcs">0</div>
+      </div>
+      <div class="kpi-card">
+        <small>Top Calculator Used</small>
+        <div class="val" id="kpiTopCalc" style="font-size: 18px; margin-top: 10px;">—</div>
+      </div>
+      <div class="kpi-card">
+        <small>Chat Messages</small>
+        <div class="val" id="kpiMsgs">0</div>
+      </div>
+    </div>
+
+    <!-- TAB 1: CLINICIANS DIRECTORY (CLEAN USER LIST ONLY) -->
+    <div id="tabUsers" class="tab-section">
+      <div class="panel">
+        <h3 style="margin-top:0; font-size: 18px;">Registered Clinicians Directory</h3>
+        <input type="text" id="userSearch" class="search-input" placeholder="Search doctor by name, degree or email...">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:60px;">Doctor</th>
+                <th>Doctor Name & Email</th>
+                <th>Degree & Specialty</th>
+                <th>Total Calcs</th>
+                <th style="text-align: right;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="usersTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: OVERALL CHARTS & ANALYTICS -->
+    <div id="tabCharts" class="tab-section hidden">
+      <div class="charts-grid">
+        <div class="chart-box">
+          <h3>Platform Usage by Specialty</h3>
+          <div class="canvas-holder"><canvas id="specPieCanvas"></canvas></div>
+        </div>
+        <div class="chart-box">
+          <h3>Calculator Breakdown by Specialty</h3>
+          <div class="canvas-holder"><canvas id="specialtyCalcBarCanvas"></canvas></div>
+          <select id="specialtySelect" class="select-control" onchange="renderSpecialtyCalcChart()">
+            <option value="">Select Specialty Category...</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: ALL PLATFORM CALCULATIONS -->
+    <div id="tabAllLogs" class="tab-section hidden">
+      <div class="panel">
+        <h3 style="margin-top:0;">Comprehensive Calculation Logs</h3>
+        <input type="text" id="logSearch" class="search-input" placeholder="Filter by calculator, doctor, specialty, or result...">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Timestamp</th>
+                <th>Doctor Name</th>
+                <th>Degree</th>
+                <th>Specialty</th>
+                <th>Calculator Used</th>
+                <th>Result</th>
+              </tr>
+            </thead>
+            <tbody id="allLogsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: LIVE CHAT & FEEDBACK -->
+    <div id="tabChat" class="tab-section hidden">
+      <div class="chat-layout">
+        <div class="chat-users" id="chatUsersList"></div>
+        <div class="chat-main">
+          <div class="chat-header">
+            <span id="activeChatDoctorTitle" style="color: var(--text-muted);">Select a clinician to chat</span>
+          </div>
+          <div class="chat-messages" id="chatMessagesBox">
+            <div style="color:var(--text-muted);text-align:center;margin-top:80px;">Choose a clinician to start chatting.</div>
+          </div>
+          <form id="adminChatForm" class="chat-input-bar">
+            <input type="text" id="adminChatInput" placeholder="Write a message or reply..." disabled>
+            <button type="submit" id="adminChatSendBtn" class="btn btn-primary" disabled>Send →</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- CLINICIAN PROFILE & ANALYTICS POPUP MODAL (EPS STYLE DETAIL VIEW) -->
+<div id="profileModal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Clinician Profile & Details</h3>
+      <button class="modal-close" onclick="closeProfileModal()">✕</button>
+    </div>
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center;">
+      <div id="profileModalAvatar" class="avatar-cell" style="width: 80px; height: 80px; font-size: 32px; border-width: 2px;">🧑🏻‍⚕️</div>
+      <div>
+        <h2 id="profileModalName" style="margin: 0 0 4px; font-size: 20px; color: var(--text-primary);"></h2>
+        <p id="profileModalDegree" style="margin: 0 0 4px; color: var(--accent-cyan); font-weight: 600; font-size: 14px;"></p>
+        <p id="profileModalEmail" style="margin: 0 0 4px; color: var(--text-muted); font-size: 13px;"></p>
+        <p id="profileModalHospital" style="margin: 0; color: var(--text-dim); font-size: 13px;"></p>
+      </div>
+      <a id="downloadAvatarBtn" class="btn btn-primary hidden" style="width: 100%; justify-content: center; margin-top: 4px;" download="doctor_avatar.png">⬇️ Download Photo</a>
+    </div>
+
+    <!-- USER SPECIFIC ANALYTICS / CALCULATOR PIE CHART -->
+    <div style="margin-top: 20px; border-top: 1px solid var(--card-border); padding-top: 16px;">
+      <h4 style="margin: 0 0 12px; font-size: 14px; color: var(--text-primary);">Calculator Usage Breakdown</h4>
+      <div class="canvas-holder" style="height: 180px;"><canvas id="userCalcPieCanvas"></canvas></div>
+    </div>
+
+    <!-- USER CALCULATION HISTORY LIST -->
+    <div style="margin-top: 20px; border-top: 1px solid var(--card-border); padding-top: 16px;">
+      <h4 style="margin: 0 0 12px; font-size: 14px; color: var(--text-primary);">Calculation History</h4>
+      <div class="table-wrap" style="max-height: 200px; overflow-y: auto;">
         <table>
           <thead>
             <tr>
               <th>Time</th>
-              <th>Calculator Used</th>
-              <th>Doctor Name</th>
-              <th>Degree</th>
-              <th>Result</th>
-              <th>Interpretation / Details</th>
-            </tr>
-          </thead>
-          <tbody id="userDrilldownBody"></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <!-- TAB 3: ALL PLATFORM CALCULATIONS -->
-  <div id="tabAllLogs" class="tab-section hidden">
-    <div class="panel">
-      <h3 style="margin-top:0;">Comprehensive Platform Calculation Logs</h3>
-      <input type="text" id="logSearch" class="search-input" placeholder="Filter by calculator, doctor, specialty, or result...">
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Timestamp</th>
-              <th>Doctor Name</th>
-              <th>Degree</th>
-              <th>Specialty</th>
-              <th>Calculator Used</th>
+              <th>Calculator</th>
               <th>Result</th>
             </tr>
           </thead>
-          <tbody id="allLogsTableBody"></tbody>
+          <tbody id="userModalCalcsBody"></tbody>
         </table>
       </div>
-    </div>
-  </div>
-
-  <!-- TAB 4: 2-WAY CLINICIAN CHAT & FEEDBACK -->
-  <div id="tabChat" class="tab-section hidden">
-    <div class="chat-layout">
-      <div class="chat-users" id="chatUsersList"></div>
-      <div class="chat-main">
-        <div class="chat-header">
-          <span id="activeChatDoctorTitle">Select a clinician on the left to view feedback & chat</span>
-        </div>
-        <div class="chat-messages" id="chatMessagesBox">
-          <div style="color:var(--muted);text-align:center;margin-top:80px;">Choose a clinician from the directory to start chatting.</div>
-        </div>
-        <form id="adminChatForm" class="chat-input-bar">
-          <input type="text" id="adminChatInput" placeholder="Write a message or reply to this clinician..." disabled>
-          <button type="submit" id="adminChatSendBtn" class="btn btn-primary" disabled>Send Reply →</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- PROFILE POPUP MODAL -->
-<div id="profileModal" class="modal-overlay hidden" role="dialog" aria-modal="true">
-  <div class="modal">
-    <div class="modal-header">
-      <h3>Clinician Profile</h3>
-      <button class="modal-close" onclick="closeProfileModal()">✕</button>
-    </div>
-    <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 6px 0;">
-      <div id="profileModalAvatar" style="width: 84px; height: 84px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 32px; overflow: hidden; border: 2px solid var(--border);">🧑🏻‍⚕️</div>
-      <div>
-        <h2 id="profileModalName" style="margin: 0 0 4px; font-size: 18px;"></h2>
-        <p id="profileModalDegree" style="margin: 0 0 4px; color: var(--muted); font-size: 13.5px;"></p>
-        <p id="profileModalEmail" style="margin: 0 0 4px; color: var(--blue); font-size: 13px; font-weight: 500;"></p>
-        <p id="profileModalHospital" style="margin: 0; color: var(--text); font-size: 13px; font-weight: 600;"></p>
-      </div>
-      <a id="downloadAvatarBtn" class="btn btn-primary hidden" style="width: 100%; justify-content: center; margin-top: 8px;" download="doctor_avatar.png">⬇️ Download Photo</a>
     </div>
   </div>
 </div>
 
 <script>
-// ============================================================================
-// PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL BELOW
-// ============================================================================
 const SCRIPT_API_URL = "https://script.google.com/macros/s/AKfycbyWB-ebKOGd7-dFc4S57LirCE63bBm42JQn0PO1eFlEw2dngXO6W9MDFhjl13mxyUrU/exec";
 
-// --- VIEW MODE TOGGLE LOGIC ---
+// --- VIEW MODE TOGGLE ---
 const viewModeToggleBtn = document.getElementById("viewModeToggleBtn");
 
 function initViewMode() {
@@ -602,38 +676,22 @@ function initViewMode() {
   if (savedMode === "android") {
     document.body.classList.add("android-friendly");
     viewModeToggleBtn.textContent = "📱 Mode: Android Friendly";
-    viewModeToggleBtn.style.background = "#2563eb";
-    viewModeToggleBtn.style.borderColor = "#1d4ed8";
   } else {
     document.body.classList.remove("android-friendly");
     viewModeToggleBtn.textContent = "💻 Mode: Friendly Desktop";
-    viewModeToggleBtn.style.background = "#10b981";
-    viewModeToggleBtn.style.borderColor = "#059669";
   }
 }
 
 viewModeToggleBtn.onclick = function() {
   const isAndroid = document.body.classList.toggle("android-friendly");
-  if (isAndroid) {
-    localStorage.setItem("docstat_view_mode", "android");
-    viewModeToggleBtn.textContent = "📱 Mode: Android Friendly";
-    viewModeToggleBtn.style.background = "#2563eb";
-    viewModeToggleBtn.style.borderColor = "#1d4ed8";
-  } else {
-    localStorage.setItem("docstat_view_mode", "friendly");
-    viewModeToggleBtn.textContent = "💻 Mode: Friendly Desktop";
-    viewModeToggleBtn.style.background = "#10b981";
-    viewModeToggleBtn.style.borderColor = "#059669";
-  }
-  // Resize charts on view mode change to ensure proper rendering
-  setTimeout(() => {
-    Object.values(chartInstances).forEach(c => c.resize());
-  }, 250);
+  localStorage.setItem("docstat_view_mode", isAndroid ? "android" : "friendly");
+  viewModeToggleBtn.textContent = isAndroid ? "📱 Mode: Android Friendly" : "💻 Mode: Friendly Desktop";
+  setTimeout(() => { Object.values(chartInstances).forEach(c => c.resize()); }, 250);
 };
 
 initViewMode();
 
-// --- ADMIN AUTHENTICATION CHECK ---
+// --- ADMIN AUTH CHECK ---
 function checkAdminAuth() {
   const isAuth = localStorage.getItem("docstat_admin_auth");
   if (isAuth !== "true") {
@@ -654,12 +712,12 @@ document.getElementById("adminLoginForm").onsubmit = function(e) {
     document.getElementById("adminLoginModal").classList.add("hidden");
     fetchAdminData();
   } else {
-    err.textContent = "Invalid username or password.";
+    err.textContent = "Invalid credentials.";
   }
 };
 
 document.getElementById("logoutBtn").onclick = function() {
-  if (confirm("Are you sure you want to log out of Admin?")) {
+  if (confirm("Log out of admin panel?")) {
     localStorage.removeItem("docstat_admin_auth");
     location.reload();
   }
@@ -683,16 +741,14 @@ document.querySelectorAll(".tab-btn").forEach(btn => {
     document.querySelectorAll(".tab-section").forEach(s => s.classList.add("hidden"));
     btn.classList.add("active");
     document.getElementById(btn.dataset.tab).classList.remove("hidden");
-    setTimeout(() => {
-      Object.values(chartInstances).forEach(c => c.resize());
-    }, 100);
+    setTimeout(() => { Object.values(chartInstances).forEach(c => c.resize()); }, 100);
   };
 });
 
-// --- FETCH LIVE DATA FROM GOOGLE APPS SCRIPT ---
+// --- FETCH DATA FROM GAS ---
 async function fetchAdminData() {
   const statusEl = document.getElementById("syncStatus");
-  statusEl.textContent = "Syncing live data from Google Sheets...";
+  statusEl.textContent = "Syncing...";
   try {
     const res = await fetch(SCRIPT_API_URL + "?action=admin_all&t=" + Date.now());
     const data = await res.json();
@@ -702,22 +758,6 @@ async function fetchAdminData() {
     STATE.logs = data.logs || [];
     STATE.calcFreq = data.calcFreq || {};
     STATE.specFreq = data.specFreq || {};
-
-    // On-demand/Lazy fetch chat transcripts for active users using email
-    STATE.messagesMap = {};
-    for (let u of STATE.users) {
-      try {
-        const msgRes = await fetch(`${SCRIPT_API_URL}?action=user_messages&email=${encodeURIComponent(u.email)}&t=${Date.now()}`);
-        const msgData = await msgRes.json();
-        if (msgData.status === "success" && msgData.messages) {
-          STATE.messagesMap[u.key] = msgData.messages;
-        } else {
-          STATE.messagesMap[u.key] = [];
-        }
-      } catch (err) {
-        STATE.messagesMap[u.key] = [];
-      }
-    }
 
     if (data.masterSheetUrl) document.getElementById("linkMasterSheet").href = data.masterSheetUrl;
     if (data.analyticsSheetUrl) document.getElementById("linkAnalyticsSheet").href = data.analyticsSheetUrl;
@@ -729,11 +769,10 @@ async function fetchAdminData() {
     renderUsersTable();
     renderAllLogsTable();
     renderChatSidebar();
-    if (STATE.selectedChatUser) renderChatConversation(STATE.selectedChatUser);
 
-    statusEl.textContent = "Last synced: " + new Date().toLocaleTimeString();
+    statusEl.textContent = "Synced: " + new Date().toLocaleTimeString();
   } catch (err) {
-    statusEl.textContent = "Sync warning: Make sure your Apps Script is deployed with 'Anyone' access.";
+    statusEl.textContent = "Sync warning";
     console.error(err);
   }
 }
@@ -747,14 +786,12 @@ function renderKPIs() {
   document.getElementById("kpiMsgs").textContent = totalMsgs;
 
   const sortedCalcs = Object.entries(STATE.calcFreq).sort((a, b) => b[1] - a[1]);
-  document.getElementById("kpiTopCalc").textContent = sortedCalcs.length ? `${sortedCalcs[0][0]} (${sortedCalcs[0][1]})` : "No data yet";
+  document.getElementById("kpiTopCalc").textContent = sortedCalcs.length ? `${sortedCalcs[0][0]} (${sortedCalcs[0][1]})` : "—";
 }
 
-// --- POPULATE SPECIALTY SELECT DROPDOWN ---
 function populateSpecialtyDropdown() {
   const select = document.getElementById("specialtySelect");
   const currentVal = select.value;
-  
   const specialties = [...new Set(STATE.logs.map(l => (l.specialty || "GENERAL").toUpperCase()))].sort();
   
   select.innerHTML = `<option value="">Select Specialty Category...</option>`;
@@ -764,20 +801,14 @@ function populateSpecialtyDropdown() {
     opt.textContent = spec;
     select.appendChild(opt);
   });
-
-  if (specialties.includes(currentVal)) {
-    select.value = currentVal;
-  } else if (specialties.length > 0) {
-    select.value = specialties[0];
-  }
+  if (specialties.includes(currentVal)) select.value = currentVal;
 }
 
-// --- RENDER CHARTS WITH SMOOTH UPDATES (NO RESET FROM ZERO) ---
+// --- CHARTS ---
 function renderCharts() {
-  const palette = ["#2563eb", "#0ea5e9", "#10b981", "#f59e0b", "#8b5cf6", "#ec4899", "#ef4444", "#14b8a6", "#64748b"];
-
+  const palette = ["#00d2ff", "#3a86ff", "#8338ec", "#10b981", "#f59e0b", "#ec4899", "#ef4444"];
   const specEntries = Object.entries(STATE.specFreq).sort((a, b) => b[1] - a[1]);
-  const specLabels = specEntries.length ? specEntries.map(x => x[0]) : ["No Specialties Yet"];
+  const specLabels = specEntries.length ? specEntries.map(x => x[0]) : ["No Data"];
   const specValues = specEntries.length ? specEntries.map(x => x[1]) : [1];
 
   drawChart("specPieCanvas", "pie", specLabels, specValues, palette);
@@ -797,10 +828,10 @@ window.renderSpecialtyCalcChart = function() {
   });
 
   const entries = Object.entries(freqMap).sort((a, b) => b[1] - a[1]);
-  const labels = entries.length ? entries.map(x => x[0]) : ["No Tools Used"];
+  const labels = entries.length ? entries.map(x => x[0]) : ["No Data"];
   const values = entries.length ? entries.map(x => x[1]) : [1];
 
-  drawChart("specialtyCalcBarCanvas", "bar", labels, values, "#2563eb");
+  drawChart("specialtyCalcBarCanvas", "bar", labels, values, "#00d2ff");
 };
 
 function drawChart(canvasId, type, labels, values, colors) {
@@ -808,7 +839,7 @@ function drawChart(canvasId, type, labels, values, colors) {
     chartInstances[canvasId].data.labels = labels;
     chartInstances[canvasId].data.datasets[0].data = values;
     chartInstances[canvasId].data.datasets[0].backgroundColor = colors;
-    chartInstances[canvasId].update({ duration: 400 });
+    chartInstances[canvasId].update();
     return;
   }
 
@@ -818,7 +849,6 @@ function drawChart(canvasId, type, labels, values, colors) {
     data: {
       labels: labels,
       datasets: [{
-        label: "Total Frequency",
         data: values,
         backgroundColor: colors,
         borderRadius: type === "bar" ? 6 : 0
@@ -827,15 +857,18 @@ function drawChart(canvasId, type, labels, values, colors) {
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      animation: { duration: 600 },
       plugins: {
-        legend: { display: type !== "bar", position: "right" }
-      }
+        legend: { display: type !== "bar", position: "right", labels: { color: "#94a3b8" } }
+      },
+      scales: type === "bar" ? {
+        x: { ticks: { color: "#94a3b8" }, grid: { color: "#2a364f" } },
+        y: { ticks: { color: "#94a3b8" }, grid: { color: "#2a364f" } }
+      } : {}
     }
   });
 }
 
-// --- RENDER MASTER CLINICIANS DIRECTORY ---
+// --- RENDER CLEAN CLINICIANS LIST ---
 function renderUsersTable() {
   const q = document.getElementById("userSearch").value.trim().toLowerCase();
   const tbody = document.getElementById("usersTableBody");
@@ -846,28 +879,21 @@ function renderUsersTable() {
   );
 
   if (!filtered.length) {
-    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--muted);">No clinicians found.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--text-muted);">No clinicians found.</td></tr>`;
     return;
   }
 
   filtered.forEach(u => {
-    const avatarHtml = u.avatar 
-      ? `<img src="${u.avatar}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">` 
-      : `🧑🏻‍⚕️`;
+    const avatarHtml = u.avatar ? `<img src="${u.avatar}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">` : `🧑🏻‍⚕️`;
 
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td><div class="avatar-cell">${avatarHtml}</div></td>
-      <td><strong>${u.name}</strong><br><small style="color:var(--muted);">${u.email}</small></td>
+      <td><strong>${u.name}</strong><br><small style="color:var(--text-muted);">${u.email}</small></td>
       <td><span class="badge">${u.degree}</span></td>
-      <td>${u.firstLogin || "—"}</td>
-      <td>${u.lastActive || "—"}</td>
       <td><strong>${u.totalCalcs || 0}</strong></td>
-      <td>
-        <button type="button" class="action-btn" onclick='openProfileModal(${JSON.stringify(u)})'>👤 Profile</button>
-        <button type="button" class="action-btn" onclick="inspectUserCalculations('${u.email}', '${u.name.replace(/'/g, "\\'")}', '${u.sheetId || ""}')">🔍 Calcs</button>
-        ${u.sheetUrl ? `<a href="${u.sheetUrl}" target="_blank" class="action-btn">📄 Excel</a>` : ""}
-        <button type="button" class="action-btn" onclick="openChatWithUser('${u.email}')">💬 Chat</button>
+      <td style="text-align: right;">
+        <button type="button" class="action-btn" onclick='openProfileModal(${JSON.stringify(u)})'>👤 Open Profile & History</button>
       </td>
     `;
     tbody.appendChild(tr);
@@ -875,8 +901,8 @@ function renderUsersTable() {
 }
 document.getElementById("userSearch").oninput = renderUsersTable;
 
-// --- PROFILE POPUP MODAL ---
-window.openProfileModal = function(user) {
+// --- PROFILE POPUP MODAL (EPS USER DETAIL VIEW WITH PIE CHART & LIST) ---
+window.openProfileModal = async function(user) {
   document.getElementById("profileModalName").textContent = user.name;
   document.getElementById("profileModalDegree").textContent = user.degree;
   document.getElementById("profileModalEmail").textContent = user.email ? `📧 ${user.email}` : "";
@@ -896,63 +922,56 @@ window.openProfileModal = function(user) {
   }
 
   document.getElementById("profileModal").classList.remove("hidden");
+
+  // Fetch or filter calculation history for this doctor
+  let userLogs = STATE.logs.filter(l => String(l.email).toLowerCase() === String(user.email).toLowerCase());
+  if (user.sheetId) {
+    try {
+      const res = await fetch(`${SCRIPT_API_URL}?action=user_sheet&sheetId=${encodeURIComponent(user.sheetId)}&t=${Date.now()}`);
+      const data = await res.json();
+      if (data.status === "success" && data.history) {
+        userLogs = data.history.map(r => ({ timestamp: r.time, tool: r.tool, result: r.result }));
+      }
+    } catch(e) { console.warn("Using local logs fallback:", e); }
+  }
+
+  // Render Table
+  const tbody = document.getElementById("userModalCalcsBody");
+  tbody.innerHTML = "";
+  if (!userLogs.length) {
+    tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;color:var(--text-muted);">No calculations yet.</td></tr>`;
+  } else {
+    userLogs.forEach(r => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${r.timestamp || r.time || "—"}</td>
+        <td><strong>${r.tool || "—"}</strong></td>
+        <td><span class="badge">${r.result || "—"}</span></td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // Render User Specific Pie Chart
+  const userCalcMap = {};
+  userLogs.forEach(r => {
+    const t = r.tool || "Unknown";
+    userCalcMap[t] = (userCalcMap[t] || 0) + 1;
+  });
+
+  const entries = Object.entries(userCalcMap);
+  const labels = entries.length ? entries.map(x => x[0]) : ["No Data"];
+  const values = entries.length ? entries.map(x => x[1]) : [1];
+  const colors = ["#00d2ff", "#3a86ff", "#8338ec", "#10b981", "#f59e0b"];
+
+  drawChart("userCalcPieCanvas", "pie", labels, values, colors);
 };
 
 window.closeProfileModal = function() {
   document.getElementById("profileModal").classList.add("hidden");
 };
 
-// --- INSPECT SPECIFIC USER'S CALCULATIONS ---
-window.inspectUserCalculations = async function(email, userName, sheetId) {
-  const panel = document.getElementById("userDrilldownPanel");
-  const title = document.getElementById("drilldownTitle");
-  const tbody = document.getElementById("userDrilldownBody");
-  panel.classList.remove("hidden");
-  title.textContent = `Calculations by ${userName}`;
-  tbody.innerHTML = `<tr><td colspan="6">Loading ${userName}'s personal Excel sheet...</td></tr>`;
-  panel.scrollIntoView({ behavior: "smooth" });
-
-  if (sheetId) {
-    try {
-      const res = await fetch(`${SCRIPT_API_URL}?action=user_sheet&sheetId=${encodeURIComponent(sheetId)}&t=${Date.now()}`);
-      const data = await res.json();
-      if (data.status === "success" && data.history) {
-        renderDrilldownRows(data.history);
-        return;
-      }
-    } catch (e) {
-      console.warn("Fallback to local log filter:", e);
-    }
-  }
-
-  const userLogs = STATE.logs.filter(l => String(l.email).toLowerCase() === String(email).toLowerCase());
-  renderDrilldownRows(userLogs.map(l => ({
-    time: l.timestamp, tool: l.tool, name: l.name, degree: l.degree, result: l.result, eq: l.eq
-  })));
-};
-
-function renderDrilldownRows(rows) {
-  const tbody = document.getElementById("userDrilldownBody");
-  tbody.innerHTML = "";
-  if (!rows.length) {
-    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--muted);">No calculations recorded for this user yet.</td></tr>`;
-    return;
-  }
-  rows.forEach(r => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${r.time || ""}</td>
-      <td><strong>${r.tool || ""}</strong></td>
-      <td>${r.name || ""}</td>
-      <td>${r.degree || ""}</td>
-      <td><span class="badge">${r.result || ""}</span></td>
-      <td style="max-width:320px;white-space:pre-line;font-size:12px;">${r.eq || ""}</td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
-
-// --- RENDER ALL PLATFORM CALCULATIONS ---
+// --- RENDER ALL LOGS TABLE ---
 function renderAllLogsTable() {
   const q = document.getElementById("logSearch").value.trim().toLowerCase();
   const tbody = document.getElementById("allLogsTableBody");
@@ -962,12 +981,11 @@ function renderAllLogsTable() {
     String(l.tool).toLowerCase().includes(q) ||
     String(l.name).toLowerCase().includes(q) ||
     String(l.specialty).toLowerCase().includes(q) ||
-    String(l.result).toLowerCase().includes(q) ||
-    String(l.email).toLowerCase().includes(q)
+    String(l.result).toLowerCase().includes(q)
   );
 
   if (!filtered.length) {
-    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--muted);">No calculation logs match your filter.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--text-muted);">No records found.</td></tr>`;
     return;
   }
 
@@ -975,7 +993,7 @@ function renderAllLogsTable() {
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td>${l.timestamp || ""}</td>
-      <td><strong>${l.name || ""}</strong><br><small style="color:var(--muted);">${l.email || ""}</small></td>
+      <td><strong>${l.name || ""}</strong><br><small style="color:var(--text-muted);">${l.email || ""}</small></td>
       <td>${l.degree || ""}</td>
       <td><span class="badge">${l.specialty || ""}</span></td>
       <td><strong>${l.tool || ""}</strong></td>
@@ -986,34 +1004,27 @@ function renderAllLogsTable() {
 }
 document.getElementById("logSearch").oninput = renderAllLogsTable;
 
-// --- 2-WAY LIVE CHAT & FEEDBACK (ON-DEMAND) ---
+// --- LIVE CHAT ---
 function renderChatSidebar() {
   const list = document.getElementById("chatUsersList");
   list.innerHTML = "";
 
   if (!STATE.users.length) {
-    list.innerHTML = `<div style="padding:16px;color:var(--muted);font-size:13px;">No registered clinicians yet.</div>`;
+    list.innerHTML = `<div style="padding:16px;color:var(--text-muted);font-size:13px;">No clinicians registered.</div>`;
     return;
   }
 
   STATE.users.forEach(u => {
-    const userMsgs = STATE.messagesMap[u.key] || [];
     const div = document.createElement("div");
     div.className = "chat-user-item" + (STATE.selectedChatUser && STATE.selectedChatUser.email === u.email ? " active" : "");
     div.innerHTML = `
       <strong>${u.name}</strong>
-      <small>${u.degree} · ${userMsgs.length} msg(s)</small>
+      <small>${u.degree}</small>
     `;
     div.onclick = () => selectAndFetchChatDoctor(u);
     list.appendChild(div);
   });
 }
-
-window.openChatWithUser = function(email) {
-  document.querySelector('[data-tab="tabChat"]').click();
-  const found = STATE.users.find(u => String(u.email).toLowerCase() === String(email).toLowerCase());
-  if (found) selectAndFetchChatDoctor(found);
-};
 
 async function selectAndFetchChatDoctor(userObj) {
   STATE.selectedChatUser = userObj;
@@ -1025,14 +1036,8 @@ async function selectAndFetchChatDoctor(userObj) {
   try {
     const res = await fetch(`${SCRIPT_API_URL}?action=user_messages&email=${encodeURIComponent(userObj.email)}&t=${Date.now()}`);
     const data = await res.json();
-    if (data.status === "success" && data.messages) {
-      STATE.messagesMap[userObj.key] = data.messages;
-    } else {
-      STATE.messagesMap[userObj.key] = [];
-    }
-  } catch (err) {
-    console.warn("Could not fetch chat for user:", err);
-  }
+    STATE.messagesMap[userObj.key] = (data.status === "success" && data.messages) ? data.messages : [];
+  } catch (err) { console.warn(err); }
 
   document.getElementById("activeChatDoctorTitle").textContent = `Chatting with ${userObj.name} (${userObj.degree})`;
   document.getElementById("adminChatInput").disabled = false;
@@ -1047,7 +1052,7 @@ function renderChatConversation(userObj) {
 
   const convo = STATE.messagesMap[userObj.key] || [];
   if (!convo.length) {
-    box.innerHTML = `<div style="color:var(--muted);text-align:center;margin-top:60px;">No feedback or messages with ${userObj.name} yet. Send a message below!</div>`;
+    box.innerHTML = `<div style="color:var(--text-muted);text-align:center;margin-top:60px;">No messages yet.</div>`;
     return;
   }
 
@@ -1057,7 +1062,7 @@ function renderChatConversation(userObj) {
     bubble.className = "msg-bubble " + (isAdmin ? "msg-admin" : "msg-clinician");
     bubble.innerHTML = `
       <div>${m.message}</div>
-      <span class="msg-meta">${isAdmin ? "Admin (You)" : m.name} · ${m.timestamp}</span>
+      <span class="msg-meta">${isAdmin ? "Admin" : m.name} · ${m.timestamp}</span>
     `;
     box.appendChild(bubble);
   });
@@ -1080,20 +1085,13 @@ document.getElementById("adminChatForm").onsubmit = async function(e) {
     message: text
   };
 
-  if (!STATE.messagesMap[STATE.selectedChatUser.key]) {
-    STATE.messagesMap[STATE.selectedChatUser.key] = [];
-  }
-
+  if (!STATE.messagesMap[STATE.selectedChatUser.key]) STATE.messagesMap[STATE.selectedChatUser.key] = [];
   STATE.messagesMap[STATE.selectedChatUser.key].push({
-    timestamp: payload.timestamp,
-    sender: "admin",
-    name: "Admin",
-    message: text
+    timestamp: payload.timestamp, sender: "admin", name: "Admin", message: text
   });
 
   inp.value = "";
   renderChatConversation(STATE.selectedChatUser);
-  renderChatSidebar();
 
   try {
     await fetch(SCRIPT_API_URL, {
@@ -1102,19 +1100,12 @@ document.getElementById("adminChatForm").onsubmit = async function(e) {
       headers: { "Content-Type": "text/plain;charset=utf-8" },
       body: JSON.stringify(payload)
     });
-  } catch (err) {
-    console.warn("Failed to send admin reply:", err);
-  }
+  } catch (err) { console.warn(err); }
 };
 
 document.getElementById("refreshBtn").onclick = fetchAdminData;
 
 checkAdminAuth();
-setInterval(() => {
-  if (localStorage.getItem("docstat_admin_auth") === "true") {
-    fetchAdminData();
-  }
-}, 30000);
 </script>
 </body>
 </html>

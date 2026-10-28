@@ -643,7 +643,7 @@ C 100 110, 100 128, 100 144
 </header>
 
 <main>
- <div class="notice"><b>Clinical safety:</b> Educational prototype only. Verify formulas, tables, and criteria independently before clinical use.</div>
+ <div class="notice"><b>Clinical safety:</b> Verify formulas, tables, and criteria independently before clinical use.</div>
 
  <!-- HOME VIEW -->
  <div id="home">
@@ -737,7 +737,7 @@ C 100 110, 100 128, 100 144
  </section>
  </div>
 
- <footer>DocStat · Educational prototype · Verify before clinical use</footer>
+ <footer>DocStat· Educational purpose app · Verify before realtime clinical use</footer>
 </main>
 
 <!-- SEAMLESS FULL-SCREEN SOURCE VIEW (BORDERLESS & CONTINUOUS) -->
@@ -1436,7 +1436,7 @@ window.S = S;
 
  if (rawHash.startsWith("source=")) {
  const calcId = decodeURIComponent(rawHash.replace("source=", ""));
- const sourcePath = `${calcId}.html`;
+ const sourcePath = `www/${calcId}.html`;
  const iframe = $("fullSourceIframe");
  
  iframe.src = "about:blank";
@@ -1973,3 +1973,5 @@ window.S = S;
 </script>
 </body>
 </html>
+
+Fix this

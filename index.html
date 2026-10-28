@@ -296,6 +296,90 @@
       text-decoration: underline;
     }
 
+    /* FULLSCREEN INTRO VIDEO OVERLAY STYLES */
+    #introOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #ffffff;
+      overflow: hidden;
+      transition: opacity 0.6s ease;
+    }
+
+    #introVideo {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Whitish haze border gradient fading transparent toward the center and edges */
+    #introOverlay::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: 
+        radial-gradient(circle at center, rgba(255,255,255,0) 40%, rgba(255,255,255,0.75) 85%, rgba(255,255,255,1) 100%);
+    }
+
+    /* Soft Mute/Unmute button bottom-left */
+    #muteToggleBtn {
+      position: absolute;
+      bottom: 30px;
+      left: 30px;
+      z-index: 10000;
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      color: #0f172a;
+      padding: 10px 14px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: all 0.2s ease;
+    }
+
+    #muteToggleBtn:hover {
+      background: rgba(255, 255, 255, 1);
+      transform: scale(1.05);
+    }
+
+    /* IN-PAGE VIDEO EMBED STYLES (Above Android Installation) */
+    .embedded-video-card {
+      padding: 1.25rem;
+    }
+
+    .embedded-video-wrapper {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #000;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .embedded-video-wrapper video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
     footer {
       text-align: center;
       color: var(--light-slate);
@@ -305,6 +389,15 @@
   </style>
 </head>
 <body>
+
+  <!-- FULLSCREEN INTRO OVERLAY -->
+  <div id="introOverlay">
+    <video id="introVideo" src="docstat-intro.mp4" playsinline autoplay muted></video>
+    <button id="muteToggleBtn" onclick="toggleIntroAudio()">
+      <svg id="volumeIcon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+      <span id="muteText">Unmute</span>
+    </button>
+  </div>
 
   <div class="container">
 
@@ -317,7 +410,6 @@
         <img src="" alt="DocStat Logo" class="logo-img" id="logoImg">
       </div>
 
-      <!-- Updated Name with Black Doc and 0066FF Stat -->
       <h1><span class="brand-doc">Doc</span><span class="brand-stat">Stat</span></h1>
       <p class="tagline">Clinical statistics and medical risk scoring calculator for healthcare professionals.</p>
 
@@ -337,8 +429,6 @@
           <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
           Open Web Version (Browser)
         </a>
-
-        <!-- Updated Download Link to DocStat.apk -->
         <a href="DocStat.apk" download="DocStat.apk" class="btn btn-outline">
           <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
           Download Android APK (~10 MB)
@@ -353,7 +443,7 @@
         How to Use on iPhone / iPad (iOS)
       </div>
       <p style="color: var(--slate); font-size: 0.92rem; margin-bottom: 1rem; line-height: 1.5;">
-        Since app is under-developement for IOS platforms hence downloadable file is strictly an Android APK, iOS users can install DocStat directly to their home screen as a standalone web app:
+        Since app is under-developement for iOS platforms hence downloadable file is strictly an Android APK, iOS users can install DocStat directly to their home screen as a standalone web app:
       </p>
       <ul class="steps-list">
         <li class="step-item">
@@ -373,6 +463,20 @@
           <div>Name it <strong>DocStat</strong> and tap <strong>Add</strong> in the top-right corner. It will now launch like a native app without browser bars.</div>
         </li>
       </ul>
+    </div>
+
+    <!-- EMBEDDED VIDEO SECTION (Placed right above Android Installation) -->
+    <div class="card embedded-video-card">
+      <div class="section-title" style="margin-bottom: 0.75rem;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        App Walkthrough & Overview
+      </div>
+      <div class="embedded-video-wrapper">
+        <video controls>
+          <source src="docstat-intro.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
     </div>
 
     <!-- ANDROID INSTALLATION & COMPATIBILITY -->
@@ -445,6 +549,61 @@
   </div>
 
   <script>
+    // Audio toggle handler for the fullscreen intro overlay
+    function toggleIntroAudio() {
+      const video = document.getElementById('introVideo');
+      const muteText = document.getElementById('muteText');
+      const volumeIcon = document.getElementById('volumeIcon');
+
+      if (video.muted) {
+        video.muted = false;
+        muteText.textContent = 'Mute';
+        volumeIcon.innerHTML = '<path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/>';
+      } else {
+        video.muted = true;
+        muteText.textContent = 'Unmute';
+        volumeIcon.innerHTML = '<path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>';
+      }
+    }
+
+    // Automatically fade out the intro overlay when the video finishes playing
+    window.addEventListener('DOMContentLoaded', () => {
+      const introVideo = document.getElementById('introVideo');
+      const introOverlay = document.getElementById('introOverlay');
+
+      introVideo.addEventListener('ended', () => {
+        introOverlay.style.opacity = '0';
+        setTimeout(() => {
+          introOverlay.style.display = 'none';
+        }, 600);
+      });
+
+      // Fallback click handler if browser blocks autoplay audio/video
+      introOverlay.addEventListener('click', (e) => {
+        if (e.target.id === 'introOverlay') {
+          introOverlay.style.opacity = '0';
+          setTimeout(() => {
+            introOverlay.style.display = 'none';
+          }, 600);
+        }
+      });
+
+      // Background and logo handlers
+      tryBackgroundCandidates([
+        'background.jpg',
+        'background.png',
+        'assets/background.jpg',
+        'assets/background.png'
+      ]);
+
+      tryLogoCandidates([
+        'logo.png',
+        'logo.jpg',
+        'assets/logo.png',
+        'assets/logo.jpg'
+      ]);
+    });
+
     function tryBackgroundCandidates(urls) {
       if (urls.length === 0) return;
       const currentUrl = urls[0];
@@ -477,22 +636,6 @@
       };
       img.src = currentUrl;
     }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      tryBackgroundCandidates([
-        'background.jpg',
-        'background.png',
-        'assets/background.jpg',
-        'assets/background.png'
-      ]);
-
-      tryLogoCandidates([
-        'logo.png',
-        'logo.jpg',
-        'assets/logo.png',
-        'assets/logo.jpg'
-      ]);
-    });
   </script>
 </body>
 </html>

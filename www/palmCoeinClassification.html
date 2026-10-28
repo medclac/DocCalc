@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>FIGO PALM-COEIN Classification for AUB</title>
+<style>
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #2c3e50;
+    line-height: 1.6;
+    font-size: 11pt;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 20px;
+  }
+  .container {
+    max-width: 750px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 35px;
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  }
+  h1 {
+    font-size: 18pt;
+    color: #0e6251;
+    margin-top: 0;
+    border-bottom: 2px solid #16a085;
+    padding-bottom: 8px;
+  }
+  .meta-tag {
+    background-color: #e8f8f5;
+    color: #117a65;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 9pt;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 15px;
+  }
+  .section-title {
+    font-size: 11.5pt;
+    color: #117a65;
+    border-bottom: 1px solid #a3e4d7;
+    padding-bottom: 4px;
+    margin-top: 22px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+  .formula-box {
+    background: #fdfefe;
+    border: 2px dashed #16a085;
+    padding: 12px;
+    text-align: center;
+    border-radius: 6px;
+    font-size: 12pt;
+    font-weight: bold;
+    color: #0e6251;
+    margin-bottom: 10px;
+  }
+  .normal-range-box {
+    background: #e8f8f5;
+    border: 1px solid #a3e4d7;
+    padding: 8px 12px;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 10.5pt;
+    font-weight: bold;
+    color: #0e6251;
+    margin-bottom: 15px;
+  }
+  ul {
+    margin: 0 0 10px 0;
+    padding-left: 20px;
+  }
+  li {
+    margin-bottom: 4px;
+  }
+  p {
+    margin: 0 0 10px 0;
+    text-align: justify;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    font-size: 10pt;
+  }
+  th, td {
+    border: 1px solid #d5dbdb;
+    padding: 8px 10px;
+    text-align: left;
+  }
+  th {
+    background-color: #e8f8f5;
+    color: #0e6251;
+    font-weight: bold;
+  }
+  tr:nth-child(even) {
+    background-color: #fcfcfc;
+  }
+  .footer {
+    margin-top: 30px;
+    border-top: 1px solid #d5dbdb;
+    padding-top: 12px;
+    font-size: 8.5pt;
+    color: #7f8c8d;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>FIGO PALM-COEIN Classification for AUB</h1>
+  <div class="meta-tag">Calculation ID: palmCoeinClassification</div>
+
+  <div class="section-title">1. Formula & Parameters</div>
+  <div class="formula-box">Categorizes abnormal uterine bleeding into Structural (PALM) and Non-structural (COEIN) causes</div>
+  <div class="normal-range-box">Normal Range / Target: Normal Range</div>
+  <p><b>Formula Breakdown & Units:</b></p>
+  <ul>
+    <li>PALM: Polyp, Adenomyosis, Leiomyoma, Malignancy. COEIN: Coagulopathy, Ovulatory, Endometrial, Iatrogenic, Not classified.</li>
+  </ul>
+
+  <div class="section-title">2. Clinical & Medical Significance</div>
+  <p>The FIGO PALM-COEIN system is the international diagnostic framework for investigating abnormal uterine bleeding (AUB) in reproductive-aged women. It systematically categorizes potential etiologies into structural uterine lesions (PALM) and non-structural functional disorders (COEIN), guiding targeted medical and surgical management.</p>
+
+  <div class="section-title">3. Useful Conditions & Medical Decisions</div>
+  <p><b>Useful Conditions / Indications:</b></p>
+  <ul>
+    <li>Abnormal Uterne Bleeding (AUB) / Menorrhagia</li>
+  </ul>
+  <p><b>Key Medical Decision:</b> Directs diagnostic workup (ultrasound, hysteroscopy, endometrial biopsy, coagulation labs) and targeted medical/surgical therapy.</p>
+  <table>
+    <thead>
+      <tr><th>Component</th><th>Category</th><th>Classification</th><th>First-Line Workup & Therapy</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>PALM</td><td>Structural Causes</td><td>Polyp, Adenomyosis, Leiomyoma, Malignancy</td><td>Targeted surgical therapy (polypectomy, myomectomy, hysterectomy, LNG-IUS) or biopsy</td></tr>
+<tr><td>COEIN</td><td>Non-Structural Causes</td><td>Coagulopathy, Ovulatory, Endometrial, Iatrogenic, Not classified</td><td>Medical management: Tranexamic acid, oral progestins, combined OCPs, LNG-IUS, hematology consultation</td></tr>
+
+    </tbody>
+  </table>
+
+  <div class="section-title">4. Pathophysiological Background</div>
+  <p>Differentiates focal anatomical pathology from systemic hormonal, endocrine, or hemostatic dysregulation.</p>
+
+  <div class="section-title">5. Medical Background & Evidence</div>
+  <p>Munro MG, Critchley HOD, Fraser IS; FIGO Menstrual Disorders Committee. (Int J Gynaecol Obstet. 2018;143(3):393-408).</p>
+
+  <div class="footer">
+    This information is researched and verified source of information from open sources.<br>
+    <b>Approved by DocStat R/D team</b>
+  </div>
+</div>
+</body>
+</html>

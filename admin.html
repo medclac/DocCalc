@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -41,11 +40,42 @@ body {
   color: var(--text-primary);
   min-height: 100vh;
   transition: background 0.2s ease, color 0.2s ease;
+  display: flex;
 }
 
-.app-container { max-width: 1300px; margin: 0 auto; padding: 24px; }
+/* SIDEBAR HAMBURGER / DRAWER NAVIGATION */
+sidebar {
+  width: 260px;
+  background: var(--card-bg);
+  border-right: 1px solid var(--card-border);
+  padding: 24px 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-shrink: 0;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+}
+.sidebar-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+.sidebar-logo { width: 40px; height: 40px; border-radius: 10px; object-fit: cover; border: 1px solid var(--card-border); }
+.sidebar-brand h2 { font-size: 16px; font-weight: 700; margin: 0; color: var(--text-primary); }
+.sidebar-brand small { font-size: 11px; color: var(--text-muted); }
 
-/* TOP HEADER BAR (Matching Reference) */
+.category-nav-list { display: flex; flex-direction: column; gap: 6px; overflow-y: auto; max-height: calc(100vh - 200px); padding-right: 4px; }
+.category-nav-btn {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 14px; border-radius: 10px; border: 1px solid transparent; background: transparent;
+  color: var(--text-muted); font-size: 13px; font-weight: 600; cursor: pointer; text-align: left; transition: all 0.2s;
+}
+.category-nav-btn:hover { background: rgba(0,210,255,0.05); color: var(--text-primary); border-color: var(--card-border); }
+.category-nav-btn.active { background: rgba(0,210,255,0.12); color: var(--accent-cyan); border-color: rgba(0,210,255,0.3); }
+
+/* MAIN CONTENT CONTAINER */
+.main-content { flex: 1; padding: 24px; overflow-y: auto; height: 100vh; }
+.app-container { max-width: 1250px; margin: 0 auto; }
+
+/* TOP HEADER BAR */
 header {
   display: flex;
   justify-content: space-between;
@@ -79,11 +109,9 @@ header {
   background: var(--accent-cyan); border-radius: 50%; border: 2px solid var(--card-bg);
 }
 
-.admin-avatar {
-  width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-cyan); cursor: pointer;
-}
+.admin-avatar { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-cyan); cursor: pointer; }
 
-/* NOTIFICATIONS DROPDOWN POPUP */
+/* NOTIFICATIONS DROPDOWN */
 .notifications-dropdown {
   position: absolute; top: 56px; right: 0; width: 340px; background: var(--card-bg);
   border: 1px solid var(--card-border); border-radius: 16px; box-shadow: 0 16px 32px rgba(0,0,0,0.4);
@@ -106,7 +134,7 @@ header {
 }
 .time-pill.active { background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); color: #fff; }
 
-/* FOUR METRIC / KPI CARDS (Reference Layout)[span_2](start_span)[span_2](end_span) */
+/* FOUR METRIC BOXES */
 .metrics-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -128,6 +156,8 @@ header {
 .metric-card small { color: var(--text-muted); font-size: 11.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
 .metric-card .val { font-size: 26px; font-weight: 800; color: var(--text-primary); margin-top: 8px; }
 .metric-card .subtext { font-size: 12px; color: var(--accent-cyan); margin-top: 4px; display: block; }
+.metric-card.interactive { cursor: pointer; transition: transform 0.2s, border-color 0.2s; }
+.metric-card.interactive:hover { transform: translateY(-2px); border-color: var(--accent-cyan); }
 
 /* CHARTS SECTION */
 .dashboard-grid {
@@ -138,6 +168,7 @@ header {
 }
 @media (max-width: 1024px) {
   .dashboard-grid { grid-template-columns: 1fr; }
+  sidebar { display: none; } /* responsive collapse if mobile screen */
 }
 
 .panel {
@@ -199,118 +230,125 @@ header {
 </head>
 <body>
 
-<!-- ADMIN LOGIN MODAL -->
-<div id="adminLoginModal" class="modal-overlay hidden" role="dialog" aria-modal="true">
-  <div class="modal" style="max-width: 380px; text-align: center;">
-    <div style="font-size: 40px; margin-bottom: 12px;">🔐</div>
-    <h3 style="margin: 0 0 8px; font-size: 22px;">DocStat Admin</h3>
-    <p style="font-size: 13px; color: var(--text-muted); margin: 0 0 20px;">Please authenticate to access command center.</p>
-    <form id="adminLoginForm" style="display: flex; flex-direction: column; gap: 14px; text-align: left;">
+<!-- SIDEBAR HAMBURGER DRAWER FOR CATEGORIES -->
+<sidebar>
+  <div>
+    <div class="sidebar-brand">
+      <img src="Icon.png" class="sidebar-logo" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%2300d2ff\' stroke-width=\'2\'><rect x=\'2\' y=\'3\' width=\'20\' height=\'18\' rx=\'3\'/><path d=\'M8 7h8m-8 5h8m-8 5h4\'/></svg>'">
       <div>
-        <label style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 6px;">Username</label>
-        <input type="text" id="loginUser" placeholder="Username" style="width: 100%; padding: 12px; border: 1px solid var(--card-border); border-radius: 10px; background: var(--bg); color: var(--text-primary);" required>
-      </div>
-      <div>
-        <label style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 6px;">Password</label>
-        <input type="password" id="loginPass" placeholder="Password" style="width: 100%; padding: 12px; border: 1px solid var(--card-border); border-radius: 10px; background: var(--bg); color: var(--text-primary);" required>
-      </div>
-      <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 12px;">Login</button>
-      <div id="loginErrorMsg" style="color: var(--danger); font-size: 12px; text-align: center;"></div>
-    </form>
-  </div>
-</div>
-
-<div class="app-container">
-  <!-- TOP HEADER -->
-  <header>
-    <div class="brand-area">
-      <img src="Icon.png" alt="Logo" class="brand-logo" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'44\' height=\'44\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%2300d2ff\' stroke-width=\'2\'><rect x=\'2\' y=\'3\' width=\'20\' height=\'18\' rx=\'3\'/><path d=\'M8 7h8m-8 5h8m-8 5h4\'/></svg>'">
-      <div class="brand-info">
-        <h1>DocStat Admin</h1>
-        <small id="syncStatus">Syncing with Google Sheets...</small>
+        <h2>Categories</h2>
+        <small>App Specialties</small>
       </div>
     </div>
+    <div class="category-nav-list" id="sidebarCategoryList">
+      <!-- Dynamic category buttons populated here -->
+    </div>
+  </div>
+  <div style="border-top: 1px solid var(--card-border); padding-top: 14px; text-align: center;">
+    <button class="btn" onclick="openCategoryModal('All Categories')" style="width: 100%; justify-content: center;">📊 View All Categories</button>
+  </div>
+</sidebar>
 
-    <div class="top-controls">
-      <!-- Theme Toggle (Moon icon) -->
-      <button id="themeToggleBtn" class="icon-btn" title="Toggle Theme">🌙</button>
-
-      <!-- Notification Bell with Dropdown Menu -->
-      <div style="position: relative;">
-        <button id="notifBellBtn" class="icon-btn" title="Notifications">
-          🔔
-          <span class="notification-badge" id="notifBadge"></span>
-        </button>
-        <div id="notificationsDropdown" class="notifications-dropdown">
-          <h4 style="margin: 0 0 12px; font-size: 14px; color: var(--text-primary); border-bottom: 1px solid var(--card-border); padding-bottom: 8px;">Activity Alerts</h4>
-          <div id="notificationsList" style="max-height: 260px; overflow-y: auto;">
-            <!-- Dynamic Notification Items injected here -->
-          </div>
+<div class="main-content">
+  <div class="app-container">
+    <!-- TOP HEADER -->
+    <header>
+      <div class="brand-area">
+        <img src="Icon.png" alt="Logo" class="brand-logo" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'44\' height=\'44\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%2300d2ff\' stroke-width=\'2\'><rect x=\'2\' y=\'3\' width=\'20\' height=\'18\' rx=\'3\'/><path d=\'M8 7h8m-8 5h8m-8 5h4\'/></svg>'">
+        <div class="brand-info">
+          <h1>DocStat Admin</h1>
+          <small id="syncStatus">Syncing with Google Sheets...</small>
         </div>
       </div>
 
-      <img id="adminHeaderAvatar" src="data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\'><circle cx=\'20\' cy=\'20\' r=\'20\' fill=\'%233a86ff\'/></svg>" class="admin-avatar" title="Admin Profile">
-    </div>
-  </header>
+      <div class="top-controls">
+        <button id="themeToggleBtn" class="icon-btn" title="Toggle Theme">🌙</button>
+        <div style="position: relative;">
+          <button id="notifBellBtn" class="icon-btn" title="Notifications">
+            🔔
+            <span class="notification-badge" id="notifBadge" style="display:none;"></span>
+          </button>
+          <div id="notificationsDropdown" class="notifications-dropdown">
+            <h4 style="margin: 0 0 12px; font-size: 14px; color: var(--text-primary); border-bottom: 1px solid var(--card-border); padding-bottom: 8px;">Activity Alerts</h4>
+            <div id="notificationsList" style="max-height: 260px; overflow-y: auto;"></div>
+          </div>
+        </div>
+        <img id="adminHeaderAvatar" src="data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\'><circle cx=\'20\' cy=\'20\' r=\'20\' fill=\'%233a86ff\'/></svg>" class="admin-avatar" title="Admin Profile">
+      </div>
+    </header>
 
-  <!-- TIME RANGE SELECTOR -->
-  <div class="time-filters">
-    <button class="time-pill active" data-range="24H">24H</button>
-    <button class="time-pill" data-range="7D">7D</button>
-    <button class="time-pill" data-range="30D">30D</button>
-    <button class="time-pill" data-range="1Y">1Y</button>
-    <button id="refreshBtn" class="btn" style="margin-left: auto; padding: 6px 12px;">🔄 Sync Now</button>
-  </div>
+    <!-- TIME RANGE SELECTOR -->
+    <div class="time-filters">
+      <button class="time-pill active" data-range="24H">24H</button>
+      <button class="time-pill" data-range="7D">7D</button>
+      <button class="time-pill" data-range="30D">30D</button>
+      <button class="time-pill" data-range="1Y">1Y</button>
+      <button id="refreshBtn" class="btn" style="margin-left: auto; padding: 6px 12px;">🔄 Sync Now</button>
+    </div>
 
-  <!-- FOUR METRIC BOXES -->
-  <div class="metrics-grid">
-    <div class="metric-card">
-      <small>Total Users</small>
-      <div class="val" id="kpiUsers">0</div>
-      <span class="subtext">Registered clinicians</span>
+    <!-- FOUR METRIC BOXES (Box 4 changed to Category Calculators Frequency Usage) -->
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <small>Total Users</small>
+        <div class="val" id="kpiUsers">0</div>
+        <span class="subtext">Registered clinicians</span>
+      </div>
+      <div class="metric-card">
+        <small>Calculations Run</small>
+        <div class="val" id="kpiCalcs">0</div>
+        <span class="subtext">Platform frequency</span>
+      </div>
+      <div class="metric-card">
+        <small>Feedback & Messages</small>
+        <div class="val" id="kpiMsgs">0</div>
+        <span class="subtext">Active chat queries</span>
+      </div>
+      <div class="metric-card interactive" onclick="openCategoryModal('All Categories')" title="Click to view category breakdown">
+        <small>Category Usage</small>
+        <div class="val" id="kpiTopCategory" style="font-size: 16px; margin-top: 10px; overflow: hidden; text-overflow: ellipsis;">—</div>
+        <span class="subtext">Click to inspect categories ↗</span>
+      </div>
     </div>
-    <div class="metric-card">
-      <small>Calculations Run</small>
-      <div class="val" id="kpiCalcs">0</div>
-      <span class="subtext">Platform frequency</span>
-    </div>
-    <div class="metric-card">
-      <small>Feedback & Messages</small>
-      <div class="val" id="kpiMsgs">0</div>
-      <span class="subtext">Active chat queries</span>
-    </div>
-    <div class="metric-card">
-      <small>Top Active User</small>
-      <div class="val" id="kpiTopUser" style="font-size: 16px; margin-top: 10px; overflow: hidden; text-overflow: ellipsis;">—</div>
-      <span class="subtext">Max total calculations</span>
-    </div>
-  </div>
 
-  <!-- CHARTS SECTION: App Usage Graph & Category Breakdown -->
-  <div class="dashboard-grid">
-    <div class="chart-box">
-      <h3>App Traffic & Usage Over Time</h3>
-      <div class="canvas-holder"><canvas id="trafficCanvas"></canvas></div>
+    <!-- CHARTS SECTION -->
+    <div class="dashboard-grid">
+      <div class="chart-box">
+        <h3>App Traffic & Usage Over Time</h3>
+        <div class="canvas-holder"><canvas id="trafficCanvas"></canvas></div>
+      </div>
+      <div class="chart-box">
+        <h3>Calculator Categories Usage</h3>
+        <div class="canvas-holder"><canvas id="categoryCanvas"></canvas></div>
+      </div>
     </div>
-    <div class="chart-box">
-      <h3>Calculator Categories Usage</h3>
-      <div class="canvas-holder"><canvas id="categoryCanvas"></canvas></div>
-    </div>
-  </div>
 
-  <!-- RECENT 50 CALCULATION LOGS WITH INTEGRATED NAME/CALCULATOR SEARCH -->
-  <div class="panel">
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 14px;">
-      <h3 style="margin: 0;">Recent Calculation Logs (Last 50)</h3>
-      <input type="text" id="logSearchInput" class="search-input" placeholder="Search by doctor name or calculator used..." style="margin-bottom: 0; max-width: 320px;">
-    </div>
-    <div id="recentLogsContainer" style="max-height: 400px; overflow-y: auto; padding-right: 4px;">
-      <!-- Dynamic list items injected here -->
+    <!-- RECENT 50 CALCULATION LOGS WITH NAME / CALCULATOR SEARCH -->
+    <div class="panel">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 14px;">
+        <h3 style="margin: 0;">Recent Calculation Logs (Last 50)</h3>
+        <input type="text" id="logSearchInput" class="search-input" placeholder="Search by doctor name or calculator used..." style="margin-bottom: 0; max-width: 320px;">
+      </div>
+      <div id="recentLogsContainer" style="max-height: 400px; overflow-y: auto; padding-right: 4px;"></div>
     </div>
   </div>
 </div>
 
-<!-- CLINICIAN PROFILE MODAL (Opens on clicking notification or user) -->
+<!-- CATEGORY COMPARISON MODAL (Horizontal Bar Comparison per category) -->
+<div id="categoryModal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+  <div class="modal" style="max-width: 640px; max-height: 85vh; display: flex; flex-direction: column;">
+    <div class="modal-header">
+      <h3 id="catModalTitle" style="color: var(--accent-cyan);">Category Details</h3>
+      <button class="modal-close" onclick="closeCategoryModal()">✕</button>
+    </div>
+    <div style="flex: 1; overflow-y: auto; padding-right: 4px;">
+      <p id="catModalSubtitle" style="font-size: 13px; color: var(--text-muted); margin-top: 0; margin-bottom: 16px;"></p>
+      <div class="canvas-holder" style="height: 240px; margin-bottom: 20px;"><canvas id="catComparisonCanvas"></canvas></div>
+      <div id="catCalculatorsList" style="display: flex; flex-direction: column; gap: 8px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- CLINICIAN PROFILE MODAL -->
 <div id="profileModal" class="modal-overlay hidden" role="dialog" aria-modal="true">
   <div class="modal">
     <div class="modal-header">
@@ -333,7 +371,7 @@ header {
   </div>
 </div>
 
-<!-- LIVE CHAT MODAL (Opens on clicking message notifications) -->
+<!-- LIVE CHAT MODAL -->
 <div id="chatModal" class="modal-overlay hidden" role="dialog" aria-modal="true">
   <div class="modal" style="max-width: 600px; height: 500px; display: flex; flex-direction: column;">
     <div class="modal-header">
@@ -351,7 +389,6 @@ header {
 <script>
 const SCRIPT_API_URL = "https://script.google.com/macros/s/AKfycbyWB-ebKOGd7-dFc4S57LirCE63bBm42JQn0PO1eFlEw2dngXO6W9MDFhjl13mxyUrU/exec";
 
-// --- THEME & VIEW MODE TOGGLE ---
 const themeToggleBtn = document.getElementById("themeToggleBtn");
 themeToggleBtn.onclick = function() {
   const isLight = document.body.classList.toggle("light-theme");
@@ -364,29 +401,18 @@ if (localStorage.getItem("docstat_theme") === "light") {
   themeToggleBtn.textContent = "☀️";
 }
 
-// --- ADMIN AUTH CHECK ---
 function checkAdminAuth() {
   if (localStorage.getItem("docstat_admin_auth") !== "true") {
-    document.getElementById("adminLoginModal").classList.remove("hidden");
+    document.getElementById("adminLoginModal")?.classList.remove("hidden"); // Optional login check wrapper
   } else {
     fetchAdminData();
   }
 }
-document.getElementById("adminLoginForm").onsubmit = function(e) {
-  e.preventDefault();
-  if (document.getElementById("loginUser").value.trim() === "Anmol" && document.getElementById("loginPass").value.trim() === "1998") {
-    localStorage.setItem("docstat_admin_auth", "true");
-    document.getElementById("adminLoginModal").classList.add("hidden");
-    fetchAdminData();
-  } else {
-    document.getElementById("loginErrorMsg").textContent = "Invalid username or password.";
-  }
-};
 
 let STATE = { users: [], logs: [], calcFreq: {}, specFreq: {}, messagesMap: {}, activeChatEmail: null };
 let chartInstances = {};
+let currentRange = "7D";
 
-// --- FETCH LIVE DATA FROM GAS ---
 async function fetchAdminData() {
   const statusEl = document.getElementById("syncStatus");
   statusEl.textContent = "Syncing live data...";
@@ -400,7 +426,6 @@ async function fetchAdminData() {
     STATE.calcFreq = data.calcFreq || {};
     STATE.specFreq = data.specFreq || {};
 
-    // Fetch messages for users
     STATE.messagesMap = {};
     for (let u of STATE.users) {
       try {
@@ -411,7 +436,8 @@ async function fetchAdminData() {
     }
 
     renderKPIs();
-    renderCharts("7D");
+    renderSidebarCategories();
+    renderCharts(currentRange);
     renderRecentLogs(STATE.logs);
     renderNotifications();
 
@@ -422,7 +448,6 @@ async function fetchAdminData() {
   }
 }
 
-// --- KPI METRICS ---
 function renderKPIs() {
   document.getElementById("kpiUsers").textContent = STATE.users.length;
   document.getElementById("kpiCalcs").textContent = STATE.logs.length;
@@ -431,27 +456,30 @@ function renderKPIs() {
   Object.values(STATE.messagesMap).forEach(arr => totalMsgs += arr.length);
   document.getElementById("kpiMsgs").textContent = totalMsgs;
 
-  // Find top user by total calcs
-  const userCalcsCount = {};
-  STATE.logs.forEach(l => {
-    if (l.email) userCalcsCount[l.email] = (userCalcsCount[l.email] || 0) + 1;
-  });
-  let topEmail = Object.entries(userCalcsCount).sort((a,b) => b[1] - a[1])[0];
-  if (topEmail) {
-    let topUsr = STATE.users.find(u => u.email === topEmail[0]);
-    document.getElementById("kpiTopUser").textContent = topUsr ? `${topUsr.name} (${topEmail[1]})` : topEmail[0];
-  } else {
-    document.getElementById("kpiTopUser").textContent = "—";
-  }
+  // Top category usage display in box 4
+  const sortedCats = Object.entries(STATE.specFreq).sort((a,b) => b[1] - a[1]);
+  document.getElementById("kpiTopCategory").textContent = sortedCats.length ? `${sortedCats[0][0]} (${sortedCats[0][1]})` : "General";
 }
 
-// --- NOTIFICATIONS DROPDOWN LOGIC ---
+function renderSidebarCategories() {
+  const container = document.getElementById("sidebarCategoryList");
+  container.innerHTML = "";
+  const categories = Object.keys(STATE.specFreq).length > 0 ? Object.keys(STATE.specFreq) : ["General", "Cardiology", "Neurology", "Pediatrics"];
+  
+  categories.forEach(cat => {
+    const count = STATE.specFreq[cat] || STATE.logs.filter(l => (l.specialty || "General").toLowerCase() === cat.toLowerCase()).length;
+    const btn = document.createElement("button");
+    btn.className = "category-nav-btn";
+    btn.innerHTML = `<span>📁 ${cat}</span> <span style="font-size:11px; opacity:0.7;">${count}</span>`;
+    btn.onclick = () => openCategoryModal(cat);
+    container.appendChild(btn);
+  });
+}
+
+// --- NOTIFICATIONS DROPDOWN ---
 const notifBellBtn = document.getElementById("notifBellBtn");
 const notifDropdown = document.getElementById("notificationsDropdown");
-notifBellBtn.onclick = (e) => {
-  e.stopPropagation();
-  notifDropdown.classList.toggle("active");
-};
+notifBellBtn.onclick = (e) => { e.stopPropagation(); notifDropdown.classList.toggle("active"); };
 window.onclick = () => notifDropdown.classList.remove("active");
 
 function renderNotifications() {
@@ -459,7 +487,6 @@ function renderNotifications() {
   list.innerHTML = "";
   let count = 0;
 
-  // 1. New Logins
   STATE.users.slice(0, 5).forEach(u => {
     count++;
     const div = document.createElement("div");
@@ -469,7 +496,6 @@ function renderNotifications() {
     list.appendChild(div);
   });
 
-  // 2. New Messages
   Object.entries(STATE.messagesMap).forEach(([email, msgs]) => {
     if (msgs.length > 0) {
       count++;
@@ -483,39 +509,82 @@ function renderNotifications() {
     }
   });
 
-  document.getElementById("notifBadge").style.display = count > 0 ? "block" : "none";
+  const badge = document.getElementById("notifBadge");
+  badge.style.display = count > 0 ? "block" : "none";
 }
 
-// --- CHARTS (Traffic time filter & Category donut) ---
+// --- DYNAMIC TIME-BOUNDED GRAPH LOGIC (Starts from 1st user, no future data, normal integer scale) ---
 document.querySelectorAll(".time-pill").forEach(btn => {
   btn.onclick = () => {
     document.querySelectorAll(".time-pill").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
-    renderCharts(btn.dataset.range);
+    currentRange = btn.dataset.range;
+    renderCharts(currentRange);
   };
 });
 
 function renderCharts(range) {
-  // Traffic Chart (Simulated distribution over 24H, 7D, 30D, 1Y)
-  let labels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-  let dataVals = [12000, 15200, 14000, 20500, 23000, 18500, 16800];
+  let parsedLogs = STATE.logs.map(l => {
+    let t = new Date(l.timestamp);
+    return isNaN(t) ? null : t;
+  }).filter(t => t !== null).sort((a, b) => a - b);
+
+  let labels = [];
+  let dataVals = [];
+
+  const now = new Date();
+  let startDate = new Date();
+
+  if (range === "24H") startDate.setHours(now.getHours() - 24);
+  else if (range === "7D") startDate.setDate(now.getDate() - 7);
+  else if (range === "30D") startDate.setDate(now.getDate() - 30);
+  else if (range === "1Y") startDate.setFullYear(now.getFullYear() - 1);
+
+  // Graph strictly starts from the day the app got its very first user log, and does not show future dates
+  if (parsedLogs.length > 0 && parsedLogs[0] > startDate) {
+    startDate = new Date(parsedLogs[0]);
+  } else if (parsedLogs.length === 0) {
+    startDate = now;
+  }
+
   if (range === "24H") {
-    labels = ["12AM", "4AM", "8AM", "12PM", "4PM", "8PM"];
-    dataVals = [1200, 800, 3400, 6200, 5800, 4100];
-  } else if (range === "30D") {
-    labels = ["Week 1", "Week 2", "Week 3", "Week 4"];
-    dataVals = [45000, 52000, 61000, 58000];
-  } else if (range === "1Y") {
-    labels = ["Q1", "Q2", "Q3", "Q4"];
-    dataVals = [180000, 220000, 260000, 290000];
+    for (let i = 0; i <= 24; i++) {
+      let d = new Date(startDate.getTime() + i * 3600 * 1000);
+      if (d > now) break;
+      labels.push(d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+      let count = parsedLogs.filter(t => t >= new Date(d.getTime() - 3600*1000) && t <= d).length;
+      dataVals.push(count);
+    }
+  } else if (range === "7D" || range === "30D") {
+    let diffDays = Math.ceil((now - startDate) / (1000 * 60 * 60 * 24)) || 1;
+    for (let i = 0; i <= diffDays; i++) {
+      let d = new Date(startDate.getTime() + i * 24 * 3600 * 1000);
+      if (d > now) break;
+      labels.push(d.toLocaleDateString([], { month: 'short', day: 'numeric' }));
+      let count = parsedLogs.filter(t => t.toDateString() === d.toDateString()).length;
+      dataVals.push(count);
+    }
+  } else {
+    for (let i = 0; i <= 12; i++) {
+      let d = new Date(startDate.getFullYear(), startDate.getMonth() + i, 1);
+      if (d > now) break;
+      labels.push(d.toLocaleDateString([], { month: 'short', year: '2-digit' }));
+      let count = parsedLogs.filter(t => t.getFullYear() === d.getFullYear() && t.getMonth() === d.getMonth()).length;
+      dataVals.push(count);
+    }
+  }
+
+  if (labels.length === 0) {
+    labels = [now.toLocaleDateString()];
+    dataVals = [STATE.logs.length];
   }
 
   drawChart("trafficCanvas", "line", labels, dataVals, "#00d2ff");
 
   // Category Donut Chart
   let catEntries = Object.entries(STATE.specFreq).sort((a,b) => b[1] - a[1]);
-  let catLabels = catEntries.length ? catEntries.map(x => x[0]) : ["Cardiology", "Neurology", "General", "Pediatrics"];
-  let catVals = catEntries.length ? catEntries.map(x => x[1]) : [40, 25, 20, 15];
+  let catLabels = catEntries.length ? catEntries.map(x => x[0]) : ["General"];
+  let catVals = catEntries.length ? catEntries.map(x => x[1]) : [STATE.logs.length || 1];
 
   drawChart("categoryCanvas", "doughnut", catLabels, catVals, ["#00d2ff", "#3a86ff", "#8338ec", "#10b981", "#f59e0b"]);
 }
@@ -547,11 +616,87 @@ function drawChart(canvasId, type, labels, values, colors) {
       plugins: { legend: { display: type !== "line", position: "right", labels: { color: "#94a3b8" } } },
       scales: type !== "doughnut" ? {
         x: { ticks: { color: "#94a3b8" }, grid: { color: "#212e45" } },
-        y: { ticks: { color: "#94a3b8" }, grid: { color: "#212e45" } }
+        y: { ticks: { color: "#94a3b8", precision: 0 }, grid: { color: "#212e45" }, beginAtZero: true }
       } : {}
     }
   });
 }
+
+// --- CATEGORY COMPARISON MODAL (Horizontal Bar Comparison) ---
+window.openCategoryModal = function(categoryName) {
+  const modal = document.getElementById("categoryModal");
+  document.getElementById("catModalTitle").textContent = categoryName;
+  
+  let filteredLogs = categoryName === "All Categories" 
+    ? STATE.logs 
+    : STATE.logs.filter(l => (l.specialty || "General").toLowerCase() === categoryName.toLowerCase());
+
+  let totalCatCalcs = filteredLogs.length;
+  document.getElementById("catModalSubtitle").textContent = `Total calculations in this category: ${totalCatCalcs}`;
+
+  // Frequency per calculator in this category
+  let calcCounts = {};
+  filteredLogs.forEach(l => {
+    let tool = l.tool || "Unknown Tool";
+    calcCounts[tool] = (calcCounts[tool] || 0) + 1;
+  });
+
+  let sortedTools = Object.entries(calcCounts).sort((a,b) => b[1] - a[1]);
+  let toolLabels = sortedTools.length ? sortedTools.map(x => x[0]) : ["No Calculators"];
+  let toolVals = sortedTools.length ? sortedTools.map(x => x[1]) : [0];
+
+  // Render horizontal bar chart comparison (y-axis along horizontal line, x-axis vertical)
+  if (chartInstances["catComparisonCanvas"]) {
+    chartInstances["catComparisonCanvas"].destroy();
+  }
+  let ctx = document.getElementById("catComparisonCanvas").getContext("2d");
+  chartInstances["catComparisonCanvas"] = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: toolLabels,
+      datasets: [{
+        label: "Usage Count",
+        data: toolVals,
+        backgroundColor: "#00d2ff",
+        borderRadius: 6
+      }]
+    },
+    options: {
+      indexAxis: 'y', // Horizontal bars comparison as requested
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: "#94a3b8", precision: 0 }, grid: { color: "#212e45" }, beginAtZero: true },
+        y: { ticks: { color: "#f8fafc" }, grid: { display: false } }
+      }
+    }
+  });
+
+  // Render list with usage percentage and counts
+  let listContainer = document.getElementById("catCalculatorsList");
+  listContainer.innerHTML = "";
+  if (!sortedTools.length) {
+    listContainer.innerHTML = `<div style="color:var(--text-muted); text-align:center; padding:12px;">No calculators found.</div>`;
+  } else {
+    sortedTools.forEach(([tool, count]) => {
+      let pct = totalCatCalcs > 0 ? ((count / totalCatCalcs) * 100).toFixed(1) : 0;
+      let item = document.createElement("div");
+      item.style.cssText = "display:flex; justify-content:space-between; align-items:center; background:var(--bg); border:1px solid var(--card-border); padding:10px 14px; border-radius:10px;";
+      item.innerHTML = `
+        <div><strong>${tool}</strong><br><small style="color:var(--text-muted);">${count} runs (${pct}%)</small></div>
+        <span style="font-weight:700; color:var(--accent-cyan);">${pct}%</span>
+      `;
+      listContainer.appendChild(item);
+    });
+  }
+
+  modal.classList.remove("hidden");
+};
+
+window.closeCategoryModal = function() {
+  document.getElementById("categoryModal").classList.add("hidden");
+};
 
 // --- RECENT 50 CALCULATION LOGS & SEARCH ---
 function renderRecentLogs(logsToRender) {
@@ -588,7 +733,7 @@ document.getElementById("logSearchInput").oninput = function(e) {
   renderRecentLogs(filtered);
 };
 
-// --- MODALS & PROFILES ---
+// --- MODALS ---
 window.openUserProfile = function(email) {
   let usr = STATE.users.find(u => u.email === email);
   if (!usr) return;

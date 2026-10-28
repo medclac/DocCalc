@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "description": "Offline-first clinical calculators and classifications",
+  "scripts": {
+    "build": "mkdir -p www && cp index.html www/ 2>/dev/null || true"
+  },
   "dependencies": {
     "@capacitor/android": "6.2.1",
     "@capacitor/app": "6.0.2",

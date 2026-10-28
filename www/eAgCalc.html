@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>HbA1c to Estimated Average Glucose (eAG)</title>
+<style>
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #2c3e50;
+    line-height: 1.6;
+    font-size: 11pt;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 20px;
+  }
+  .container {
+    max-width: 750px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 35px;
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  }
+  h1 {
+    font-size: 18pt;
+    color: #0e6251;
+    margin-top: 0;
+    border-bottom: 2px solid #16a085;
+    padding-bottom: 8px;
+  }
+  .meta-tag {
+    background-color: #e8f8f5;
+    color: #117a65;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 9pt;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 15px;
+  }
+  .section-title {
+    font-size: 11.5pt;
+    color: #117a65;
+    border-bottom: 1px solid #a3e4d7;
+    padding-bottom: 4px;
+    margin-top: 22px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+  .formula-box {
+    background: #fdfefe;
+    border: 2px dashed #16a085;
+    padding: 12px;
+    text-align: center;
+    border-radius: 6px;
+    font-size: 12pt;
+    font-weight: bold;
+    color: #0e6251;
+    margin-bottom: 10px;
+  }
+  .normal-range-box {
+    background: #e8f8f5;
+    border: 1px solid #a3e4d7;
+    padding: 8px 12px;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 10.5pt;
+    font-weight: bold;
+    color: #0e6251;
+    margin-bottom: 15px;
+  }
+  ul {
+    margin: 0 0 10px 0;
+    padding-left: 20px;
+  }
+  li {
+    margin-bottom: 4px;
+  }
+  p {
+    margin: 0 0 10px 0;
+    text-align: justify;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    font-size: 10pt;
+  }
+  th, td {
+    border: 1px solid #d5dbdb;
+    padding: 8px 10px;
+    text-align: left;
+  }
+  th {
+    background-color: #e8f8f5;
+    color: #0e6251;
+    font-weight: bold;
+  }
+  tr:nth-child(even) {
+    background-color: #fcfcfc;
+  }
+  .footer {
+    margin-top: 30px;
+    border-top: 1px solid #d5dbdb;
+    padding-top: 12px;
+    font-size: 8.5pt;
+    color: #7f8c8d;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>HbA1c to Estimated Average Glucose (eAG)</h1>
+  <div class="meta-tag">Calculation ID: eAgCalc</div>
+
+  <div class="section-title">1. Formula & Parameters</div>
+  <div class="formula-box">eAG (mg/dL) = 28.7 × HbA1c − 46.7 | eAG (mmol/L) = eAG (mg/dL) ÷ 18.018</div>
+  <div class="normal-range-box">Normal Range / Target: < 5.7% (< 117 mg/dL)</div>
+  <p><b>Formula Breakdown & Units:</b></p>
+  <ul>
+    <li><b>HbA1c (%):</b> Glycated hemoglobin percentage.</li>
+  </ul>
+
+  <div class="section-title">2. Clinical & Medical Significance</div>
+  <p>Translating laboratory HbA1c into estimated average glucose (eAG) is a critical clinical communication tool in diabetes management [cite: Nathan DM et al., 2008]. Patients frequently struggle to conceptualize percentage-based A1c values in comparison to their daily home glucometer or continuous glucose monitor (CGM) fingerstick readings. Providing a concrete average glucose value bridges the gap between chronic glycemic integration and daily self-management trends. This translation empowers patients and clinicians to identify discordances between point-in-time fingersticks and long-term glycation, evaluates chronic glucotoxicity, and refines lifestyle or pharmacological regimens to reduce microvascular and macrovascular complications [cite: Nathan DM et al., 2008].</p>
+
+  <div class="section-title">3. Useful Conditions & Medical Decisions</div>
+  <p><b>Useful Conditions / Indications:</b></p>
+  <ul>
+    <li>Type 1 and Type 2 Diabetes Mellitus [cite: Nathan DM et al., 2008]</li><li>Prediabetes Surveillance [cite: Nathan DM et al., 2008]</li><li>Gestational Diabetes Glycemic Monitoring [cite: Nathan DM et al., 2008]</li>
+  </ul>
+  <p><b>Key Medical Decision:</b> Guides intensification or de-escalation of antihyperglycemic pharmacotherapy to achieve personalized ADA A1c targets (typically <7.0% for non-pregnant adults) [cite: Nathan DM et al., 2008].</p>
+  <table>
+    <thead>
+      <tr><th>HbA1c (%)</th><th>eAG (mg/dL)</th><th>eAG (mmol/L)</th><th>Clinical Interpretation & Physiological Significance</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>< 5.7%</td><td>< 117 mg/dL</td><td>< 6.5 mmol/L</td><td>Normal Glycemic Profile: Unimpaired glucose homeostasis and normal insulin sensitivity [cite: Nathan DM et al., 2008].</td></tr>
+<tr><td>5.7 – 6.4%</td><td>117 – 137 mg/dL</td><td>6.5 – 7.6 mmol/L</td><td>Prediabetes: Early beta-cell dysfunction and insulin resistance; high risk for microvascular/macrovascular disease progression [cite: Nathan DM et al., 2008].</td></tr>
+<tr><td>6.5 – 7.0%</td><td>140 – 154 mg/dL</td><td>7.8 – 8.6 mmol/L</td><td>ADA Target: Optimal glycemic control for non-pregnant adults to minimize long-term vascular complications [cite: Nathan DM et al., 2008].</td></tr>
+<tr><td>> 8.0%</td><td>> 183 mg/dL</td><td>> 10.2 mmol/L</td><td>Suboptimal Control: Chronic sustained hyperglycemia; elevated risk of retinopathy, nephropathy, and neuropathy [cite: Nathan DM et al., 2008].</td></tr>
+
+    </tbody>
+  </table>
+
+  <div class="section-title">4. Pathophysiological Background</div>
+  <p>Glucose molecules non-enzymatically attach to the N-terminal valine of the hemoglobin beta chain in a slow, irreversible, concentration-dependent reaction throughout the 120-day lifespan of circulating erythrocytes [cite: Nathan DM et al., 2008]. The ADAG trial established a robust linear regression model proving that cumulative plasma glucose exposure directly dictates glycation density, allowing accurate conversion between integrated percentages and average daily glycemia [cite: Nathan DM et al., 2008].</p>
+
+  <div class="section-title">5. Medical Background & Evidence</div>
+  <p>A1C-Derived Average Glucose (ADAG) Study Group (Nathan DM, Kuenen J, Borg R, et al. Diabetes Care. 2008;31(8):1473-1478) [cite: Nathan DM et al., 2008].</p>
+
+  <div class="footer">
+    This information is researched and verified source of information from open sources.<br>
+    <b>Approved by DocStat R/D team</b>
+  </div>
+</div>
+</body>
+</html>

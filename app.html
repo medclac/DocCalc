@@ -645,7 +645,7 @@ C 100 110, 100 128, 100 144
 </header>
 
 <main>
- <div class="notice"><b>Clinical safety:</b> Verify formulas, tables, and criteria independently before clinical use.</div>
+ <div class="notice"><b>Clinical safety:</b> Educational prototype only. Verify formulas, tables, and criteria independently before clinical use.</div>
 
  <!-- HOME VIEW -->
  <div id="home">
@@ -1379,8 +1379,12 @@ window.S = S;
  window.scrollTo({ top: 0, behavior: "smooth" });
  }
 
- // --- HASH ROUTER FOR ANDROID HARDWARE BACK BUTTON ---
+ // --- ROBUST HASH ROUTER FOR ANDROID BACK BUTTON ---
+ let isHandlingHash = false;
  window.addEventListener("hashchange", function () {
+ if (isHandlingHash) return;
+ isHandlingHash = true;
+
  const rawHash = location.hash.replace(/^#/, "");
 
  const modal = $("settingsModal");
@@ -1396,34 +1400,46 @@ window.S = S;
  }
 
  if (!rawHash) {
+ $("fullSourceIframe").src = "";
  showView("home");
+ isHandlingHash = false;
  return;
  }
 
  if (rawHash.startsWith("category=")) {
+ $("fullSourceIframe").src = "";
  const catId = decodeURIComponent(rawHash.replace("category=", ""));
  currentCatId = catId;
  renderCategoryTools();
  showView("category");
+ isHandlingHash = false;
  return;
  }
 
  if (rawHash.startsWith("tool=")) {
+ $("fullSourceIframe").src = "";
  const toolId = decodeURIComponent(rawHash.replace("tool=", ""));
  const foundTool = (window.tools || []).find(t => t.id === toolId);
- if (foundTool) {
- openToolView(foundTool);
+ if (foundTool && (!currentTool || currentTool.id !== toolId)) {
+ openToolView(foundTool, true);
+ } else {
+ showView("calculator");
  }
+ isHandlingHash = false;
  return;
  }
 
  if (rawHash.startsWith("source=")) {
  const calcId = decodeURIComponent(rawHash.replace("source=", ""));
  const sourcePath = `www/${calcId}.html`;
+ if ($("fullSourceIframe").getAttribute("src") !== sourcePath) {
  $("fullSourceIframe").src = sourcePath;
+ }
  showView("source");
+ isHandlingHash = false;
  return;
  }
+ isHandlingHash = false;
  });
 
  if (location.hash) {
@@ -1598,9 +1614,13 @@ window.S = S;
  $("searchResultsSection").classList.add("hidden");
  };
 
- function openToolView(tool) {
+ function openToolView(tool, skipHistory) {
  currentTool = tool;
  trackRecentTool(tool);
+
+ if (!skipHistory) {
+ location.hash = "tool=" + encodeURIComponent(tool.id);
+ }
 
  $("title").textContent = tool.name;
  $("desc").textContent = tool.desc || "";

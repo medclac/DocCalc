@@ -643,7 +643,7 @@ C 100 110, 100 128, 100 144
 </header>
 
 <main>
- <div class="notice"><b>Clinical safety:</b> Verify formulas, tables, and criteria independently before clinical use.</div>
+ <div class="notice"><b>Clinical safety:</b> Educational prototype only. Verify formulas, tables, and criteria independently before clinical use.</div>
 
  <!-- HOME VIEW -->
  <div id="home">
@@ -737,7 +737,7 @@ C 100 110, 100 128, 100 144
  </section>
  </div>
 
- <footer>DocStat· Educational purpose app · Verify before realtime clinical use</footer>
+ <footer>DocStat · Educational prototype · Verify before clinical use</footer>
 </main>
 
 <!-- SEAMLESS FULL-SCREEN SOURCE VIEW (BORDERLESS & CONTINUOUS) -->
@@ -1194,7 +1194,7 @@ window.S = S;
  const name = $("loginDrName").value.trim();
  const degree = $("loginDrDegree").value.trim();
  const hospital = localStorage.getItem("doccalc_temp_hospital") || "";
- const avatar = localStorage.getItem("doccalc_temp_avatar"] || "";
+ const avatar = localStorage.getItem("doccalc_temp_avatar") || "";
 
  localStorage.setItem("doccalc_dr_name", name);
  localStorage.setItem("doccalc_dr_degree", degree);
@@ -1436,7 +1436,7 @@ window.S = S;
 
  if (rawHash.startsWith("source=")) {
  const calcId = decodeURIComponent(rawHash.replace("source=", ""));
- const sourcePath = `${calcId}.html`; /* <--- CHANGED FROM 'www/' to root level */
+ const sourcePath = `${calcId}.html`;
  const iframe = $("fullSourceIframe");
  
  iframe.src = "about:blank";

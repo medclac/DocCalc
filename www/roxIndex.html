@@ -2,24 +2,24 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>ROX Index for High-Flow Nasal Oxygen (HFNO)</title>
+<title>ROX Index for HFNC Success vs Failure</title>
 <style>
   body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     color: #2c3e50;
-    line-height: 1.6;
+    line-height: 1.5;
     font-size: 11pt;
     background-color: #f9f9f9;
     margin: 0;
     padding: 20px;
   }
   .container {
-    max-width: 750px;
+    max-width: 700px;
     margin: 0 auto;
     background: #ffffff;
-    padding: 35px;
+    padding: 30px;
     border-radius: 8px;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   }
   h1 {
     font-size: 18pt;
@@ -39,11 +39,11 @@
     margin-bottom: 15px;
   }
   .section-title {
-    font-size: 11.5pt;
+    font-size: 11pt;
     color: #117a65;
     border-bottom: 1px solid #a3e4d7;
     padding-bottom: 4px;
-    margin-top: 22px;
+    margin-top: 20px;
     margin-bottom: 8px;
     text-transform: uppercase;
     font-weight: bold;
@@ -79,32 +79,11 @@
   }
   p {
     margin: 0 0 10px 0;
-    text-align: justify;
-  }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-    margin-bottom: 15px;
-    font-size: 10pt;
-  }
-  th, td {
-    border: 1px solid #d5dbdb;
-    padding: 8px 10px;
-    text-align: left;
-  }
-  th {
-    background-color: #e8f8f5;
-    color: #0e6251;
-    font-weight: bold;
-  }
-  tr:nth-child(even) {
-    background-color: #fcfcfc;
   }
   .footer {
-    margin-top: 30px;
+    margin-top: 25px;
     border-top: 1px solid #d5dbdb;
-    padding-top: 12px;
+    padding-top: 10px;
     font-size: 8.5pt;
     color: #7f8c8d;
     text-align: center;
@@ -113,43 +92,32 @@
 </head>
 <body>
 <div class="container">
-  <h1>ROX Index for High-Flow Nasal Oxygen (HFNO)</h1>
+  <h1>ROX Index for HFNC Success vs Failure</h1>
   <div class="meta-tag">Calculation ID: roxIndex</div>
 
   <div class="section-title">1. Formula & Parameters</div>
-  <div class="formula-box">ROX = (SpO₂ ÷ FiO₂) ÷ Respiratory Rate</div>
-  <div class="normal-range-box">Normal Range / Target: Normal Range</div>
+  <div class="formula-box">ROX = (SpO2 ÷ FiO2) ÷ Respiratory Rate</div>
+  <div class="normal-range-box">Normal Range / Target: ROX ≥ 4.88 at 12 hours indicates high probability of HFNC success</div>
   <p><b>Formula Breakdown & Units:</b></p>
   <ul>
-    <li><b>SpO₂:</b> Pulse oximetry %.</li><li><b>FiO₂:</b> Fraction (0.21–1.0).</li><li><b>RR:</b> Breaths/min.</li>
+    <li>SpO2: Oxygen saturation percentage (%).</li><li>FiO2: Fraction of inspired oxygen (decimal).</li><li>Respiratory Rate: Breaths per minute.</li>
   </ul>
 
   <div class="section-title">2. Clinical & Medical Significance</div>
-  <p>The ROX index is a validated bedside predictor of success versus failure for patients receiving high-flow nasal cannula (HFNO) oxygen therapy for acute hypoxemic respiratory failure. Calculating ROX at 2, 6, and 12 hours helps clinicians identify failing patients early, avoiding delayed emergency intubation.</p>
+  <p>Accurately identifies patients failing HFNC who require prompt endotracheal intubation, avoiding the harms of delayed intubation.</p>
 
   <div class="section-title">3. Useful Conditions & Medical Decisions</div>
   <p><b>Useful Conditions / Indications:</b></p>
   <ul>
-    <li>Acute Hypoxemic Respiratory Failure on HFNO</li><li>Pneumonia & COVID-19 Respiratory Support</li>
+    <li>Acute Hypoxemic Respiratory Failure</li><li>Viral Pneumonia (e.g., COVID-19)</li><li>Acute Pulmonary Edema</li>
   </ul>
-  <p><b>Key Medical Decision:</b> Determines timely escalation from high-flow nasal oxygen to invasive mechanical ventilation.</p>
-  <table>
-    <thead>
-      <tr><th>ROX Threshold</th><th>Therapy Trajectory</th><th>Treatment Failure Risk</th><th>Clinical Action</th></tr>
-    </thead>
-    <tbody>
-      <tr><td>< 3.85 (or <2.85 at 2h)</td><td>High Failure Risk</td><td>> 75% fail HFNO</td><td>ESCALATE: Prepare for invasive mechanical ventilation; intubate without delay</td></tr>
-<tr><td>3.85 – 4.87</td><td>Indeterminate / Grey Zone</td><td>Moderate Risk</td><td>Maintain close ICU monitoring; repeat ROX index in 1–2 hours</td></tr>
-<tr><td>≥ 4.88</td><td>Favorable Response</td><td>< 15% fail HFNO</td><td>Continue HFNO; begin weaning FiO₂ as patient stabilizes</td></tr>
-
-    </tbody>
-  </table>
+  <p><b>Key Medical Decision:</b> Decides whether to continue HFNC therapy or proceed immediately with rapid sequence intubation.</p>
 
   <div class="section-title">4. Pathophysiological Background</div>
-  <p>Combines oxygenation efficiency (SpO₂/FiO₂) with ventilatory mechanics (respiratory rate) to quantify respiratory distress.</p>
+  <p>Reflects the balance between oxygenation efficiency and work of breathing; worsening tachypnea and FiO2 requirements rapidly depress the ROX score.</p>
 
   <div class="section-title">5. Medical Background & Evidence</div>
-  <p>Roca O, Messika J, Caralt B, et al. (J Crit Care. 2016;35:200-205).</p>
+  <p>Validated in multicenter studies by Roca et al. (J Crit Care, 2016).</p>
 
   <div class="footer">
     This information is researched and verified source of information from open sources.<br>

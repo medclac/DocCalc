@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en" data-theme="light">
 <head>
@@ -432,7 +433,8 @@ button { cursor: pointer; font: inherit; }
 .value { font-size: 24px; font-weight: 800; color: var(--result-val); margin: 4px 0 10px; overflow-wrap: anywhere; }
 .res-subhead { font-size: 11.5px; font-weight: 750; color: var(--result-text); text-transform: uppercase; margin: 12px 0 4px; letter-spacing: 0.4px; }
 .equation { font-size: 12.5px; line-height: 1.6; color: var(--result-text); white-space: pre-line; }
-.copy { float: right; padding: 6px 11px; border: 1px solid var(--result-border); border-radius: 7px; background: var(--bg-card); font-weight: 600; color: var(--result-val); }
+.copy { float: right; padding: 6px 11px; border: 1px solid var(--result-border); border-radius: 7px; background: #ffffff; font-weight: 600; color: #075c42; }
+.source-btn { float: right; clear: both; margin-top: 6px; padding: 6px 11px; border: 1px solid var(--result-border); border-radius: 7px; background: #ffffff; font-weight: 600; color: #075c42; }
 
 /* SEVERITY DYNAMIC THEMES */
 .result.severity-critical {
@@ -441,11 +443,15 @@ button { cursor: pointer; font: inherit; }
 }
 .result.severity-critical .value,
 .result.severity-critical .caption,
-.result.severity-critical .res-subhead,
-.result.severity-critical .copy {
+.result.severity-critical .res-subhead {
  color: var(--contra-text) !important;
 }
-.result.severity-critical .copy { border-color: var(--contra-border) !important; }
+.result.severity-critical .copy,
+.result.severity-critical .source-btn {
+ background: #ffffff !important;
+ color: var(--contra-text) !important;
+ border-color: var(--contra-border) !important;
+}
 
 .result.severity-moderate {
  background: var(--notice-bg) !important;
@@ -453,11 +459,15 @@ button { cursor: pointer; font: inherit; }
 }
 .result.severity-moderate .value,
 .result.severity-moderate .caption,
-.result.severity-moderate .res-subhead,
-.result.severity-moderate .copy {
+.result.severity-moderate .res-subhead {
  color: var(--notice-text) !important;
 }
-.result.severity-moderate .copy { border-color: var(--notice-border) !important; }
+.result.severity-moderate .copy,
+.result.severity-moderate .source-btn {
+ background: #ffffff !important;
+ color: var(--notice-text) !important;
+ border-color: var(--notice-border) !important;
+}
 
 .result.severity-mild {
  background: var(--result-bg) !important;
@@ -465,11 +475,15 @@ button { cursor: pointer; font: inherit; }
 }
 .result.severity-mild .value,
 .result.severity-mild .caption,
-.result.severity-mild .res-subhead,
-.result.severity-mild .copy {
+.result.severity-mild .res-subhead {
  color: var(--result-val) !important;
 }
-.result.severity-mild .copy { border-color: var(--result-border) !important; }
+.result.severity-mild .copy,
+.result.severity-mild .source-btn {
+ background: #ffffff !important;
+ color: var(--result-val) !important;
+ border-color: var(--result-border) !important;
+}
 
 .reference-card { margin-top: 22px; border-top: 1px solid var(--border-color); padding-top: 16px; }
 .ref-heading { font-size: 14px; font-weight: 750; color: var(--text-main); margin: 0 0 6px; display: flex; align-items: center; gap: 6px; }
@@ -700,6 +714,7 @@ C 100 110, 100 128, 100 144
  </form>
  <div class="result" id="result" aria-live="polite">
  <button class="copy" id="copy" type="button">Copy</button>
+ <button class="source-btn" id="sourceBtn" type="button">Source</button>
  <div class="caption">ASSESSMENT & CLASSIFICATION</div>
  <div class="value" id="value"></div>
  <div class="res-subhead">Interpretation & Management</div>
@@ -725,6 +740,19 @@ C 100 110, 100 128, 100 144
 
  <footer>DocStat · Educational prototype · Verify before clinical use</footer>
 </main>
+
+<!-- IN-APP SOURCE VIEWER MODAL -->
+<div id="sourceModal" class="modal-overlay hidden" role="dialog" aria-modal="true">
+ <div class="modal" style="max-width: 900px; width: 90vw; height: 85vh; display: flex; flex-direction: column; padding: 16px;">
+ <div class="modal-header" style="margin-bottom: 10px;">
+ <h3 id="sourceModalTitle">Calculator Source Code</h3>
+ <button id="closeSourceModalBtn" class="modal-close" type="button">✕</button>
+ </div>
+ <div style="flex: 1; width: 100%; border: 1px solid var(--border-color); border-radius: 10px; overflow: hidden; background: #ffffff;">
+ <iframe id="sourceIframe" style="width: 100%; height: 100%; border: none;"></iframe>
+ </div>
+ </div>
+</div>
 
 <!-- SETTINGS MODAL -->
 <div id="settingsModal" class="modal-overlay hidden" role="dialog" aria-modal="true">
@@ -848,10 +876,6 @@ window.S = S;
 <script src="renal.js"></script>
 <script src="rheum.js"></script>
 <script src="surg.js"></script>
-<!-- Future modules ready: -->
-<!-- <script src="onco.js"></script> -->
-<!-- <script src="peds.js"></script> -->
-<!-- <script src="surg.js"></script> -->
 
 <!-- ============================================================== -->
 <!-- 3. APPLICATION ENGINE, OFFLINE SYNC QUEUE & CONTROLLER -->
@@ -1369,6 +1393,11 @@ window.S = S;
  modal.classList.add("hidden");
  }
 
+ const sourceModal = $("sourceModal");
+ if (sourceModal && !sourceModal.classList.contains("hidden")) {
+ sourceModal.classList.add("hidden");
+ }
+
  const searchInput = $("search");
  if (searchInput && searchInput.value) {
  searchInput.value = "";
@@ -1403,7 +1432,7 @@ window.S = S;
  location.hash = "";
  }
 
- // --- SPECIALTY COLOR HELPER (SUPPORTS RENAL, RESPI, RHEUM & FUTURE ONCO, PEDS, SURG) ---
+ // --- SPECIALTY COLOR HELPER ---
  function getSpecialtyBadgeClass(catName) {
  const c = (catName || "").toLowerCase().trim();
  if (c.includes("obgy") || c.includes("obstetrics") || c.includes("gynecology")) return "badge-spec-obgy";
@@ -1779,6 +1808,29 @@ window.S = S;
  logToolCalculation(currentTool.name, valText, eqText);
  };
 
+ // --- SOURCE BUTTON & IN-APP HTML VIEWER MODAL LOGIC ---
+ $("sourceBtn").onclick = () => {
+ if (!currentTool || !currentTool.id) return;
+ const calcId = currentTool.id;
+ const sourcePath = `DocCalc/www/${calcId}.html`;
+
+ $("sourceModalTitle").textContent = `${currentTool.name} — Source (${calcId}.html)`;
+ $("sourceIframe").src = sourcePath;
+ $("sourceModal").classList.remove("hidden");
+ };
+
+ $("closeSourceModalBtn").onclick = () => {
+ $("sourceModal").classList.add("hidden");
+ $("sourceIframe").src = "";
+ };
+
+ $("sourceModal").onclick = e => {
+ if (e.target === $("sourceModal")) {
+ $("sourceModal").classList.add("hidden");
+ $("sourceIframe").src = "";
+ }
+ };
+
  renderHome();
  window.addEventListener("load", renderHome);
 
@@ -1819,13 +1871,13 @@ window.S = S;
  wrap.style.gap = "8px";
  settingsBtn.parentNode.insertBefore(wrap, settingsBtn);
 
- const chatBtn = document.createElement("button");
- chatBtn.type = "button";
- chatBtn.className = "icon-btn";
- chatBtn.innerHTML = "💬 Feedback";
- chatBtn.onclick = openClinicianChat;
+ const actualChatBtn = document.createElement("button");
+ actualChatBtn.type = "button";
+ actualChatBtn.className = "icon-btn";
+ actualChatBtn.innerHTML = "💬 Feedback";
+ actualChatBtn.onclick = openClinicianChat;
 
- wrap.appendChild(chatBtn);
+ wrap.appendChild(actualChatBtn);
  wrap.appendChild(settingsBtn);
  }
 
@@ -1870,7 +1922,7 @@ window.S = S;
 
  const email = (localStorage.getItem("doccalc_dr_email") || "").trim().toLowerCase();
  const name = (localStorage.getItem("doccalc_dr_name") || "Anonymous").trim();
- const degree = (localStorage.getItem("doccalc_dr_degree") || "N/A").trim();
+ const degree = (localStorage.getItem("doccalc_dr_name") || "N/A").trim();
  const avatar = (localStorage.getItem("doccalc_dr_avatar") || "").trim();
  const timestamp = new Date().toLocaleString();
 
@@ -1880,7 +1932,7 @@ window.S = S;
  div.innerHTML = `<div>${msg}${!navigator.onLine ? " (Queued offline)" : ""}</div><div style="font-size:10px;opacity:0.75;margin-top:3px;">You · ${timestamp}`;
  box.appendChild(div);
  box.scrollTop = box.scrollHeight;
- inp.value = "";
+ inp.value, inp.value = "";
 
  if (window.sendDataToWebhook) {
  window.sendDataToWebhook({
